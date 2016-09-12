@@ -1,4 +1,27 @@
-﻿body {
+﻿.topNav {
+    border-color: #284A9F;
+    background-color: #284A9F;
+}
+
+.bluebtn {
+    background-color: #284A9F;
+}
+
+.topNav a {
+    color: white;
+}
+
+.topNav a:hover{
+    color: white;
+    background-color: transparent;
+}
+
+.topNav ul li a:hover{
+    color: white;
+    background-color: transparent;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -21,4 +44,8 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.input-validation-error {
+    border-color: red !important;
 }
