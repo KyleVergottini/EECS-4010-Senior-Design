@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card="http://schemas.android.com/apk/res-auto">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+        <it.gmariotti.cardslib.library.view.CardViewNative
+        android:id="@+id/carddemo_largeimage_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card:card_layout_resourceID="@layout/native_material_largeimage_text_card"
+        style="@style/card_external"
+        />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="Find New Convention"
+            android:id="@+id/button3"
+            android:onClick="findNewConventionClick"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="60dp"
+            android:text="Leave Convention"
+            android:id="@+id/button2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+    </TableLayout>
+</ScrollView>

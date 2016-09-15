@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.jordanklamut.interactiveevents.SplashActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/splash_content" />
+
+</android.support.design.widget.CoordinatorLayout>
+
+    <!--<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/tools">
+
+        <data>
+            <import type="com.jordanklamut.interactiveevents.models.Event"/>
+
+            <variable
+                name="event"
+                type="Event" />
+
+        </data>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            card_view:cardCornerRadius="4dp"
+            card_view:elevation="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.like.LikeButton
+                    app:icon_type="star"
+                    app:icon_size="25dp"
+                    android:id="@+id/star_button"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </com.like.LikeButton>
+
+                <ImageView
+                     android:id="@+id/iv_image"
+                     android:layout_height="wrap_content"
+                     android:layout_width="wrap_content"
+                     android:src="@drawable/abc_btn_radio_material"
+                     android:layout_centerVertical="true"
+                     android:layout_alignParentStart="true"
+                     android:paddingLeft="5dp"
+                     android:paddingRight="5dp">
+                 </ImageView>
+
+                <TextView
+                    android:id="@+id/tv_text"
+                    android:text="@{event.eventTitle}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/tv_blah"
+                    android:layout_centerVertical="true">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_blah"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Room: 214"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/star_button">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time: 7:15PM - 7:30PM"
+                    android:layout_below="@+id/tv_blah"
+                    android:layout_alignStart="@+id/tv_blah"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </layout>-->

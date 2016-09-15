@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">Interactive Events</string>
+    <string name="app_version">Alpha Build 16.9.10</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="title_activity_splash">Splash</string>
+
+    <string name="cardlib_hyperlink"><a href="https://github.com/gabrielemariotti/cardslib">CardsLib</a></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--CARD STRINGS-->
+    <string name="header_title_subtitle_lbase">How to build a simple list</string>
+    <string name="header_title_subtitle_ldiff">List with card with different layouts</string>
+    <string name="header_title_subtitle_lexpand">List and expandable cards</string>
+    <string name="header_title_subtitle_lgplay">A list like the Google Play &#8482;</string>
+    <string name="header_title_subtitle_swipe">A list with the swipe and undo actions</string>
+    <string name="header_title_subtitle_gbase">A basic grid</string>
+    <string name="header_title_subtitle_ggplay">A Grid like the Google Play &#8482;</string>
+    <string name="header_title_subtitle_lcolored">A list with colored cards</string>
+    <string name="header_title_subtitle_lcursor">A list with Cursor</string>
+    <string name="header_title_subtitle_gcursor">A grid with Cursor</string>
+
+    <string name="header_title_group1">Card Base Features</string>
+    <string name="header_title_group2">Card Examples</string>
+    <string name="header_title_group3">List,Grid and RecyclerView</string>
+    <string name="header_title_group4">Multichoice</string>
+    <string name="header_title_group5">Misc</string>
+
+    <string name="carddemo_title_list_expand">List with expandable card</string>
+
+
+</resources>
