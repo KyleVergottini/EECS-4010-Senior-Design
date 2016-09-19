@@ -8,6 +8,8 @@ namespace BusinessLogic.BusinessObjects
 {
     public class Convention
     {
+        public int ID { get; set; }
+
         public string Name { get; set; }
 
         public string StartDate { get; set; }

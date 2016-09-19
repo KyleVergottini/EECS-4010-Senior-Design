@@ -49,6 +49,24 @@ namespace WebUI.Controllers
         }
 
         [HttpGet]
+        public virtual ActionResult EditEvent()
+        {
+            var model = new EventViewModel();
+            //var conEvent = _eventService.GetEventsForRoom(roomID);
+            //if(conEvent != null)
+            //{
+            //  TODO: Set Model Fields Here
+            //}
+            return View(MVC.Convention.Views.Event, model);
+        }
+
+        [HttpPost]
+        public virtual ActionResult EditEvent(ConventionViewModel model)
+        {
+            return View(MVC.Convention.Views.ConList);
+        }
+
+        [HttpGet]
         public virtual ActionResult Map()
         {
             return View();
