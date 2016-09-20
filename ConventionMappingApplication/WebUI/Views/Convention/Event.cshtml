@@ -4,6 +4,15 @@
 @{
     ViewBag.Title = Model.ID != null ? "Update Event" : "Add An Event";
 }
+@section scripts{
+    <script type="text/javascript">
+        $("form").validate({
+            rules: {
+                EndDate: { greaterThan: "#StartDate" }
+            }
+        });
+    </script>
+}
 <h2>@ViewBag.Title</h2>
 
 <div class="row">

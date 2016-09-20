@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
+using Services;
 using WebUI.Models;
 
 namespace WebUI.Controllers
 {
     public partial class ConventionController : Controller
     {
+        private IEventService _eventService;
+
+        public ConventionController(IEventService eventService)
+        {
+            _eventService = eventService;
+        }
+
         [HttpGet]
         public virtual ActionResult Create()
         {

@@ -4,6 +4,15 @@
 @{
     ViewBag.Title = "Create a Convention";
 }
+@section scripts{
+    <script type="text/javascript">
+        $("form").validate({
+            rules: {
+                EndDate: { greaterThan: "#StartDate" }
+            }
+        });
+    </script>
+}
 <h2>@ViewBag.Title</h2>
 
 <div class="row">
