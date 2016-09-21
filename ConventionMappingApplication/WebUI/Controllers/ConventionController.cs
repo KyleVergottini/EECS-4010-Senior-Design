@@ -57,7 +57,7 @@ namespace WebUI.Controllers
         public virtual ActionResult EditEvent()
         {
             var model = new EventViewModel();
-            //var conEvent = _eventService.GetEventsForRoom(roomID);
+            //var conEvent = _eventService.GetEventsForRoom(0);
             //if(conEvent != null)
             //{
             //  TODO: Set Model Fields Here

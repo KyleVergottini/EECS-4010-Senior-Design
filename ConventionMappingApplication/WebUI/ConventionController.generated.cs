@@ -28,9 +28,6 @@ namespace WebUI.Controllers
     public partial class ConventionController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ConventionController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected ConventionController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
