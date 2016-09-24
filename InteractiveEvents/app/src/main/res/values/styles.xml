@@ -51,4 +51,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.SettingsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="titleTextStyle">@color/colorTitleText</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.SettingsTheme.Toolbar" parent="AppTheme.SettingsTheme">
+        <item name="android:textColorPrimary">#ffffffff</item>
+    </style>
+
 </resources>
