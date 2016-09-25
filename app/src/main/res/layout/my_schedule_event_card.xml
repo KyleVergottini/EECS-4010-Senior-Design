@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools">
+        <data>
+            <import type="com.jordanklamut.interactiveevents.models.Event"/>
+
+            <variable
+                name="event"
+                type="Event" />
+
+        </data>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            card_view:cardCornerRadius="4dp"
+            card_view:elevation="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.like.LikeButton
+                    app:icon_type="star"
+                    app:icon_size="25dp"
+                    android:id="@+id/star_button"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </com.like.LikeButton>
+
+                <TextView
+                    android:id="@+id/tv_card_title"
+                    android:text="@{event.eventTitle}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/tv_card_room"
+                    android:layout_centerVertical="true">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_card_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{event.eventRoom}"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/star_button">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_card_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{event.eventStartTime + '-' + event.eventEndTime()}"
+                    android:layout_below="@+id/tv_card_room"
+                    android:layout_alignStart="@+id/tv_card_room"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </layout>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".DebugActivity">
+
+
+
+    <TextView
+        android:id="@+id/txt_notifications_enabled_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="notifications_enabled: "/>
+    <TextView
+        android:id="@+id/txt_notifications_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_notifications_enabled_hint"
+        android:layout_alignBaseline="@id/txt_notifications_enabled_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_notifications_reminder_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_notifications_enabled_hint"
+        android:text="notifications_reminder: "/>
+    <TextView
+        android:id="@+id/txt_notifications_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_notifications_reminder_hint"
+        android:layout_alignBaseline="@id/txt_notifications_reminder_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_notification_ringtone_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_notifications_reminder_hint"
+        android:text="notification_ringtone: "/>
+    <TextView
+        android:id="@+id/txt_notification_ringtone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_notification_ringtone_hint"
+        android:layout_alignBaseline="@id/txt_notification_ringtone_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_notification_vibrate_enabled_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_notification_ringtone_hint"
+        android:text="notification_vibrate_enabled: "/>
+    <TextView
+        android:id="@+id/txt_notification_vibrate_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_notification_vibrate_enabled_hint"
+        android:layout_alignBaseline="@id/txt_notification_vibrate_enabled_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_wifi_only_enabled_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_notification_vibrate_enabled_hint"
+        android:text="wifi_only_enabled: "/>
+    <TextView
+        android:id="@+id/txt_wifi_only_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_wifi_only_enabled_hint"
+        android:layout_alignBaseline="@id/txt_wifi_only_enabled_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_sync_frequency_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_wifi_only_enabled_hint"
+        android:text="sync_frequency: "/>
+    <TextView
+        android:id="@+id/txt_sync_frequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_sync_frequency_hint"
+        android:layout_alignBaseline="@id/txt_sync_frequency_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_username_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_sync_frequency_hint"
+        android:text="username: "/>
+    <TextView
+        android:id="@+id/txt_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_username_hint"
+        android:layout_alignBaseline="@id/txt_username_hint"
+        android:text="default"/>
+</RelativeLayout>

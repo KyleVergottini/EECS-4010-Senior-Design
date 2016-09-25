@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Notifications">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifications_enabled"
+            android:summary="Enable upcoming event notifications"
+            android:title="Notifications" />
+
+        <ListPreference
+            android:defaultValue="15"
+            android:entries="@array/pref_prior_notification_titles"
+            android:entryValues="@array/pref_prior_notification_values"
+            android:key="notifications_reminder"
+            android:summary="Set upcoming event notification period"
+            android:dependency="notifications_enabled"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="Notification Reminder" />
+
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_enabled"
+            android:key="notification_ringtone"
+            android:ringtoneType="notification"
+            android:title="@string/pref_title_ringtone" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notifications_enabled"
+            android:key="notification_vibrate_enabled"
+            android:title="@string/pref_title_vibrate" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_header_data_sync">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wifi_only_enabled"
+            android:title="Use WiFi only" />
+
+        <ListPreference
+            android:defaultValue="10"
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:key="sync_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_sync_frequency" />
+
+        <!--<Preference android:title="@string/pref_title_system_sync_settings">
+            <intent android:action="android.settings.SYNC_SETTINGS" />
+        </Preference>-->
+
+        <Preference
+            android:title="Manual Sync Now"
+            android:key="manual_sync_now"/>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Application">
+        <Preference
+            android:title="Log Out"
+            android:key="logout" />
+
+        <Preference
+            android:key="application_version"
+            android:title="@string/pref_title_application_version" />
+    </PreferenceCategory>
+</PreferenceScreen>
