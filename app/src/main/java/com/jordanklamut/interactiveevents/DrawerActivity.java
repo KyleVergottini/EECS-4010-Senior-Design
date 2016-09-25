@@ -109,7 +109,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             fm.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
         } else if (id == R.id.nav_schedule) {
             fm.beginTransaction().replace(R.id.content_frame, new MyScheduleFragment()).commit();
-            //fm.beginTransaction().replace(R.id.content_frame, new ScheduleFragment()).commit();
             //Toast.makeText(DrawerActivity.this, "Schedule is not available", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_my_schedule) {
             fm.beginTransaction().replace(R.id.content_frame, new MyScheduleFragment()).commit();
