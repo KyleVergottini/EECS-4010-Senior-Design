@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Services.Registries;
+using WebUI.Transformers;
 
 namespace WebUI
 {
@@ -26,6 +27,12 @@ namespace WebUI
             builder.RegisterControllers(typeof(MvcApplication).Assembly)
                 .InstancePerHttpRequest();
             builder.RegisterModule<ServiceModule>();
+            builder.RegisterType<EventToEventViewModelTransformer>()
+                .AsImplementedInterfaces()
+                .InstancePerRequest();
+            builder.RegisterType<ConventionToConventionViewModelTransformer>()
+                .AsImplementedInterfaces()
+                .InstancePerRequest();
             
             DependencyResolver.SetResolver(new AutofacDependencyResolver(builder.Build()));
         }
