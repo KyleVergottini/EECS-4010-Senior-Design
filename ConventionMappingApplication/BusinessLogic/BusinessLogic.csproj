@@ -58,7 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessObjects\Convention.cs" />
+    <Compile Include="BusinessObjects\ConventionRecord.cs" />
+    <Compile Include="BusinessObjects\EventRecord.cs" />
     <Compile Include="ConventionMapping.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

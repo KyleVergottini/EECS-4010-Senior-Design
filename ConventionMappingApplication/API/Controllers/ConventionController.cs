@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using BusinessLogic;
 using BusinessLogic.Services;
+using BusinessLogic.BusinessObjects;
 
 namespace API.Controllers
 {
@@ -21,12 +22,12 @@ namespace API.Controllers
         [Route("Convention/GetByID/{ID}")]
         public IHttpActionResult GetConventionByID(int ID)
         {
-            IList<Convention> result = _DatabaseReadService.GetConventions(c => c.ID == ID);
+            IList<ConventionRecord> result = _DatabaseReadService.GetConventions(c => c.ID == ID);
             if (result.Count == 0)
             {
                 return BadRequest("No convention found for this ID");
             }
-            return Ok(result.First<Convention>());
+            return Ok(result.First<ConventionRecord>());
         }
 
         [HttpGet]
@@ -37,7 +38,7 @@ namespace API.Controllers
         {
             // -- TODO
             // Query database for multiple Convention records
-            IList<Convention> result = _DatabaseReadService.GetConventions(c => 0 == 0);
+            IList<ConventionRecord> result = _DatabaseReadService.GetConventions(c => 0 == 0);
             return Ok(result);
         }
     }

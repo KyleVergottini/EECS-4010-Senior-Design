@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogic.BusinessObjects;
 
 namespace BusinessLogic.Services
 {
@@ -11,38 +12,40 @@ namespace BusinessLogic.Services
     {
         private ConventionMappingDataContext dbConventionMapping = new ConventionMappingDataContext("Data Source=URASHIMA\\SQLEXPRESS;Initial Catalog=ConventionMappingApplication;Integrated Security=True");
 
-        public IList<Convention> GetConventions(Expression<Func<Convention, bool>> Filter)
+        public IList<ConventionRecord> GetConventions(Expression<Func<Convention, bool>> Filter)
         {
             return
                 (from Conventions in dbConventionMapping.Conventions
-                select Conventions)
+                 select Conventions)
                 .Where(Filter)
-                .ToList<Convention>();
+                .Select(c => new ConventionRecord(c))
+                .ToList<ConventionRecord>();
         }
 
         public IList<Room> GetRooms(Expression<Func<Room, bool>> Filter)
         {
             return
                 (from Rooms in dbConventionMapping.Rooms
-                select Rooms)
+                 select Rooms)
                 .Where(Filter)
                 .ToList<Room>();
         }
 
-        public IList<Event> GetEvents(Expression<Func<Event, bool>> Filter)
+        public IList<EventRecord> GetEvents(Expression<Func<Event, bool>> Filter)
         {
             return
                 (from Events in dbConventionMapping.Events
                  select Events)
                 .Where(Filter)
-                .ToList<Event>();
+                .Select(e => new EventRecord(e))
+                .ToList<EventRecord>();
         }
 
         public IList<User> GetUsers(Expression<Func<User, bool>> Filter)
         {
             return
                 (from Users in dbConventionMapping.Users
-                select Users)
+                 select Users)
                 .Where(Filter)
                 .ToList<User>();
         }
@@ -51,7 +54,7 @@ namespace BusinessLogic.Services
         {
             return
                 (from ConventionRoles in dbConventionMapping.ConventionRoles
-                select ConventionRoles)
+                 select ConventionRoles)
                 .Where(Filter)
                 .ToList<ConventionRole>();
         }
@@ -60,7 +63,7 @@ namespace BusinessLogic.Services
         {
             return
                 (from Schedules in dbConventionMapping.Schedules
-                select Schedules)
+                 select Schedules)
                 .Where(Filter)
                 .ToList<Schedule>();;
         }
