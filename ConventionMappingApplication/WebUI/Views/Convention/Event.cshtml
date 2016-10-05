@@ -2,7 +2,7 @@
 @model EventViewModel
 
 @{
-    ViewBag.Title = Model.ID != null ? "Update Event" : "Add An Event";
+    ViewBag.Title = Model.ID != 0 ? "Update Event" : "Add An Event";
 }
 @section scripts{
     <script type="text/javascript">
@@ -21,13 +21,25 @@
             @using (Html.BeginForm(MVC.Convention.EditEvent(), FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.HiddenFor(m => m.ID)
-                @Html.HiddenFor(m => m.RoomID)
-                <h4>Fill out the following fields to create an event for the current convention.</h4>
+                if (Model.ID == 0)
+                {
+                    <h4>Fill out the following fields to create an event for the current convention.</h4>
+                }
+                else
+                {
+                    <h4>Fill out the following fields to update the given event.</h4>
+                }
                 <hr />
                 <div class="form-group">
                     @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Rooms, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.RoomID, Model.Rooms,"Select a Room", new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -50,10 +62,15 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Create" class="btn btn-default" />
+                        <input type="submit" value="Add Another Event" class="btn btn-default" />
                     </div>
                 </div>
             }
         </section>
+    </div>
+    <div class="col-md-4">
+        <div class="col-md-offset-2 col-md-10 text-right">
+            <a href="@Url.Action(MVC.Convention.EventList())" class="btn btn-default mainBtn" >View Events</a>
+        </div>
     </div>
 </div>

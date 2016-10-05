@@ -1,6 +1,7 @@
-﻿using System.Web;
+﻿using Services;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using Services;
 using WebUI.Models;
 using WebUI.Transformers;
 
@@ -10,21 +11,27 @@ namespace WebUI.Controllers
     {
         private readonly IEventService _eventService;
         private readonly IConventionService _conventionService;
-        private readonly IEventToEventViewModelTransformer _eventTransformer;
-        private readonly IConventionToConventionViewModelTransformer _conTransformer;
+        private readonly IRoomService _roomService;
+        private readonly IEventTransformer _eventTransformer;
+        private readonly IConventionTransformer _conventionTransformer;
 
-        public ConventionController(IEventService eventService, IEventToEventViewModelTransformer eventTransformer, IConventionService conventionService, IConventionToConventionViewModelTransformer conTransformer)
+        public ConventionController(IEventService eventService, IEventTransformer eventTransformer, IConventionService conventionService, IConventionTransformer conventionTransformer, IRoomService roomService)
         {
             _eventService = eventService;
             _eventTransformer = eventTransformer;
             _conventionService = conventionService;
-            _conTransformer = conTransformer;
+            _conventionTransformer = conventionTransformer;
+            _roomService = roomService;
         }
 
         [HttpGet]
         public virtual ActionResult Create()
         {
-            return View();
+            var model = new ConventionViewModel
+            {
+                ID = 0
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -34,13 +41,18 @@ namespace WebUI.Controllers
             {
                 return View(model);
             }
+            var convention = _conventionTransformer.TransformToBusinessObject(model);
+            Session["conventionId"] = _conventionService.SaveConvention(convention);
             return RedirectToAction(MVC.Convention.Map());
         }
 
         [HttpGet]
-        public virtual ActionResult GetConList()
+        public virtual ActionResult ConList()
         {
-            var model = new ConListViewModel();
+            var model = new ConListViewModel
+            {
+                Conventions = _conventionService.GetAllConventions()
+            };
             return View(MVC.Convention.Views.ConList, model);
         }
 
@@ -48,33 +60,52 @@ namespace WebUI.Controllers
         public virtual ActionResult Edit(int id)
         {
             var con = _conventionService.GetConventionById(id);
-            var model = _conTransformer.Transform(con);
+            var model = _conventionTransformer.TransformToViewModel(con);
             return View(MVC.Convention.Views.Edit, model);
         }
 
         [HttpPost]
         public virtual ActionResult Edit(ConventionViewModel model)
         {
-            //--TODO: add save
-            return View();
+            var convention = _conventionTransformer.TransformToBusinessObject(model);
+            Session["conventionId"] = _conventionService.SaveConvention(convention);
+            return RedirectToAction(MVC.Convention.Map());
         }
 
         [HttpGet]
-        public virtual ActionResult EditEvent()
+        public virtual ActionResult EventList()
         {
-            var model = new EventViewModel();
-            var conEvent = _eventService.GetEventById(0);
-            if(conEvent != null)
+            var model = new EventListViewModel
             {
-                model = _eventTransformer.Trasform(conEvent);
+                Events = _eventService.GetAllEventsForAConvention(1)
+            };
+            return View(MVC.Convention.Views.EventList, model);
+        }
+
+        [HttpGet]
+        public virtual ActionResult EditEvent(int id)
+        {
+            var model = new EventViewModel{ ID = id };
+            model.Rooms = _roomService.GetRoomsForGivenConventionId(1)
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ID.ToString()
+                });
+            var conEvent = _eventService.GetEventById(id);
+            if (conEvent != null)
+            {
+                model = _eventTransformer.TrasformToViewModel(conEvent);
             }
             return View(MVC.Convention.Views.Event, model);
         }
 
         [HttpPost]
-        public virtual ActionResult EditEvent(ConventionViewModel model)
+        public virtual ActionResult EditEvent(EventViewModel model)
         {
-            return View(MVC.Convention.Views.ConList);
+            var conEvent = _eventTransformer.TrasformToBusinessObject(model);
+            _eventService.SaveEvent(conEvent);
+            return RedirectToAction(MVC.Convention.EditEvent(0));
         }
 
         [HttpGet]
@@ -87,7 +118,7 @@ namespace WebUI.Controllers
         public virtual ActionResult Map(HttpPostedFileBase file)
         {
             //--can get images from Request.Files
-            return View();
+            return RedirectToAction(MVC.Convention.EditEvent(0));
         }
     }
 }

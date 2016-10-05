@@ -2,3 +2,18 @@
     ViewBag.Title = "Upload a Map";
 }
 <h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <section id="mapForm">
+            @using (Html.BeginForm(MVC.Convention.Map(), FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Submit" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>

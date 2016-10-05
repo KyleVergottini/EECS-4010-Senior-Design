@@ -52,6 +52,10 @@
       <HintPath>..\packages\Autofac.Mvc5.4.0.0\lib\net451\Autofac.Integration.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CodeCarvings.Piczard, Version=1.2.3.0, Culture=neutral, PublicKeyToken=88d00d4422733d60, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeCarvings.Piczard.1.2.3.3\lib\CodeCarvings.Piczard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -195,9 +199,24 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ConListViewModel.cs" />
     <Compile Include="Models\ConventionViewModel.cs" />
+    <Compile Include="Models\EventListViewModel.cs" />
     <Compile Include="Models\EventViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="piczardUserControls\simpleImageUploadUserControl\SimpleImageUpload.ascx.cs">
+      <DependentUpon>SimpleImageUpload.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="piczardUserControls\simpleImageUploadUserControl\SimpleImageUpload.ascx.designer.cs">
+      <DependentUpon>SimpleImageUpload.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="piczardUserControls\simpleImageUploadUserControl\upload.aspx.cs">
+      <DependentUpon>upload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="piczardUserControls\simpleImageUploadUserControl\upload.aspx.designer.cs">
+      <DependentUpon>upload.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -208,10 +227,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="Transformers\ConventionToConventionViewModelTransformer.cs" />
-    <Compile Include="Transformers\EventToEventViewModelTransformer.cs" />
-    <Compile Include="Transformers\IConventionToConventionViewModelTransformer.cs" />
-    <Compile Include="Transformers\IEventToEventViewModelTransformer.cs" />
+    <Compile Include="Transformers\ConventionTransformer.cs" />
+    <Compile Include="Transformers\EventTransformer.cs" />
+    <Compile Include="Transformers\IConventionTransformer.cs" />
+    <Compile Include="Transformers\IEventTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker.css" />
@@ -383,6 +402,11 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\blank.gif" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\SimpleImageUpload.ascx" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\simpleImageUpload.js" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\upload.aspx" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\wait.gif" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -398,6 +422,9 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <Content Include="App_Data\__CCPZTF_78d3a7c598904cd48d0447186ad55482__wt.tmp" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\preview.ashx" />
+    <Content Include="piczardUserControls\simpleImageUploadUserControl\uploadMonitor.ashx" />
     <None Include="Scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -599,10 +626,9 @@
     <Content Include="Views\Convention\Map.cshtml" />
     <Content Include="Views\Convention\Event.cshtml" />
     <Content Include="Views\Convention\Edit.cshtml" />
+    <Content Include="Views\Convention\EventList.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />

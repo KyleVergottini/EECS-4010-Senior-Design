@@ -7,18 +7,22 @@
     background-color: #284A9F;
 }
 
+.homeNav:hover {
+    background-color: transparent !important;
+}
+
 .topNav a {
     color: white;
 }
 
 .topNav a:hover{
     color: white;
-    background-color: transparent;
+    background-color: #417EC1;
 }
 
 .topNav ul li a:hover{
     color: white;
-    background-color: transparent;
+    background-color: #417EC1;
 }
 
 body {
@@ -53,4 +57,16 @@ textarea {
 .error {
     color: red !important;
     border-color: red !important;
+}
+
+.mainBtn {
+    background-color: #284A9F;
+    color: white;
+    border-color: #284A9F;
+}
+
+.mainBtn:hover {
+    background-color: #417EC1;
+    color: white;
+    border-color: #284A9F;
 }

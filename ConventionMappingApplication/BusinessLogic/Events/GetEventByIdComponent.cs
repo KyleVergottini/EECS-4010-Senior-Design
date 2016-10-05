@@ -17,8 +17,8 @@ namespace BusinessLogic.Events
                         RoomID = x.RoomID,
                         Name = x.Name,
                         Description = x.Description,
-                        EndDate = x.EndDate.ToString("d"),
-                        StartDate = x.StartDate.ToString("d")
+                        EndDate = x.EndDate,
+                        StartDate = x.StartDate
                     }).FirstOrDefault();
             }
         }

@@ -27,10 +27,10 @@ namespace WebUI
             builder.RegisterControllers(typeof(MvcApplication).Assembly)
                 .InstancePerHttpRequest();
             builder.RegisterModule<ServiceModule>();
-            builder.RegisterType<EventToEventViewModelTransformer>()
+            builder.RegisterType<EventTransformer>()
                 .AsImplementedInterfaces()
                 .InstancePerRequest();
-            builder.RegisterType<ConventionToConventionViewModelTransformer>()
+            builder.RegisterType<ConventionTransformer>()
                 .AsImplementedInterfaces()
                 .InstancePerRequest();
             

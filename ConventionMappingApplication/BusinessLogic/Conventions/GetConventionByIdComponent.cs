@@ -20,8 +20,8 @@ namespace BusinessLogic.Conventions
                         State = x.State,
                         ZipCode = x.ZipCode,
                         Description = x.Description,
-                        EndDate = x.EndDate.ToString("d"),
-                        StartDate = x.StartDate.ToString("d")
+                        EndDate = x.EndDate,
+                        StartDate = x.StartDate
                     }).FirstOrDefault();
             }
         }

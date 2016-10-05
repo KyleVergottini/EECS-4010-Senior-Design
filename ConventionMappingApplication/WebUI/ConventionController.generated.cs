@@ -62,6 +62,12 @@ namespace WebUI.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Edit);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public virtual System.Web.Mvc.ActionResult EditEvent()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditEvent);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ConventionController Actions { get { return MVC.Convention; } }
@@ -79,8 +85,9 @@ namespace WebUI.Controllers
         public class ActionNamesClass
         {
             public readonly string Create = "Create";
-            public readonly string GetConList = "GetConList";
+            public readonly string ConList = "ConList";
             public readonly string Edit = "Edit";
+            public readonly string EventList = "EventList";
             public readonly string EditEvent = "EditEvent";
             public readonly string Map = "Map";
         }
@@ -89,8 +96,9 @@ namespace WebUI.Controllers
         public class ActionNameConstants
         {
             public const string Create = "Create";
-            public const string GetConList = "GetConList";
+            public const string ConList = "ConList";
             public const string Edit = "Edit";
+            public const string EventList = "EventList";
             public const string EditEvent = "EditEvent";
             public const string Map = "Map";
         }
@@ -119,6 +127,7 @@ namespace WebUI.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_EditEvent
         {
+            public readonly string id = "id";
             public readonly string model = "model";
         }
         static readonly ActionParamsClass_Map s_params_Map = new ActionParamsClass_Map();
@@ -143,12 +152,14 @@ namespace WebUI.Controllers
                 public readonly string Create = "Create";
                 public readonly string Edit = "Edit";
                 public readonly string Event = "Event";
+                public readonly string EventList = "EventList";
                 public readonly string Map = "Map";
             }
             public readonly string ConList = "~/Views/Convention/ConList.cshtml";
             public readonly string Create = "~/Views/Convention/Create.cshtml";
             public readonly string Edit = "~/Views/Convention/Edit.cshtml";
             public readonly string Event = "~/Views/Convention/Event.cshtml";
+            public readonly string EventList = "~/Views/Convention/EventList.cshtml";
             public readonly string Map = "~/Views/Convention/Map.cshtml";
         }
     }
@@ -182,13 +193,13 @@ namespace WebUI.Controllers
         }
 
         [NonAction]
-        partial void GetConListOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
+        partial void ConListOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
         [NonAction]
-        public override System.Web.Mvc.ActionResult GetConList()
+        public override System.Web.Mvc.ActionResult ConList()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetConList);
-            GetConListOverride(callInfo);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ConList);
+            ConListOverride(callInfo);
             return callInfo;
         }
 
@@ -217,21 +228,33 @@ namespace WebUI.Controllers
         }
 
         [NonAction]
-        partial void EditEventOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
+        partial void EventListOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
         [NonAction]
-        public override System.Web.Mvc.ActionResult EditEvent()
+        public override System.Web.Mvc.ActionResult EventList()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditEvent);
-            EditEventOverride(callInfo);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EventList);
+            EventListOverride(callInfo);
             return callInfo;
         }
 
         [NonAction]
-        partial void EditEventOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, WebUI.Models.ConventionViewModel model);
+        partial void EditEventOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, int id);
 
         [NonAction]
-        public override System.Web.Mvc.ActionResult EditEvent(WebUI.Models.ConventionViewModel model)
+        public override System.Web.Mvc.ActionResult EditEvent(int id)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditEvent);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
+            EditEventOverride(callInfo, id);
+            return callInfo;
+        }
+
+        [NonAction]
+        partial void EditEventOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, WebUI.Models.EventViewModel model);
+
+        [NonAction]
+        public override System.Web.Mvc.ActionResult EditEvent(WebUI.Models.EventViewModel model)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditEvent);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
