@@ -1,55 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Http;
-using System.Linq.Expressions;
-using BusinessLogic;
-using BusinessLogic.Services;
-using BusinessLogic.BusinessObjects;
+using Services;
+using BusinessLogic.Events;
+using BusinessObjects;
 
 namespace API.Controllers
 {
     public class EventController : ApiController
     {
-        private DatabaseReadService _DatabaseReadService;
+        private IEventService _EventService;
 
         public EventController()
         {
-            _DatabaseReadService = new DatabaseReadService();
+            _EventService = new EventService(
+                new GetEventsByRoomIdComponent(),
+                new GetEventByIdComponent()
+            );
         }
 
         [HttpGet]
-        [Route("Event/GetScheduleForConvention/{ConventionID}")]
-        public IHttpActionResult GetScheduleForConvention(int ConventionID, int? RoomID = null, DateTime? StartDate = null, DateTime? EndDate = null)
+        [Route("Event/GetEventById/{Id}")]
+        public IHttpActionResult GetEventById(int Id)
         {
-            Expression<Func<Event, bool>> filter = e => e.Room.ConventionID == ConventionID;
-            ParameterExpression param = filter.Parameters.Single();
-            if (RoomID != null)
+            Event result;
+            try
             {
-                int RoomIDParam = RoomID ?? default(int);
-                Expression<Func<Event, bool>> newFilter = e => e.RoomID == RoomIDParam;
-                BinaryExpression body = Expression.AndAlso(filter.Body, Expression.Invoke(newFilter, param));
-                filter = Expression.Lambda<Func<Event, bool>>(body, param);
+                result = _EventService.GetEventById(Id);
             }
-            if (StartDate != null)
+            catch (Exception e)
             {
-                DateTime StartDateParam = StartDate ?? default(DateTime);
-                Expression<Func<Event, bool>> newFilter = e => e.StartDate >= StartDateParam;
-                BinaryExpression body = Expression.AndAlso(filter.Body, Expression.Invoke(newFilter, param));
-                filter = Expression.Lambda<Func<Event, bool>>(body, param);
+                return BadRequest(e.ToString());
             }
-            if (EndDate != null)
+            if (result == null)
             {
-                DateTime EndDateParam = EndDate ?? default(DateTime);
-                Expression<Func<Event, bool>> newFilter = e => e.EndDate <= EndDateParam;
-                BinaryExpression body = Expression.AndAlso(filter.Body, Expression.Invoke(newFilter, param));
-                filter = Expression.Lambda<Func<Event, bool>>(body, param);
+                return BadRequest("No event found for this Id");
             }
-            IList<EventRecord> result = _DatabaseReadService.GetEvents(filter);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("Event/GetEventByRoomId/{RoomId}")]
+        public IHttpActionResult GetEventByRoomId(int RoomId)
+        {
+            List<Event> result;
+            try
+            {
+                result = _EventService.GetEventForRoomId(RoomId);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
             if (result.Count == 0)
             {
-                return BadRequest("No events found for this criteria");
+                return BadRequest("No events found for this room Id");
             }
             return Ok(result);
         }

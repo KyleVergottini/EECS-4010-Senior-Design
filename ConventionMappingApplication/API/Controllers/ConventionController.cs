@@ -1,33 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Http;
-using BusinessLogic;
-using BusinessLogic.Services;
-using BusinessLogic.BusinessObjects;
+using Services;
+using BusinessLogic.Conventions;
+using BusinessObjects;
 
 namespace API.Controllers
 {
     public class ConventionController : ApiController
     {
-        private DatabaseReadService _DatabaseReadService;
+        private IConventionService _ConventionService;
 
         public ConventionController()
         {
-            _DatabaseReadService = new DatabaseReadService();
+            _ConventionService = new ConventionService(
+                new GetConventionByIdComponent()
+            );
         }
 
         [HttpGet]
-        [Route("Convention/GetByID/{ID}")]
-        public IHttpActionResult GetConventionByID(int ID)
+        [Route("Convention/GetConventionById/{Id}")]
+        public IHttpActionResult GetConventionById(int Id)
         {
-            IList<ConventionRecord> result = _DatabaseReadService.GetConventions(c => c.ID == ID);
-            if (result.Count == 0)
+            Convention result;
+            try
             {
-                return BadRequest("No convention found for this ID");
+                result = _ConventionService.GetConventionById(Id);
             }
-            return Ok(result.First<ConventionRecord>());
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+            if (result == null)
+            {
+                return BadRequest("No convention found for this Id");
+            }
+            return Ok(result);
         }
 
         [HttpGet]
@@ -38,8 +47,7 @@ namespace API.Controllers
         {
             // -- TODO
             // Query database for multiple Convention records
-            IList<ConventionRecord> result = _DatabaseReadService.GetConventions(c => 0 == 0);
-            return Ok(result);
+            return Ok();
         }
     }
 }

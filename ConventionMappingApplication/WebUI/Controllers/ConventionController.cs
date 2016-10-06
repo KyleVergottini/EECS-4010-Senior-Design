@@ -2,16 +2,23 @@
 using System.Web.Mvc;
 using Services;
 using WebUI.Models;
+using WebUI.Transformers;
 
 namespace WebUI.Controllers
 {
     public partial class ConventionController : Controller
     {
-        private IEventService _eventService;
+        private readonly IEventService _eventService;
+        private readonly IConventionService _conventionService;
+        private readonly IEventToEventViewModelTransformer _eventTransformer;
+        private readonly IConventionToConventionViewModelTransformer _conTransformer;
 
-        public ConventionController(IEventService eventService)
+        public ConventionController(IEventService eventService, IEventToEventViewModelTransformer eventTransformer, IConventionService conventionService, IConventionToConventionViewModelTransformer conTransformer)
         {
             _eventService = eventService;
+            _eventTransformer = eventTransformer;
+            _conventionService = conventionService;
+            _conTransformer = conTransformer;
         }
 
         [HttpGet]
@@ -38,18 +45,17 @@ namespace WebUI.Controllers
         }
 
         [HttpGet]
-        public virtual ActionResult Edit()
+        public virtual ActionResult Edit(int id)
         {
-            var model = new ConventionViewModel
-            {
-                Name = "Test Convetion"
-            };
+            var con = _conventionService.GetConventionById(id);
+            var model = _conTransformer.Transform(con);
             return View(MVC.Convention.Views.Edit, model);
         }
 
         [HttpPost]
         public virtual ActionResult Edit(ConventionViewModel model)
         {
+            //--TODO: add save
             return View();
         }
 
@@ -57,11 +63,11 @@ namespace WebUI.Controllers
         public virtual ActionResult EditEvent()
         {
             var model = new EventViewModel();
-            //var conEvent = _eventService.GetEventsForRoom(0);
-            //if(conEvent != null)
-            //{
-            //  TODO: Set Model Fields Here
-            //}
+            var conEvent = _eventService.GetEventById(0);
+            if(conEvent != null)
+            {
+                model = _eventTransformer.Trasform(conEvent);
+            }
             return View(MVC.Convention.Views.Event, model);
         }
 

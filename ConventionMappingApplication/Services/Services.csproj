@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConventionService.cs" />
     <Compile Include="EventService.cs" />
+    <Compile Include="IConventionService.cs" />
     <Compile Include="IEventService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registries\ServiceModule.cs" />

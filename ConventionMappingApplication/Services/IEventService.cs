@@ -1,9 +1,11 @@
-﻿using BusinessObjects;
+﻿using System.Collections.Generic;
+using BusinessObjects;
 
 namespace Services
 {
     public interface IEventService
     {
-        Event GetEventsForRoom(int roomId);
+        Event GetEventById(int eventId);
+        List<Event> GetEventForRoomId(int roomId);
     }
 }
