@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("Convention/GetMapForConvention/{conventionId}")]
+        [Route("Map/GetMapForConvention/{conventionId}")]
         public IHttpActionResult GetMapForConvention(int conventionId)
         {
             List<Map> result;

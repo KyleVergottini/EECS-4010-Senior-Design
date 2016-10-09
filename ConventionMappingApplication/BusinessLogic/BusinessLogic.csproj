@@ -63,11 +63,15 @@
     <Compile Include="Conventions\IGetConventionByIdComponent.cs" />
     <Compile Include="Events\GetEventByIdComponent.cs" />
     <Compile Include="Events\GetEventsByRoomIdComponent.cs" />
+    <Compile Include="Maps\GetMapForConventionComponent.cs" />
+    <Compile Include="Maps\IGetMapForConventionComponent.cs" />
+    <Compile Include="Users\CreateUserComponent.cs" />
     <Compile Include="Users\GetUserComponent.cs" />
     <Compile Include="Events\IGetEventByIdComponent.cs" />
     <Compile Include="Events\IGetEventsByRoomIdComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registries\BusinessModule.cs" />
+    <Compile Include="Users\ICreateUserComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

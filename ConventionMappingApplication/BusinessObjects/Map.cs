@@ -8,7 +8,7 @@ namespace BusinessObjects
 
         public int Level { get; set; }
 
-        public byte[] Map { get; set; }
+        public byte[] MapImage { get; set; }
 
         public List<Room> RoomList { get; set; }
     }

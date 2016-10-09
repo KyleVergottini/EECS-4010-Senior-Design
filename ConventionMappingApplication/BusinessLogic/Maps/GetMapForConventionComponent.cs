@@ -19,37 +19,34 @@ namespace BusinessLogic.Maps
                         new Map {
                             ConventionId = x.ID,
                             Level = 1,
-                            Map = x.Map1
+                            MapImage = x.Map1
                         },
                         new Map {
                             ConventionId = x.ID,
                             Level = 2,
-                            Map = x.Map2
+                            MapImage = x.Map2
                         },
                         new Map {
                             ConventionId = x.ID,
                             Level = 3,
-                            Map = x.Map3
+                            MapImage = x.Map3
                         }
                     }).FirstOrDefault()
-                    .Where(x => x.Map != null)
+                    .Where(x => x.MapImage != null)
                     .ToList();
 
                 foreach (Map mapRecord in mapRecords)
                 {
-                    if (mapRecord.Map != null)
-                    {
-                        mapRecord.RoomList = context.Rooms.Where(x => x.Level == mapRecord.Level)
-                            .Select(x => new Room
-                            {
-                                ID = x.ID,
-                                ConventionID = x.ID,
-                                Name = x.Name,
-                                Level = x.Level,
-                                XCoordinate = x.XCoordinate,
-                                YCoordinate = x.YCoordinate
-                            }).ToList();
-                    }
+                    mapRecord.RoomList = context.Rooms.Where(x => x.Level == mapRecord.Level)
+                        .Select(x => new Room
+                        {
+                            ID = x.ID,
+                            ConventionID = x.ID,
+                            Name = x.Name,
+                            Level = x.Level,
+                            XCoordinate = x.XCoordinate,
+                            YCoordinate = x.YCoordinate
+                        }).ToList();
                 }
 
                 return mapRecords;
