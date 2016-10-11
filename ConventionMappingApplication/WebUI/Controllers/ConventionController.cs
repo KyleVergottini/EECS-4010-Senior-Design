@@ -1,4 +1,5 @@
-﻿using Services;
+﻿using System.Collections.Generic;
+using Services;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -49,11 +50,15 @@ namespace WebUI.Controllers
         [HttpGet]
         public virtual ActionResult ConList()
         {
-            var model = new ConListViewModel
-            {
-                Conventions = _conventionService.GetAllConventions()
-            };
-            return View(MVC.Convention.Views.ConList, model);
+            return View(MVC.Convention.Views.ConList);
+        }
+
+        [HttpGet]
+        public virtual JsonResult GetConList()
+        {
+            var cons = _conventionService.GetAllConventions();
+            var conventions = cons.Select(con => _conventionTransformer.TransformToViewModel(con)).ToList();
+            return Json(conventions, JsonRequestBehavior.AllowGet); 
         }
 
         [HttpGet]
@@ -75,11 +80,15 @@ namespace WebUI.Controllers
         [HttpGet]
         public virtual ActionResult EventList()
         {
-            var model = new EventListViewModel
-            {
-                Events = _eventService.GetAllEventsForAConvention(1)
-            };
-            return View(MVC.Convention.Views.EventList, model);
+            return View(MVC.Convention.Views.EventList);
+        }
+
+        [HttpGet]
+        public virtual JsonResult GetEventList()
+        {
+            var eventList = _eventService.GetAllEventsForAConvention((int)Session["conventionId"]);
+            var events = eventList.Select(e => _eventTransformer.TrasformToViewModel(e)).ToList();
+            return Json(events, JsonRequestBehavior.AllowGet); 
         }
 
         [HttpGet]

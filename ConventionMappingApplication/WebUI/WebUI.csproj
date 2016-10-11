@@ -425,6 +425,7 @@
     <Content Include="App_Data\__CCPZTF_78d3a7c598904cd48d0447186ad55482__wt.tmp" />
     <Content Include="piczardUserControls\simpleImageUploadUserControl\preview.ashx" />
     <Content Include="piczardUserControls\simpleImageUploadUserControl\uploadMonitor.ashx" />
+    <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />

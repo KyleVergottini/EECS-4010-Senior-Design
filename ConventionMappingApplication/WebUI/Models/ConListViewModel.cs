@@ -7,9 +7,9 @@ namespace WebUI.Models
     {
         public ConListViewModel()
         {
-            Conventions = new List<Convention>();
+            Conventions = new List<ConventionViewModel>();
         }
 
-        public List<Convention> Conventions { get; set; }
+        public List<ConventionViewModel> Conventions { get; set; }
     }
 }

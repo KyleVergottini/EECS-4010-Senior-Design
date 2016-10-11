@@ -12,6 +12,7 @@ namespace WebUI.Transformers
             {
                 ID = convention.ID,
                 Name = convention.Name,
+                Address = convention.Address,
                 Description = convention.Description,
                 State = convention.State,
                 City = convention.City,

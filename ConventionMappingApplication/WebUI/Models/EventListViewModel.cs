@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BusinessObjects;
 
 namespace WebUI.Models
 {
@@ -7,9 +6,9 @@ namespace WebUI.Models
     {
         public EventListViewModel()
         {
-            Events = new List<Event>();
+            Events = new List<EventViewModel>();
         }
 
-        public List<Event> Events { get; set; }
+        public List<EventViewModel> Events { get; set; }
     }
 }

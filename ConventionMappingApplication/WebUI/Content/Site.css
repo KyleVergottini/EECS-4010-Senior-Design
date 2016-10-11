@@ -70,3 +70,12 @@ textarea {
     color: white;
     border-color: #284A9F;
 }
+
+.odd {
+    background-color: #EFEFEF;
+}
+
+.table-hover>tbody>tr:hover {
+    background-color: #F0F8FF;
+    cursor: pointer;
+}
