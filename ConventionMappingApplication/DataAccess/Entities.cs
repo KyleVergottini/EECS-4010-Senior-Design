@@ -18,6 +18,7 @@ namespace DataAccess
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRecovery> UserRecovery { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -53,6 +54,11 @@ namespace DataAccess
 
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Schedules)
+                .WithRequired(e => e.User)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<User>()
+                .HasOptional(e => e.UserRecovery)
                 .WithRequired(e => e.User)
                 .WillCascadeOnDelete(false);
         }
