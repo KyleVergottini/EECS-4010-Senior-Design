@@ -13,37 +13,37 @@
         android:padding="12dp">
 
         <ImageView
-            android:id="@+id/iv_convention_photo"
+            android:id="@+id/iv_results_convention_photo"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginRight="16dp" />
 
         <TextView
-            android:id="@+id/tv_con_name"
+            android:id="@+id/tv_results_con_name"
             android:text="Convention Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:layout_toRightOf="@id/iv_convention_photo" />
+            android:layout_toRightOf="@id/iv_results_convention_photo" />
 
         <TextView
-            android:id="@+id/tv_con_address"
+            android:id="@+id/tv_results_con_address"
             android:text="City, State"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_con_name"
-            android:layout_toRightOf="@id/iv_convention_photo" />
+            android:layout_below="@id/tv_results_con_name"
+            android:layout_toRightOf="@id/iv_results_convention_photo" />
 
         <TextView
-            android:id="@+id/tv_con_dates"
+            android:id="@+id/tv_results_con_dates"
             android:text="October 7 - October 14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_con_address"
-            android:layout_toRightOf="@id/iv_convention_photo"/>
+            android:layout_below="@id/tv_results_con_address"
+            android:layout_toRightOf="@id/iv_results_convention_photo"/>
 
         <ImageView
-            android:id="@+id/iv_favorites"
+            android:id="@+id/iv_results_favorites"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_height"
             android:padding="@dimen/icon_padding"
@@ -57,13 +57,13 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_con_dates"
-            android:layout_alignLeft="@+id/iv_convention_photo"
+            android:layout_below="@+id/tv_results_con_dates"
+            android:layout_alignLeft="@+id/iv_results_convention_photo"
             android:paddingTop="20dp"
-            android:layout_alignStart="@+id/iv_convention_photo">
+            android:layout_alignStart="@+id/iv_results_convention_photo">
 
             <TextView
-                android:id="@+id/btn_set_con"
+                android:id="@+id/btn_results_set_con"
                 android:text="SET CONVENTION"
                 android:background="?android:selectableItemBackground"
                 android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                 android:paddingRight="20dp"/>
 
             <TextView
-                android:id="@+id/btn_view_details"
+                android:id="@+id/btn_results_view_details"
                 android:text="VIEW DETAILS"
                 android:background="?android:selectableItemBackground"
                 android:textColor="@color/colorPrimary"

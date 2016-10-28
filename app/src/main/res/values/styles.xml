@@ -63,4 +63,12 @@
         <item name="android:textColorPrimary">#ffffffff</item>
     </style>
 
+    <!--Spinner Styles-->
+    <style name="ThemeSpinner">
+        <!-- Color when pressed -->
+        <item name="colorAccent">@color/colorPrimary</item>
+        <!-- Default color for the dropdown arrow and line -->
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
+
 </resources>

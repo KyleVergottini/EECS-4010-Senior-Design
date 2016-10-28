@@ -8,16 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ConventionFinderFragment_Recents extends Fragment {
+public class ConventionFinderFragment_Scan extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ConventionFinderFragment_Recents() {
+    public ConventionFinderFragment_Scan() {
         // Required empty public constructor
     }
 
-    public static ConventionFinderFragment_Recents newInstance() {
-        ConventionFinderFragment_Recents fragment = new ConventionFinderFragment_Recents();
+    public static ConventionFinderFragment_Scan newInstance() {
+        ConventionFinderFragment_Scan fragment = new ConventionFinderFragment_Scan();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -32,7 +32,7 @@ public class ConventionFinderFragment_Recents extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.convention_finder_fragment_recents, container, false);
+        return inflater.inflate(R.layout.convention_finder_fragment_scan, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card="http://schemas.android.com/apk/res-auto">
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Welcome to"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:id="@+id/tv_login_header_1"
         android:gravity="center"
         android:layout_below="@+id/iv_logo"
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Interactive Events"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:id="@+id/tv_login_header_2"
         android:textSize="35dp"
         android:layout_below="@+id/tv_login_header_1"
@@ -58,13 +59,23 @@
         android:layout_alignEnd="@+id/tb_username"
         android:layout_alignStart="@+id/tb_username" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/tb_password2"
+        android:hint="confirm password"
+        android:layout_below="@+id/tb_password"
+        android:layout_alignEnd="@+id/tb_username"
+        android:layout_alignStart="@+id/tb_username" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Account"
         android:id="@+id/btn_create_account"
-        android:onClick="createAccountClick"
-        android:layout_below="@+id/tb_password"
+        android:layout_below="@+id/tb_password2"
         android:layout_alignEnd="@+id/tb_password"
         android:layout_alignStart="@+id/tb_password" />
 
@@ -136,7 +147,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Sign In"
             android:id="@+id/tv_sign_up"

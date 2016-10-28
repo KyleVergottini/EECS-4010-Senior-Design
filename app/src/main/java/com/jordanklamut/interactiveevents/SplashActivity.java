@@ -12,22 +12,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 public class SplashActivity extends AppCompatActivity {
-    SharedPreferences mSharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //get login preference and check for username
         SharedPreferences csp = getSharedPreferences("login_pref", 0);
-        if (csp.getString("usernameEmail", null) != null)
-        {
-            Intent intent = new Intent(this, DrawerActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        else
-        {
+        if (csp.getString("usernameEmail", null) != null) {
+            //IF NO CON SET, START CONVENTION FINDER
+            if (csp.getString("homeConventionID", null) == null) {
+                Intent intent = new Intent(this, ConventionFinderActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(this, DrawerActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }else {
             Intent intent = new Intent(this, LogInActivity.class);
             startActivity(intent);
             finish();

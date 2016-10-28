@@ -62,8 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:id="@+id/btn_create_account"
-        android:onClick="loginClick"
+        android:id="@+id/btn_login"
         android:layout_below="@+id/tb_password"
         android:layout_alignEnd="@+id/tb_password"
         android:layout_alignStart="@+id/tb_password" />
@@ -75,7 +74,7 @@
         android:text="Forgot password?"
         android:textColor="@color/colorPrimary"
         android:id="@+id/tv_forgot_password"
-        android:layout_below="@+id/btn_create_account"
+        android:layout_below="@+id/btn_login"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp" />
 

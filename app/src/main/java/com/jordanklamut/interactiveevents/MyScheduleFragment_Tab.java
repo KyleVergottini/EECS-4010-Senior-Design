@@ -54,7 +54,7 @@ public class MyScheduleFragment_Tab extends Fragment {
         //MyScheduleCardAdapter adapter = new MyScheduleCardAdapter(new String[]{"test one", "test two", "test three", "test four", "test five" , "test six" , "test seven"});
         //rv.setAdapter(adapter);
 
-        List<Event> event = util.getEventList(getContext());
+        List<Event> event = DatabaseManager.getEventList(getContext()); //TODO
         MyScheduleCardAdapter adapter2 = new MyScheduleCardAdapter(event);
         rv.setAdapter(adapter2);
 

@@ -27,6 +27,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int SETTINGS_REQUEST = 1000;
@@ -47,11 +50,21 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //SET USERNAME IN NAV HEADER
+        View header = navigationView.getHeaderView(0);
+        TextView tv_username = (TextView) header.findViewById(R.id.tv_username);
+        SharedPreferences csp = getSharedPreferences("login_pref", 0);
+        if (csp.getString("usernameEmail", null) != null){
+            tv_username.setText(csp.getString("usernameEmail", null));
+        }
+
+        //TODO - SET BUILD IN NAV HEADER, REMOVE UPON RELEASE
+        TextView tv_build = (TextView) header.findViewById(R.id.tv_app_version);
+        String date = new SimpleDateFormat("yy.MM.dd").format(new Date());
+        tv_build.setText("Alpha Build " + date, null);
+
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
-
-        //TextView tv = (TextView) findViewById(R.id.tv_username);
-        //tv.setText("Changed");
     }
 
     @Override
@@ -73,26 +86,22 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            PreferencesActivity.startThisActivityForResult(this, SETTINGS_REQUEST);
-            //startActivity(new Intent(DrawerActivity.this, SettingsActivity.class));
-        }
-        else if (id == R.id.action_log_out) {
-            Toast.makeText(DrawerActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
-
-            //remove username from login_pref
-            SharedPreferences csp = this.getSharedPreferences("login_pref", 0);
-            SharedPreferences.Editor cEditor = csp.edit();
-            cEditor.clear().apply();
-
-            startActivity(new Intent(DrawerActivity.this, LogInActivity.class));
-            finish();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                PreferencesActivity.startThisActivityForResult(this, SETTINGS_REQUEST);
+                return true;
+            case R.id.action_log_out:
+                //remove username from login_pref
+                SharedPreferences csp = this.getSharedPreferences("login_pref", 0);
+                SharedPreferences.Editor cEditor = csp.edit();
+                cEditor.clear().apply();
+                Toast.makeText(DrawerActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(DrawerActivity.this, LogInActivity.class));
+                finish();
+                return true;
+            case R.id.action_refresh:
+                Toast.makeText(DrawerActivity.this, "Refresh DB: TODO", Toast.LENGTH_LONG).show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -109,13 +118,12 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             fm.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
         } else if (id == R.id.nav_schedule) {
             fm.beginTransaction().replace(R.id.content_frame, new MyScheduleFragment()).commit();
-            //Toast.makeText(DrawerActivity.this, "Schedule is not available", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_my_schedule) {
             fm.beginTransaction().replace(R.id.content_frame, new MyScheduleFragment()).commit();
         } else if (id == R.id.nav_find_convention) {
             startActivity(new Intent(DrawerActivity.this, ConventionFinderActivity.class));
         }else if (id == R.id.nav_share) {
-            composeEmail("", "Check out Interactive Events", "TODO : App details and link to app to download?");
+            composeEmail("", "Check out Interactive Events", "TODO : App details and link to app to download?"); //TODO
         }else if (id == R.id.nav_feedback) {
             composeEmail("feedback@jordanklamut.com", "Interactive Events Feedback", null);
         }else if (id == R.id.nav_about) {
@@ -143,10 +151,4 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         emailIntent.putExtra(Intent.EXTRA_TEXT, emailContent);
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }
-
-    public void findNewConventionClick(View v)
-    {
-        startActivity(new Intent(DrawerActivity.this, ConventionFinderActivity.class));
-    }
-
 }

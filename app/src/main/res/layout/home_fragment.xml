@@ -9,30 +9,150 @@
         android:layout_height="match_parent"
         android:stretchColumns="1">
 
-        <it.gmariotti.cardslib.library.view.CardViewNative
-        android:id="@+id/carddemo_largeimage_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card:card_layout_resourceID="@layout/native_material_largeimage_text_card"
-        style="@style/card_external"
-        />
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/home_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            card_view:cardCornerRadius="4dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:layout_weight="3.2"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal">
+
+                        <ImageView
+                            android:id="@+id/tv_home_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="175dp"
+                            android:layout_gravity="center"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/san_fran_header"
+                            android:cropToPadding="false" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|top"
+                            android:background="@android:drawable/screen_background_dark_transparent"
+                            android:orientation="vertical">
+
+                            <!--<TextView
+                                android:text="Convention Title"
+                                android:id="@+id/titleTextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />-->
+
+
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_home_con_name"
+                        android:text="Convention Name"
+                        android:textSize="25sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"/>
+
+                    <TextView
+                        android:id="@+id/tv_home_con_address"
+                        android:text="City, State"
+                        android:textSize="18sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_home_con_name" />
+
+                    <TextView
+                        android:id="@+id/tv_home_con_dates"
+                        android:text="Oct 17 - Oct 24"
+                        android:textSize="18sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_home_con_address"/>
+
+                    <ImageView
+                        android:id="@+id/iv_home_navigation"
+                        android:layout_width="@dimen/icon_width"
+                        android:layout_height="@dimen/icon_height"
+                        android:padding="@dimen/icon_padding"
+                        android:src="@drawable/ic_google_maps"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:clickable="true"/>
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_home_con_dates"
+                        android:paddingTop="20dp">
+
+                        <TextView
+                            android:id="@+id/btn_home_view_map"
+                            android:text="VIEW MAP"
+                            android:textSize="15sp"
+                            android:background="?android:selectableItemBackground"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"/>
+
+                        <TextView
+                            android:id="@+id/btn_home_view_schedule"
+                            android:text="VIEW SCHEDULE"
+                            android:textSize="15sp"
+                            android:background="?android:selectableItemBackground"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:clickable="true"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:text="Find New Convention"
-            android:id="@+id/button3"
-            android:onClick="findNewConventionClick"
+            android:id="@+id/btn_home_find_new_convention"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
-        <Button
+        <!--<Button
             android:layout_width="125dp"
             android:layout_height="60dp"
             android:text="Leave Convention"
-            android:id="@+id/button2"
+            android:id="@+id/btn_home_leave_convention"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp" />-->
 
     </TableLayout>
 </ScrollView>

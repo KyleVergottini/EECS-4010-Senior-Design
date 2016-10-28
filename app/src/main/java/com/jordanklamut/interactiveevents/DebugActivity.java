@@ -21,6 +21,8 @@ public class DebugActivity extends Activity {
     private TextView txt_wifi_only_enabled;
     private TextView txt_sync_frequency;
     private TextView txt_username;
+    private TextView txt_home_convention_id;
+    private TextView txt_home_convention_name;
 
 
     @Override
@@ -48,6 +50,8 @@ public class DebugActivity extends Activity {
         txt_wifi_only_enabled = (TextView) findViewById(R.id.txt_wifi_only_enabled);
         txt_sync_frequency = (TextView) findViewById(R.id.txt_sync_frequency);
         txt_username = (TextView) findViewById(R.id.txt_username);
+        txt_home_convention_id = (TextView) findViewById(R.id.txt_home_convention);
+        txt_home_convention_name = (TextView) findViewById(R.id.txt_home_convention_name);
     }
 
     private void fillViews() {
@@ -62,5 +66,7 @@ public class DebugActivity extends Activity {
 
         SharedPreferences csp = getSharedPreferences("login_pref", 0);
         txt_username.setText(csp.getString("usernameEmail", null));
+        txt_home_convention_id.setText((csp.getString("homeConventionID", null)));
+        txt_home_convention_name.setText((csp.getString("homeConventionName", null)));
     }
 }

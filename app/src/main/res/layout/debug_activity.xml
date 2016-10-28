@@ -107,4 +107,43 @@
         android:layout_toRightOf="@id/txt_username_hint"
         android:layout_alignBaseline="@id/txt_username_hint"
         android:text="default"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Home Convention Info"
+        android:id="@+id/con_title"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/txt_username"/>
+
+    <TextView
+        android:id="@+id/txt_home_convention_id_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/con_title"
+        android:text="home con id: "/>
+    <TextView
+        android:id="@+id/txt_home_convention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_home_convention_id_hint"
+        android:layout_alignBaseline="@id/txt_home_convention_id_hint"
+        android:text="default"/>
+
+    <TextView
+        android:id="@+id/txt_home_convention_name_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_home_convention"
+        android:text="home con name: "/>
+    <TextView
+        android:id="@+id/txt_home_convention_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/txt_home_convention_name_hint"
+        android:layout_alignBaseline="@id/txt_home_convention_name_hint"
+        android:text="default"/>
+
+
 </RelativeLayout>

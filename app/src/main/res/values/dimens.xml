@@ -7,6 +7,11 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!--Con Finder Cards-->
+    <dimen name="icon_width">60dip</dimen>
+    <dimen name="icon_height">60dip</dimen>
+    <dimen name="icon_padding">5dp</dimen>
+
     <!--Top tabs-->
     <dimen name="tab_max_width">264dp</dimen>
     <dimen name="tab_padding_bottom">16dp</dimen>
