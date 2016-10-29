@@ -15,24 +15,14 @@ import com.jordanklamut.interactiveevents.models.Event;
 
 import java.util.List;
 
-/**
- * Created by jorda on 9/14/2016.
- */
-
 public class MyScheduleFragment_Tab extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
 
-
     public MyScheduleFragment_Tab() {
 
-    }
-
-    public static MyScheduleFragment_Tab newInstance() {
-        MyScheduleFragment_Tab fragment = new MyScheduleFragment_Tab();
-        return fragment;
     }
 
     @Override
@@ -63,12 +53,6 @@ public class MyScheduleFragment_Tab extends Fragment {
 
         return rootView;
 
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

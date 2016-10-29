@@ -14,14 +14,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,7 +25,6 @@ import java.util.Map;
 public class RegisterActivity extends Activity {
 
     private EditText ET_USER, ET_PASS;
-    private String login_user, login_pass;
     private Button register;
     private RequestQueue requestQueue;
     private StringRequest request;
@@ -52,7 +45,6 @@ public class RegisterActivity extends Activity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 request = new StringRequest(Request.Method.POST, login_url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -95,19 +87,6 @@ public class RegisterActivity extends Activity {
             }
         });
 
-    }
-
-    public void createAccountClick(View v) {
-
-        String name,user_name,user_pass;
-
-        name = ET_USER.getText().toString();
-        user_name = ET_USER.getText().toString();
-        user_pass = ET_PASS.getText().toString();
-        String method = "register";
-        AccountTask accountTask = new AccountTask(this);
-        accountTask.execute(method,name,user_name,user_pass);
-        finish();
     }
 
     //Go back to sign in screen

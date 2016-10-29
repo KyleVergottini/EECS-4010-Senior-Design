@@ -1,22 +1,14 @@
 package com.jordanklamut.interactiveevents;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.app.backup.SharedPreferencesBackupHelper;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,19 +27,6 @@ public class AccountTask extends AsyncTask<String, Void, String> {
 
     AlertDialog alertDialog;
     Context mContext;
-    Settings settings = new Settings();
-    public static final String PREFERENCES_NAME = "IEPref";
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
-
-    // url to get all products list
-    private String reg_url = "http://www.jordanklamut.com/InteractiveEvents/n_register.php";
-    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/n_login.php";
-
-    AccountTask(Context ctx)
-    {
-        this.mContext =ctx;
-    }
 
     @Override
     protected void onPreExecute() {
@@ -57,6 +36,10 @@ public class AccountTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+
+        //URL TO PHP SCRIPTS
+        String reg_url = "http://www.jordanklamut.com/InteractiveEvents/n_register.php";
+        String login_url = "http://www.jordanklamut.com/InteractiveEvents/n_login.php";
         String method = params[0];
 
         if (method.equals("register"))
@@ -134,55 +117,51 @@ public class AccountTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         try{
+            JSONObject json_data = new JSONObject(result);
+            String resultUsername = json_data.getString("Username");
+            String resultStatus = json_data.getString("Status");
 
-        JSONObject json_data = new JSONObject(result);
-        //Log.i("log_tag", "value:" + json_data.getString("UserID")); //TODO
+            //SIGN IN
+            if (resultStatus.equals("1")) {
+                Toast.makeText(mContext, "Logged In", Toast.LENGTH_LONG).show();
 
-        String resultUserID = json_data.getString("UserID");
-        String resultUsername = json_data.getString("Username");
-        String resultStatus = json_data.getString("Status");
+                //SET LOGIN_PREFERENCE
+                SharedPreferences csp = mContext.getSharedPreferences("login_pref", 0);
+                SharedPreferences.Editor cEditor = csp.edit();
+                cEditor.putString("usernameEmail", resultUsername);
+                cEditor.apply();
 
-        //sign in
-        if (resultStatus.equals("1")) {
-            Toast.makeText(mContext, "Logged In", Toast.LENGTH_LONG).show();
+                Intent myIntent = new Intent(mContext, DrawerActivity.class);
+                mContext.startActivity(myIntent);
+                //TODO need to finish() so user cant back into login screen
+            } else if (resultStatus.equals("0")) {
+                alertDialog.setTitle("Login Failed");
+                alertDialog.setMessage("Email or password is not correct. Please try again.");
+                //alertDialog.setMessage(result);
+                alertDialog.show();
+            }
+            //SIGN UP
+            else if (resultStatus.equals("1")) {
+                Toast.makeText(mContext, "Account created", Toast.LENGTH_LONG).show();
 
-            //SET LOGIN_PREFERENCE
-            SharedPreferences csp = mContext.getSharedPreferences("login_pref", 0);
-            SharedPreferences.Editor cEditor = csp.edit();
-            cEditor.putString("usernameEmail", resultUsername);
-            cEditor.apply();
+                //SET LOGIN_PREFERENCE
+                SharedPreferences csp = mContext.getSharedPreferences("login_pref", 0);
+                SharedPreferences.Editor cEditor = csp.edit();
+                cEditor.putString("usernameEmail", resultUsername);
+                cEditor.apply();
 
-            Intent myIntent = new Intent(mContext, DrawerActivity.class);
-            mContext.startActivity(myIntent);
-            //TODO need to finish() so user cant back into login screen
-        } else if (resultStatus.equals("0")) {
-            alertDialog.setTitle("Login Failed");
-            alertDialog.setMessage("Email or password is not correct. Please try again.");
-            //alertDialog.setMessage(result);
-            alertDialog.show();
+                Intent myIntent = new Intent(mContext, DrawerActivity.class);
+                mContext.startActivity(myIntent);
+                //TODO need to finish() so user cant back into login screen
+            } else {
+                alertDialog.setTitle("Unknown Error");
+                alertDialog.setMessage(result);
+                alertDialog.show();
+            }
         }
-        //sign up
-        else if (resultStatus.equals("1")) {
-            Toast.makeText(mContext, "Account created", Toast.LENGTH_LONG).show();
-
-            //SET LOGIN_PREFERENCE
-            SharedPreferences csp = mContext.getSharedPreferences("login_pref", 0);
-            SharedPreferences.Editor cEditor = csp.edit();
-            cEditor.putString("usernameEmail", resultUsername);
-            cEditor.apply();
-
-            Intent myIntent = new Intent(mContext, DrawerActivity.class);
-            mContext.startActivity(myIntent);
-            //TODO need to finish() so user cant back into login screen
-        } else {
-            alertDialog.setTitle("Unknown Error");
-            alertDialog.setMessage(result);
-            alertDialog.show();
-        }
-    }
         catch (JSONException e)
         {
-            return;
+
         }
     }
 }

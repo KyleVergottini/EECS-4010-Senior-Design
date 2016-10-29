@@ -25,7 +25,6 @@ public class ConventionFinderFragment_Search extends Fragment{
     Spinner sConWithin;
     EditText etConStartDate;
     EditText etConEndDate;
-    private OnFragmentInteractionListener mListener;
 
     public ConventionFinderFragment_Search() {
     }
@@ -181,7 +180,6 @@ public class ConventionFinderFragment_Search extends Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     public interface OnFragmentInteractionListener {

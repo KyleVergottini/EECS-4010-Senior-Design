@@ -3,8 +3,6 @@ package com.jordanklamut.interactiveevents;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.DatePicker;
 import android.app.Dialog;

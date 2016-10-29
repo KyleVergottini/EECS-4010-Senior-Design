@@ -1,34 +1,16 @@
 package com.jordanklamut.interactiveevents;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceFragment;
-import android.support.design.widget.AppBarLayout;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class PreferencesActivity extends PreferenceActivity {
-
-    private static String appVersion;
-    private Toolbar mToolBar;
-
-    public static void startThisActivity(Context context) {
-        Intent intent = new Intent(context, PreferencesActivity.class);
-        context.startActivity(intent);
-    }
 
     public static void startThisActivityForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, PreferencesActivity.class);
@@ -39,39 +21,10 @@ public class PreferencesActivity extends PreferenceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //prepareLayout();
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
         }
     }
-
-    private void prepareLayout() {
-        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-        View content = root.getChildAt(0);
-        LinearLayout toolbarContainer = (LinearLayout) View.inflate(this, R.layout.preferences_activity, null);
-
-        root.removeAllViews();
-        toolbarContainer.addView(content);
-        root.addView(toolbarContainer);
-
-        mToolBar = (Toolbar) toolbarContainer.findViewById(R.id.toolbar);
-        mToolBar.setTitle(getTitle());
-        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-
-    //@Override
-    //protected void onCreate(Bundle savedInstanceState) {
-    //    super.onCreate(savedInstanceState);
-    //
-    //    mSharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
-    //    addPreferencesFromResource(R.xml.pref_general);
-    //}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -121,7 +74,7 @@ public class PreferencesActivity extends PreferenceActivity {
                 }
             });
 
-            Preference logout = (Preference) findPreference("logout");
+            Preference logout = findPreference("logout");
             logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {

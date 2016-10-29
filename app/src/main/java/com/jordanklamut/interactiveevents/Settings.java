@@ -2,9 +2,6 @@ package com.jordanklamut.interactiveevents;
 
 import android.content.SharedPreferences;
 
-import java.util.Collections;
-import java.util.Set;
-
 public class Settings {
 
     private boolean notificationsEnabled;

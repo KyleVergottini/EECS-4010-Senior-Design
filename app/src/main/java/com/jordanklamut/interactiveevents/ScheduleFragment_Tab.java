@@ -1,12 +1,10 @@
 package com.jordanklamut.interactiveevents;
 
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +30,7 @@ public class ScheduleFragment_Tab extends Fragment{
     }
 
     public static ScheduleFragment_Tab newInstance() {
-        ScheduleFragment_Tab fragment = new ScheduleFragment_Tab();
-        return fragment;
+        return new ScheduleFragment_Tab();
     }
 
     @Override
@@ -45,7 +42,6 @@ public class ScheduleFragment_Tab extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("Schedule");
-        //return inflater.inflate(R.layout.schedule_tab_fragment, container, false);
         return inflater.inflate(R.layout.schedule_tab_fragment,null);
     }
 
@@ -68,30 +64,6 @@ public class ScheduleFragment_Tab extends Fragment{
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
-    }
-
-
-
-//CARD LIST METHODS
-
-    protected int getSubTitleHeaderResourceId() {
-        return R.string.header_title_subtitle_lexpand;
-    }
-
-    protected int getTitleHeaderResourceId() {
-        return R.string.header_title_group3;
-    }
-
-    protected String getDocUrl() {
-        return "https://github.com/gabrielemariotti/cardslib/blob/master/doc/LIST.md";
-    }
-
-    protected String getSourceUrl() {
-        return "https://github.com/gabrielemariotti/cardslib/blob/master/demo/stock/src/main/java/it/gmariotti/cardslib/demo/fragment/nativeview/NativeListExpandCardFragment.java";
-    }
-
-    public int getTitleResourceId() {
-        return R.string.carddemo_title_list_expand;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {

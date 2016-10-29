@@ -1,10 +1,8 @@
 package com.jordanklamut.interactiveevents;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +20,6 @@ import android.widget.Toast;
 
 public class ConventionFinderActivity extends AppCompatActivity {
 
-    private TabLayout mTabLayout;
     private int[] mTabsIcons = {
             R.drawable.ic_qr_selector,
             R.drawable.ic_search_selector,
@@ -32,6 +28,7 @@ public class ConventionFinderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        TabLayout mTabLayout;
         //GET ALL FROM PHP AND CREATE SQLite
         new GetAllConventionsPHPtoSQLite().execute();
 

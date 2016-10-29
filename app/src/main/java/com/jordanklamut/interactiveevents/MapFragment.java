@@ -21,9 +21,5 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
-        ActionBar ab = getActivity().getActionBar();
-        ab.setTitle("Interactive Map2");
-
     }
 }

@@ -4,19 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
-/**
- * Created by jorda on 9/21/2016.
- */
 public class DebugActivity extends Activity {
 
     private static final int SETTINGS_REQUEST = 1000;
     private TextView txt_notifications_enabled;
     private TextView txt_notifications_reminder;
-    private TextView txt_notification_ringtone;
+    //private TextView txt_notification_ringtone;
     private TextView txt_notification_vibrate_enabled;
     private TextView txt_wifi_only_enabled;
     private TextView txt_sync_frequency;
@@ -45,7 +40,7 @@ public class DebugActivity extends Activity {
     private void initViews() {
         txt_notifications_enabled = (TextView) findViewById(R.id.txt_notifications_enabled);
         txt_notifications_reminder = (TextView) findViewById(R.id.txt_notifications_reminder);
-        txt_notification_ringtone = (TextView) findViewById(R.id.txt_notification_ringtone);
+        //txt_notification_ringtone = (TextView) findViewById(R.id.txt_notification_ringtone);
         txt_notification_vibrate_enabled = (TextView) findViewById(R.id.txt_notification_vibrate_enabled);
         txt_wifi_only_enabled = (TextView) findViewById(R.id.txt_wifi_only_enabled);
         txt_sync_frequency = (TextView) findViewById(R.id.txt_sync_frequency);

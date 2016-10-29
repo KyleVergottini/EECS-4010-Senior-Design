@@ -1,17 +1,9 @@
 package com.jordanklamut.interactiveevents;
 
-//import android.app.FragmentManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -128,9 +120,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             composeEmail("feedback@jordanklamut.com", "Interactive Events Feedback", null);
         }else if (id == R.id.nav_about) {
             LayoutInflater inflater = getLayoutInflater();
-            View dialoglayout = inflater.inflate(R.layout.about_dialog, null);
+            View dialogLayout = inflater.inflate(R.layout.about_dialog, null);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(dialoglayout);
+            builder.setView(dialogLayout);
             builder.show();
         } else if (id == R.id.pref) {
             //startActivity(new Intent(DrawerActivity.this, PreferencesActivity.class));

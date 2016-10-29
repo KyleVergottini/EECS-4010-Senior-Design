@@ -1,7 +1,6 @@
 package com.jordanklamut.interactiveevents;
 
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,7 +24,6 @@ import com.jordanklamut.interactiveevents.models.ConventionCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ConventionFinderActivity_SearchResults extends AppCompatActivity {
 
@@ -107,7 +105,6 @@ public class ConventionFinderActivity_SearchResults extends AppCompatActivity {
 
         if(res.getCount() == 0) {
             Log.d("Database","No rows returned for convention finder");
-            return;
         }
         else {
             StringBuffer buffer = new StringBuffer();
@@ -261,7 +258,6 @@ public class ConventionFinderActivity_SearchResults extends AppCompatActivity {
         DatabaseManager dm;
         ProgressDialog pd;
         Context context;
-        Cursor res;
 
         public GetConventionsFromSQLite(Context context) {
             this.context = context;

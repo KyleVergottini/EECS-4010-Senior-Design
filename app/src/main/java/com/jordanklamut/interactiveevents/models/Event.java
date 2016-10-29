@@ -1,8 +1,5 @@
 package com.jordanklamut.interactiveevents.models;
 
-/**
- * Created by jorda on 9/14/2016.
- */
 public class Event {
     private String eventTitle;
     private String eventRoom;

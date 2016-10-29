@@ -1,9 +1,5 @@
 package com.jordanklamut.interactiveevents.models;
 
-/**
- * Created by jorda on 9/14/2016.
- */
-
 public class Convention {
     private String conID;
     private String conName;

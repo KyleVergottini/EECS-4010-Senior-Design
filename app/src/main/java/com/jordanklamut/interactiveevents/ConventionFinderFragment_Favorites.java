@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -48,10 +47,8 @@ public class ConventionFinderFragment_Favorites extends Fragment {
 
         if(res.getCount() == 0) {
             Log.d("Database","No rows returned for convention finder");
-            return;
         }
         else {
-            StringBuffer buffer = new StringBuffer();
             while (res.moveToNext())
             {
                 ConventionCardView item = new ConventionCardView();
@@ -72,7 +69,6 @@ public class ConventionFinderFragment_Favorites extends Fragment {
             //5 CON_STATE = "State";
             //6 CON_ZIP_CODE = "ZipCode";
             //7 CON_DESCRTIPION = "Description";
-
         }
     }
 

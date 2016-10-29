@@ -12,7 +12,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jordanklamut.interactiveevents.models.Convention;
 import com.jordanklamut.interactiveevents.models.Event;
@@ -24,7 +23,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -102,8 +100,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     public Cursor getAllConventionsFromSQLite()
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + CON_TABLE_NAME, null);
-        return c;
+        return db.rawQuery("SELECT * FROM " + CON_TABLE_NAME, null);
     }
 
     public Cursor getSelectConventionsFromSQLite(String conName, String conCode, String conCity, String conState, String conWithin, String conStartDate, String conEndDate)
@@ -142,8 +139,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
         SQLiteDatabase db = this.getWritableDatabase();
         String t = "SELECT * FROM " + CON_TABLE_NAME + whereQuery;
-        Cursor c = db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + whereQuery, null);
-        return c;
+        return db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + whereQuery, null);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -257,6 +253,5 @@ public class DatabaseManager extends SQLiteOpenHelper{
         });
 
         requestQueue.add(jsonObjectRequest);
-        return;// conventionsList;
     }
 }

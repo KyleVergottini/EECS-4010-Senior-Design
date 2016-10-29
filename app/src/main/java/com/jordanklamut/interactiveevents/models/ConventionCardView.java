@@ -1,8 +1,5 @@
 package com.jordanklamut.interactiveevents.models;
 
-/**
- * Created by jorda on 10/8/2016.
- */
 public class ConventionCardView {
     String cardID;
     String cardName;

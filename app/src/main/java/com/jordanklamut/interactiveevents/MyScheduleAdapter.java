@@ -1,19 +1,15 @@
 package com.jordanklamut.interactiveevents;
 
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+//import android.support.v4.view.ViewPager;
+//import android.support.design.widget.TabLayout;
 
-/**
- * Created by jorda on 9/14/2016.
- */
 public class MyScheduleAdapter extends FragmentPagerAdapter
 {
-
-    public static TabLayout tabLayout;
-    public static ViewPager viewPager;
+    //public static TabLayout tabLayout;
+    //public static ViewPager viewPager;
     public static int int_items = 3 ;
 
     public MyScheduleAdapter(FragmentManager fm) {
