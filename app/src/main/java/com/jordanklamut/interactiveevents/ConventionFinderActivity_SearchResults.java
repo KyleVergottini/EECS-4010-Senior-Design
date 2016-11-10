@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jordanklamut.interactiveevents.models.ConventionCardView;
+import com.jordanklamut.interactiveevents.models.Convention;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class ConventionFinderActivity_SearchResults extends AppCompatActivity {
                 item.setCardDates(formatDate);
                 item.setImageResourceId(R.drawable.ic_wallpaper_black_48dp);
                 item.setIsfav(0);
-                item.setIsturned(0);
+                //item.setIsturned(0);
                 listConventions.add(item);
             }
 
@@ -277,7 +278,7 @@ public class ConventionFinderActivity_SearchResults extends AppCompatActivity {
             dm = new DatabaseManager(getApplicationContext());
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.interrupted();
             }
@@ -298,15 +299,6 @@ public class ConventionFinderActivity_SearchResults extends AppCompatActivity {
         @Override
         //GETS ALL THE CONVENTIONS FROM SQLite
         protected void onPostExecute(String result) {
-
-            //Toast.makeText(getApplicationContext(),"conName: " + conName,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(),"conCode: " + conCode,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(),"conCity: " + conCity,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(),"conState: " + conState,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(),"conWithin: " + conWithin,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(),"conStartDate: " + conStartDate,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(),"conEndDate: " + conEndDate,Toast.LENGTH_SHORT).show();
-
             Toast.makeText(getApplicationContext(),"SEARCHED CONVENTIONS FROM SQLITE",Toast.LENGTH_SHORT).show();
             pd.dismiss();
 

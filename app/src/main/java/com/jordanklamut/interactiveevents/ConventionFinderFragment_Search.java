@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.app.DialogFragment;
+import android.widget.TextView;
 
 
 public class ConventionFinderFragment_Search extends Fragment{
@@ -46,6 +47,7 @@ public class ConventionFinderFragment_Search extends Fragment{
         View v = inflater.inflate(R.layout.convention_finder_fragment_search, container, false);
 
         Button btnSearch = (Button) v.findViewById(R.id.btn_search);
+        Button btnClear = (Button) v.findViewById(R.id.btn_clear);
         etConName = (EditText) v.findViewById(R.id.et_search_con_name);
         etConCode = (EditText) v.findViewById(R.id.et_search_con_code);
         etConCity = (EditText) v.findViewById(R.id.et_search_start_city);
@@ -61,7 +63,6 @@ public class ConventionFinderFragment_Search extends Fragment{
         //TODO - NEED TO IMPLEMENT FUNCTIONS, DISABLED UNTIL DONE
         etConCode.setEnabled(false);
         sConWithin.setEnabled(false);
-
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
 
@@ -81,6 +82,21 @@ public class ConventionFinderFragment_Search extends Fragment{
                 Intent i = new Intent(getContext(), ConventionFinderActivity_SearchResults.class);
                 i.putExtra("conInfo", conInfo);
                 startActivity(i);
+            }
+        });
+
+        btnClear.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v)
+            {
+                etConName.setText(null);
+                etConCode.setText(null);
+                etConCity.setText(null);
+                //sConState.setAdapter(null);
+                //sConWithin.setAdapter(null);
+                etConStartDate.setText(null);
+                etConEndDate.setText(null);
             }
         });
 
@@ -152,22 +168,6 @@ public class ConventionFinderFragment_Search extends Fragment{
 
             }
         });
-
-        //from_dateListener = new DatePickerDialog.OnDateSetListener() {
-        //    @Override
-        //    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        //        String stringOfDate = month + "/" + dayOfMonth + "/" + year;
-        //        etConStartDate.setText(stringOfDate);
-        //    }
-        //};
-//
-        //to_dateListener = new DatePickerDialog.OnDateSetListener() {
-        //    @Override
-        //    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        //        String stringOfDate = month + "/" + dayOfMonth + "/" + year;
-        //        etConEndDate.setText(stringOfDate);
-        //    }
-        //};
 
         return v;
     }

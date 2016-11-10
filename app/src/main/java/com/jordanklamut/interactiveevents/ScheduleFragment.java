@@ -16,7 +16,7 @@ public class ScheduleFragment extends Fragment{
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
-    public static int int_items = 3 ;
+    public static int int_items;
 
     @Nullable
     @Override
@@ -25,27 +25,14 @@ public class ScheduleFragment extends Fragment{
         getActivity().setTitle("Schedule");
 
         //Inflate tab_layout and setup Views.
-        View x =  inflater.inflate(R.layout.schedule_fragment,null);
+        View x =  inflater.inflate(R.layout.schedule_fragment_pager,null); //TODO
         tabLayout = (TabLayout) x.findViewById(R.id.tabs);
         viewPager = (ViewPager) x.findViewById(R.id.viewpager);
 
         //Set an Adapter for the View Pager
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
-        /**
-         * Now , this is a workaround ,
-         * The setupWithViewPager dose't works without the runnable .
-         * Maybe a Support Library Bug .
-         */
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                tabLayout.setupWithViewPager(viewPager);
-            }
-        });
-
         return x;
-
     }
 
     class MyAdapter extends FragmentPagerAdapter{
@@ -54,40 +41,25 @@ public class ScheduleFragment extends Fragment{
             super(fm);
         }
 
-        //Return fragment with respect to Position .
         @Override
-        public Fragment getItem(int position)
-        {
-            switch (position){
-                case 0 :
-                    return new ScheduleFragment_Tab();
-                case 1 :
-                    return new MapFragment();
-                case 2 :
-                    return new MapFragment();
-            }
+        public Fragment getItem(int position) {
+
+            for (int i = 0; i <= position; i++)
+                return ScheduleFragment_Tab.newInstance(position, "Day " + position);
             return null;
         }
 
         @Override
         public int getCount() {
-
+            int_items = 5; //TODO - SET TO NUMBER OF DAYS
             return int_items;
-
         }
 
-        //This method returns the title of the tab according to the position.
         @Override
         public CharSequence getPageTitle(int position) {
 
-            switch (position){
-                case 0 :
-                    return "Day 1";
-                case 1 :
-                    return "Day 2";
-                case 2 :
-                    return "Day 3";
-            }
+            for (int i = 0; i <= position; i++)
+                return "Day " + position;
             return null;
         }
     }

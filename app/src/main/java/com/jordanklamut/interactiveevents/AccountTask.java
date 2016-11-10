@@ -37,9 +37,11 @@ public class AccountTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
 
+        Toast.makeText(mContext, "DELETE ME?", Toast.LENGTH_LONG).show(); //TODO - Is AccountTask Used?
+
         //URL TO PHP SCRIPTS
-        String reg_url = "http://www.jordanklamut.com/InteractiveEvents/n_register.php";
-        String login_url = "http://www.jordanklamut.com/InteractiveEvents/n_login.php";
+        String reg_url = "http://www.jordanklamut.com/InteractiveEvents/register.php";
+        String login_url = "http://www.jordanklamut.com/InteractiveEvents/login.php";
         String method = params[0];
 
         if (method.equals("register"))
@@ -165,3 +167,26 @@ public class AccountTask extends AsyncTask<String, Void, String> {
         }
     }
 }
+
+
+
+/*
+    public String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+*/

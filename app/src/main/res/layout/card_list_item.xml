@@ -26,7 +26,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{event.eventTitle}"
+                android:text="@{event.eventName}"
                 android:textSize="24sp" />
 
             <TextView
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titleTextView"
-                android:text="@{event.eventRoom}"
+                android:text="@{event.eventRoomID}"
                 android:textSize="18sp" />
 
             <TextView

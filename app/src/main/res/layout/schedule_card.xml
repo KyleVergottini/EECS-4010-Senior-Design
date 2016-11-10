@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+    android:id="@+id/schedule_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -13,62 +13,54 @@
         android:padding="12dp">
 
         <ImageView
-            android:id="@+id/iv_convention_photo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginRight="16dp" />
-
-        <TextView
-            android:id="@+id/tv_con_name"
-            android:text="Convention Name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_toRightOf="@id/iv_convention_photo" />
-
-        <TextView
-            android:id="@+id/tv_con_address"
-            android:text="City, State"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_con_name"
-            android:layout_toRightOf="@id/iv_convention_photo" />
-
-        <TextView
-            android:id="@+id/tv_con_dates"
-            android:text="October 7 - October 14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_con_address"
-            android:layout_toRightOf="@id/iv_convention_photo"/>
-
-        <ImageView
-            android:id="@+id/iv_favorites"
+            android:id="@+id/iv_schedule_favorites"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_height"
             android:padding="@dimen/icon_padding"
             android:src="@drawable/ic_like"
-            android:layout_centerVertical="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_marginRight="16dp" />
+
+        <TextView
+            android:id="@+id/tv_event_name"
+            android:text="Event Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_toRightOf="@id/iv_schedule_favorites" />
+
+        <TextView
+            android:id="@+id/tv_event_room"
+            android:text="Event Room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_event_name"
+            android:layout_toRightOf="@id/iv_schedule_favorites" />
+
+        <TextView
+            android:id="@+id/tv_event_time"
+            android:text="10:15 AM - 11:45 AM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_event_room"
+            android:layout_toRightOf="@id/iv_schedule_favorites"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_con_dates"
-            android:layout_alignLeft="@+id/iv_convention_photo"
-            android:paddingTop="20dp"
-            android:layout_alignStart="@+id/iv_convention_photo">
+            android:layout_below="@+id/tv_event_time"
+            android:layout_alignLeft="@+id/iv_schedule_favorites"
+            android:paddingTop="15dp"
+            android:layout_alignStart="@+id/iv_schedule_favorites">
 
             <TextView
-                android:id="@+id/btn_set_con"
-                android:text="SET CONVENTION"
+                android:id="@+id/btn_view_on_map"
+                android:text="VIEW ON MAP"
+                android:textColor="@color/colorPrimary"
                 android:background="?android:selectableItemBackground"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp" />
 
             <TextView
                 android:id="@+id/btn_view_details"

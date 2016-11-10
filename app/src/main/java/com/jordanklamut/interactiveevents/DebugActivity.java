@@ -4,7 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DebugActivity extends Activity {
 
@@ -19,6 +34,8 @@ public class DebugActivity extends Activity {
     private TextView txt_home_convention_id;
     private TextView txt_home_convention_name;
 
+    private Button btn_clear_events_table;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +43,18 @@ public class DebugActivity extends Activity {
         setContentView(R.layout.debug_activity);
         initViews();
         fillViews();
+
+        btn_clear_events_table = (Button) findViewById(R.id.btn_clear_events_table);
+
+        btn_clear_events_table.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseManager dm = new DatabaseManager(getApplicationContext());
+                dm.clearEventsTable();
+                Toast.makeText(getApplicationContext(), "Events Table cleared", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

@@ -57,7 +57,7 @@ public class ConventionFinderFragment_Favorites extends Fragment {
                 item.setCardDates(res.getString(2) + " - " + res.getString(3));
                 item.setImageResourceId(R.drawable.ic_wallpaper_black_48dp);
                 item.setIsfav(0);
-                item.setIsturned(0);
+                //item.setIsturned(0);
                 listitems.add(item);
             }
 

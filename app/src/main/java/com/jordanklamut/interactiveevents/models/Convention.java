@@ -10,12 +10,15 @@ public class Convention {
     private String conState;
     private String conZipCode;
     private String conDescription;
+    private String conFavorite;
+    private int conFavoriteResourceId;
+
 
     public Convention(){
 
     }
 
-    public Convention(String cID, String cName, String cStartDate, String cEndDate, String cStreetAddress, String cCity, String cState, String cZipCode, String cDescription)
+    public Convention(String cID, String cName, String cStartDate, String cEndDate, String cStreetAddress, String cCity, String cState, String cZipCode, String cDescription, String cFavorite)
     {
         this.conID = cID;
         this.conName = cName;
@@ -26,6 +29,7 @@ public class Convention {
         this.conState = cState;
         this.conZipCode = cZipCode;
         this.conDescription = cDescription;
+        this.conFavorite = cFavorite;
     }
 
     public String getConID() {return conID;}
@@ -92,5 +96,21 @@ public class Convention {
 
     public void setConDescription(String conDescription) {
         this.conDescription = conDescription;
+    }
+
+    public String getConFavorite() {
+        return conFavorite;
+    }
+
+    public void setConFavorite(String conFavorite) {
+        this.conFavorite = conFavorite;
+    }
+
+    public int getConFavoriteResourceId() {
+        return conFavoriteResourceId;
+    }
+
+    public void setConFavoriteResourceId(int conFavoriteResourceId) {
+        this.conFavoriteResourceId = conFavoriteResourceId;
     }
 }

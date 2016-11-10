@@ -18,6 +18,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class LogInActivity extends Activity {
     private RequestQueue requestQueue;
     private StringRequest request;
 
-    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/new_login.php";
+    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +88,11 @@ public class LogInActivity extends Activity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String,String> hashMap = new HashMap<String, String>();
                         hashMap.put("email",et_User.getText().toString());
-                        hashMap.put("password",et_Pass.getText().toString());
+                        hashMap.put("password",et_Pass.getText().toString()); //TODO - HASH PASSWORD
 
                         return hashMap;
                     }
                 };
-
                 requestQueue.add(request);
             }
         });

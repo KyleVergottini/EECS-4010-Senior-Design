@@ -134,7 +134,7 @@ public class ConventionFinderActivity extends AppCompatActivity {
             dm.setConventionList(ConventionFinderActivity.this); //gets from php, and inserts into sqlite
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.interrupted();
             }
@@ -181,7 +181,7 @@ public class ConventionFinderActivity extends AppCompatActivity {
             dm = new DatabaseManager(ConventionFinderActivity.this);
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.interrupted();
             }

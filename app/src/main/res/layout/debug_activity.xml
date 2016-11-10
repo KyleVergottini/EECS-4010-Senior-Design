@@ -10,12 +10,19 @@
     tools:context=".DebugActivity">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Settings Info"
+        android:id="@+id/con_title_settings_info"/>
 
     <TextView
         android:id="@+id/txt_notifications_enabled_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="notifications_enabled: "/>
+        android:text="notifications_enabled: "
+        android:layout_below="@id/con_title_settings_info"/>
     <TextView
         android:id="@+id/txt_notifications_enabled"
         android:layout_width="wrap_content"
@@ -113,15 +120,16 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Home Convention Info"
-        android:id="@+id/con_title"
+        android:id="@+id/con_title_home_con_info"
         android:layout_centerVertical="true"
-        android:layout_below="@id/txt_username"/>
+        android:layout_marginTop="20px"
+        android:layout_below="@id/txt_username_hint"/>
 
     <TextView
         android:id="@+id/txt_home_convention_id_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/con_title"
+        android:layout_below="@id/con_title_home_con_info"
         android:text="home con id: "/>
     <TextView
         android:id="@+id/txt_home_convention"
@@ -135,7 +143,7 @@
         android:id="@+id/txt_home_convention_name_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_home_convention"
+        android:layout_below="@id/txt_home_convention_id_hint"
         android:text="home con name: "/>
     <TextView
         android:id="@+id/txt_home_convention_name"
@@ -144,6 +152,23 @@
         android:layout_toRightOf="@id/txt_home_convention_name_hint"
         android:layout_alignBaseline="@id/txt_home_convention_name_hint"
         android:text="default"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Database Info"
+        android:id="@+id/con_title_database_info"
+        android:layout_below="@+id/txt_home_convention_name_hint"
+        android:layout_marginTop="20px"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear Events Table"
+        android:id="@+id/btn_clear_events_table"
+        android:layout_below="@+id/con_title_database_info"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

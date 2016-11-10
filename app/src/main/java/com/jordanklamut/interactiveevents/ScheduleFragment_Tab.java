@@ -1,53 +1,97 @@
 package com.jordanklamut.interactiveevents;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.jordanklamut.interactiveevents.cards.Schedule_CustomExpand_Card;
 import java.util.ArrayList;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.view.CardListView;
+import com.jordanklamut.interactiveevents.models.Event;
 
-/**
- Code behind each tab of the schedule
- */
 public class ScheduleFragment_Tab extends Fragment{
 
     private OnFragmentInteractionListener mListener;
+    ArrayList<Event> listitems = new ArrayList<>();
+    RecyclerView MyRecyclerView;
 
     public ScheduleFragment_Tab() {
 
     }
 
-    public static ScheduleFragment_Tab newInstance() {
-        return new ScheduleFragment_Tab();
+    public static ScheduleFragment_Tab newInstance(int pageNumber, String pageTitle) {
+        ScheduleFragment_Tab fragment = new ScheduleFragment_Tab();
+        Bundle args = new Bundle();
+        args.putInt("someInt", pageNumber);
+        args.putString("someTitle", pageTitle);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeList();
+        getActivity().setTitle("Schedule");
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("Schedule");
-        return inflater.inflate(R.layout.schedule_tab_fragment,null);
+        View view = inflater.inflate(R.layout.schedule_fragment_recycler, container, false);
+        MyRecyclerView = (RecyclerView) view.findViewById(R.id.rv_schedule_events);
+        MyRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
+        MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        if (listitems.size() > 0 & MyRecyclerView != null) {
+            MyRecyclerView.setAdapter(new MyAdapter(listitems));
+        }
+        MyRecyclerView.setLayoutManager(MyLayoutManager);
+
+        return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    //GETS DATA FROM THE SQLite DATABASE
+    public void initializeList() {
+        listitems.clear();
+        DatabaseManager dm = new DatabaseManager(getActivity());
+        Cursor res = dm.getAllEventsFromSQLite();
+
+        if(res.getCount() == 0) {
+            Log.d("Database","No events for this convention");
+        }
+        else {
+            while (res.moveToNext())
+            {
+                Event item = new Event();
+                item.setEventID(res.getString(0));
+                item.setEventRoomID(res.getString(1));
+                item.setEventName(res.getString(2));
+                item.setEventDate(res.getString(3));
+                item.setEventStartTime(res.getString(4));
+                item.setEventEndTime(res.getString(5));
+                item.setEventFavorite(res.getString(7));
+                listitems.add(item);
+            }
+
+            //0 EVENT_EVENT_ID
+            //1 EVENT_ROOM_ID
+            //2 EVENT_NAME
+            //3 EVENT_EVENT_DATE
+            //4 EVENT_START_TIME
+            //5 EVENT_END_TIME
+            //6 EVENT_DESCRIPTION
+            //7 EVENT_FAVORITE?
         }
     }
 
@@ -66,64 +110,138 @@ public class ScheduleFragment_Tab extends Fragment{
         void onFragmentInteraction(Uri uri);
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    //ADAPTER
+    public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+        private ArrayList<Event> list;
 
-        initCards();
-    }
-
-    private void initCards() {
-
-        //Init an array of Cards
-        ArrayList<Card> cards = new ArrayList<Card>();
-        for (int i=0;i<10;i++){
-            Card card = init_standard_header_with_expandcollapse_button_custom_area("Event Name "+i,i);
-            cards.add(card);
+        public MyAdapter(ArrayList<Event> Data) {
+            list = Data;
         }
 
-        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(),cards);
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.schedule_card, parent, false);
+            return new MyViewHolder(view);
+        }
 
-        CardListView listView = (CardListView) getActivity().findViewById(R.id.schedule_card_list_expand);
-        if (listView!=null){
-            listView.setAdapter(mCardArrayAdapter);
+        @Override
+        //BINDS THE DATA TO EACH CARD
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
+            Event ecv = list.get(position);
+
+            holder.eventName.setText(list.get(position).getEventName());
+            holder.eventRoom.setText(list.get(position).getEventRoomID() + " | " + list.get(position).getEventFavorite());
+            holder.eventTime.setText(list.get(position).getEventStartTime() + " - " + list.get(position).getEventEndTime());
+
+            if (list.get(position).getEventFavorite().equals("1")) {
+                holder.ivFavorites.setTag(R.drawable.ic_liked);  //set tag to later check status
+                holder.ivFavorites.setImageResource(R.drawable.ic_liked);
+            } else {
+                holder.ivFavorites.setTag(R.drawable.ic_like);  //set tag to later check status
+                holder.ivFavorites.setImageResource(R.drawable.ic_like);
+            }
+
+            holder.ecv = ecv;
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
         }
     }
 
-    //This method builds a standard header with a custom expand/collpase
-    private Card init_standard_header_with_expandcollapse_button_custom_area(String titleHeader,int i)
-    {
-        Card card = new Card(getActivity());
+    //VIEW HOLDER
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView eventName;
+        public TextView eventRoom;
+        public TextView eventTime;
+        public ImageView ivFavorites;
+        public TextView btnViewOnMap;
+        public TextView btnViewDetails;
 
-        CardHeader header = new CardHeader(getActivity());
-        header.setTitle(titleHeader);
-        header.setButtonExpandVisible(true);
-        card.addCardHeader(header);
+        public Event ecv;
 
-        //This provides a simple (and useless) expand area
-        Schedule_CustomExpand_Card expand = new Schedule_CustomExpand_Card(getActivity(),i);
-        //Add Expand Area to Card
-        card.addCardExpand(expand);
+        public MyViewHolder(View v) {
 
-        //Just an example to expand a card
-        if (i==2)
-            card.setExpanded(true);
+            super(v);
+            eventName = (TextView) v.findViewById(R.id.tv_event_name);
+            eventRoom = (TextView) v.findViewById(R.id.tv_event_room);
+            eventTime = (TextView) v.findViewById(R.id.tv_event_time);
+            ivFavorites = (ImageView) v.findViewById(R.id.iv_schedule_favorites);
+            btnViewOnMap = (TextView) v.findViewById(R.id.btn_view_on_map);
+            btnViewDetails = (TextView) v.findViewById(R.id.btn_view_details);
 
-        card.setSwipeable(false);
+            ivFavorites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String eventID = ecv.getEventID();
+                    String eventFavorite = ecv.getEventFavorite();
+                    DatabaseManager dm = new DatabaseManager(getActivity());
 
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-                Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(),Toast.LENGTH_SHORT).show();
-            }
-        });
+                    if (eventFavorite.equals("1")) {
+                        //un-favorite event
+                        ivFavorites.setTag(R.drawable.ic_like);
+                        ivFavorites.setImageResource(R.drawable.ic_like);
+                        dm.setEventFavorite(eventID, 0);
+                        Toast.makeText(getActivity(),"Removed from Favorites", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (eventFavorite.equals("0")) {
+                        //favorite event
+                        ivFavorites.setTag(R.drawable.ic_liked);
+                        ivFavorites.setImageResource(R.drawable.ic_liked);
+                        dm.setEventFavorite(eventID, 1);
+                        Toast.makeText(getActivity(),"Added to Favorites", Toast.LENGTH_SHORT).show();
+                    }
 
-        card.setOnCollapseAnimatorEndListener(new Card.OnCollapseAnimatorEndListener() {
-            @Override
-            public void onCollapseEnd(Card card) {
-                Toast.makeText(getActivity(),"Collpase " +card.getCardHeader().getTitle(),Toast.LENGTH_SHORT).show();
-            }
-        });
+                    //int id = (int)ivFavorites.getTag();
+                    //if( id == R.drawable.ic_like){
+                    //    ivFavorites.setTag(R.drawable.ic_liked);
+                    //    ivFavorites.setImageResource(R.drawable.ic_liked);
+//
+                    //    dm.setEventFavorite(eventID, 1);
+//
+                    //    Toast.makeText(getActivity(),"Added to Favorites", Toast.LENGTH_SHORT).show();
+                    //}else{
+                    //    ivFavorites.setTag(R.drawable.ic_like);
+                    //    ivFavorites.setImageResource(R.drawable.ic_like);
+//
+                    //    dm.setEventFavorite(eventID, 0);
+//
+                    //    Toast.makeText(getActivity(),"Removed from Favorites",Toast.LENGTH_SHORT).show();
+                    //}
+                }
+            });
 
-        return card;
+            btnViewOnMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show(); //TODO - Link to map
+                }
+            });
+
+            btnViewDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show(); //TODO - Set Details page
+                }
+            });
+//
+            //shareImageView.setOnClickListener(new View.OnClickListener() {
+            //    @Override
+            //    public void onClick(View v) {
+            //        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+            //                "://" + getResources().getResourcePackageName(coverImageView.getId())
+            //                + '/' + "drawable" + '/' + getResources().getResourceEntryName((int)coverImageView.getTag()));
+//
+            //        Intent shareIntent = new Intent();
+            //        shareIntent.setAction(Intent.ACTION_SEND);
+            //        shareIntent.putExtra(Intent.EXTRA_STREAM,imageUri);
+            //        shareIntent.setType("image/jpeg");
+            //        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+            //    }
+            //});
+        }
     }
+
 }

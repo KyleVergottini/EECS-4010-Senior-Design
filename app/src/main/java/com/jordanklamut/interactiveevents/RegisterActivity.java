@@ -19,6 +19,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ public class RegisterActivity extends Activity {
     private RequestQueue requestQueue;
     private StringRequest request;
 
-    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/new_register.php";
+    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +61,16 @@ public class RegisterActivity extends Activity {
                                 cEditor.putString("usernameEmail", jsonObject.getString("success"));
                                 cEditor.apply();
 
-                                startActivity(new Intent(getApplicationContext(), DrawerActivity.class));
-                                finish();
+                                //TODO - CHECK FOR SHARED PREFS
+                                if (csp.getString("homeConventionID", null) == null) {
+                                    Intent intent = new Intent(getApplicationContext(), ConventionFinderActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Intent intent = new Intent(getApplicationContext(), DrawerActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             } else {
                                 Toast.makeText(getApplicationContext(), "Error: " + jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
                             }
@@ -77,16 +87,14 @@ public class RegisterActivity extends Activity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String,String> hashMap = new HashMap<String, String>();
                         hashMap.put("email",ET_USER.getText().toString());
-                        hashMap.put("password",ET_PASS.getText().toString());
+                        hashMap.put("password",ET_PASS.getText().toString()); //TODO - HASH PASSWORD
 
                         return hashMap;
                     }
                 };
-
                 requestQueue.add(request);
             }
         });
-
     }
 
     //Go back to sign in screen

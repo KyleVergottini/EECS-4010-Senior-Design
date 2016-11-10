@@ -3,6 +3,7 @@ package com.jordanklamut.interactiveevents;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.DatePicker;
 import android.app.Dialog;
@@ -24,6 +25,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
             public DatePickerDialog (Context context, DatePickerDialog.OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth)
             public DatePickerDialog (Context context, int theme, DatePickerDialog.OnDateSetListener listener, int year, int monthOfYear, int dayOfMonth)
          */
+
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
     public void onDateSet(DatePicker view, int year, int month, int day) {

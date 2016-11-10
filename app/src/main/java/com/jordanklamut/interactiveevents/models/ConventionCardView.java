@@ -7,15 +7,6 @@ public class ConventionCardView {
     String cardDates;
     int imageResourceId;
     int isfav;
-    int isturned;
-
-    public int getIsturned() {
-        return isturned;
-    }
-
-    public void setIsturned(int isturned) {
-        this.isturned = isturned;
-    }
 
     public int getIsfav() {
         return isfav;

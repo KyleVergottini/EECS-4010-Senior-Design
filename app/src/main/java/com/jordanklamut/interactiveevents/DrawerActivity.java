@@ -1,8 +1,10 @@
 package com.jordanklamut.interactiveevents;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +43,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         //SET USERNAME IN NAV HEADER
         View header = navigationView.getHeaderView(0);
@@ -92,6 +95,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 finish();
                 return true;
             case R.id.action_refresh:
+                new GetAllEventsPHPtoSQLite().execute();
                 Toast.makeText(DrawerActivity.this, "Refresh DB: TODO", Toast.LENGTH_LONG).show();
                 return true;
         }
@@ -109,7 +113,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_map) {
             fm.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
         } else if (id == R.id.nav_schedule) {
-            fm.beginTransaction().replace(R.id.content_frame, new MyScheduleFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new ScheduleFragment()).commit();
         } else if (id == R.id.nav_my_schedule) {
             fm.beginTransaction().replace(R.id.content_frame, new MyScheduleFragment()).commit();
         } else if (id == R.id.nav_find_convention) {
@@ -142,5 +146,45 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, emailContent);
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
+    }
+
+
+    //EXECUTES ON REFRESH CLICK - GETS ALL EVENTS FROM PHP MATCHING CONVENTION ID, CREATES SQLite AND RETURNS
+    private class GetAllEventsPHPtoSQLite extends AsyncTask<String, Void, String> {
+        DatabaseManager dm;
+        ProgressDialog pd;
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            SharedPreferences csp = getSharedPreferences("login_pref", 0);
+            dm = new DatabaseManager(DrawerActivity.this);
+            dm.setEventList(DrawerActivity.this, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.interrupted();
+            }
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(DrawerActivity.this,"CREATED SQLITE FROM PHP",Toast.LENGTH_SHORT).show();
+            pd.dismiss();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pd = new ProgressDialog(DrawerActivity.this);
+            pd.setTitle("Please Wait...");
+            pd.setMessage("Gettings Events...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
     }
 }

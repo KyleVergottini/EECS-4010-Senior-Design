@@ -2,11 +2,13 @@ package com.jordanklamut.interactiveevents;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +36,7 @@ public class HomeFragment extends Fragment
     public void loadFragmentManager(View view) {
         final FragmentManager fm = getFragmentManager();
 
+        final NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
         TextView tvViewMap = (TextView) view.findViewById(R.id.btn_home_view_map);
         TextView tvViewSchedule = (TextView) view.findViewById(R.id.btn_home_view_schedule);
         ImageView ivNavigation = (ImageView) view.findViewById(R.id.iv_home_navigation);
@@ -44,6 +47,7 @@ public class HomeFragment extends Fragment
             @Override
             public void onClick(View v) {
                 fm.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
+                navigationView.getMenu().getItem(1).setChecked(true);
             }
         });
 
@@ -52,6 +56,7 @@ public class HomeFragment extends Fragment
             @Override
             public void onClick(View v) {
                 fm.beginTransaction().replace(R.id.content_frame, new ScheduleFragment()).commit();
+                navigationView.getMenu().getItem(2).setChecked(true);
             }
         });
 
