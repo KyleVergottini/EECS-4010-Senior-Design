@@ -1,8 +1,11 @@
 package com.jordanklamut.interactiveevents;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -43,10 +46,22 @@ public class LogInActivity extends Activity {
 
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
+        //ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+//
+        //if (activeNetwork == null)
+        //    Toast.makeText(getApplicationContext(), "Error: No Connection", Toast.LENGTH_SHORT).show();
+        //else
+        //{
+        //    if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+        //        Toast.makeText(getApplicationContext(), "Connection: Wifi", Toast.LENGTH_SHORT).show();
+        //    if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+        //        Toast.makeText(getApplicationContext(), "Connection: Data", Toast.LENGTH_SHORT).show();
+        //}
+
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 request = new StringRequest(Request.Method.POST, login_url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -81,14 +96,21 @@ public class LogInActivity extends Activity {
                         }
                     }
                 }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {}
-                }){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+                        if (activeNetwork == null)
+                            Toast.makeText(getApplicationContext(), "Error: No Internet", Toast.LENGTH_SHORT).show();
+                        else Toast.makeText(getApplicationContext(), "Error: Unknown", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String,String> hashMap = new HashMap<String, String>();
-                        hashMap.put("email",et_User.getText().toString());
-                        hashMap.put("password",et_Pass.getText().toString()); //TODO - HASH PASSWORD
+                        HashMap<String, String> hashMap = new HashMap<String, String>();
+                        hashMap.put("email", et_User.getText().toString());
+                        hashMap.put("password", et_Pass.getText().toString()); //TODO - HASH PASSWORD
 
                         return hashMap;
                     }

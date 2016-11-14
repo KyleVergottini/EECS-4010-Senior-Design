@@ -1,6 +1,8 @@
 package com.jordanklamut.interactiveevents;
 
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -51,8 +53,15 @@ public class ScheduleFragment extends Fragment{
 
         @Override
         public int getCount() {
-            int_items = 5; //TODO - SET TO NUMBER OF DAYS
-            return int_items;
+
+            SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
+            String conID =  csp.getString("homeConventionID", null);
+
+            DatabaseManager dm = new DatabaseManager(getActivity());
+            int days = dm.getConventionDates(conID);
+
+            //int_items = 5; //TODO - SET TO NUMBER OF DAYS
+            return days;
         }
 
         @Override

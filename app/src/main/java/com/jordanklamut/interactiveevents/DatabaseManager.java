@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
         public static final String CON_STATE = "State";
         public static final String CON_ZIP_CODE = "ZipCode";
         public static final String CON_DESCRTIPION = "Description";
+        public static final String CON_FAVORITE = "Favorite";
 
     public static final String EVENT_TABLE_NAME = "Events";
         public static final String EVENT_EVENT_ID = "EventID";
@@ -74,7 +76,8 @@ public class DatabaseManager extends SQLiteOpenHelper{
             + CON_CITY + " TEXT, "
             + CON_STATE + " TEXT, "
             + CON_ZIP_CODE + " TEXT, "
-            + CON_DESCRTIPION + " TEXT)";
+            + CON_DESCRTIPION + " TEXT, "
+            + CON_FAVORITE + " INTEGER DEFAULT 0) ";
 
     private final String QUERY_EVENT = "CREATE TABLE " + EVENT_TABLE_NAME + " ("
             + EVENT_EVENT_ID + " INTEGER, "
@@ -98,6 +101,20 @@ public class DatabaseManager extends SQLiteOpenHelper{
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, 1);
         Log.d("Database","Database Created: " + DATABASE_NAME);
+
+        //SQLiteDatabase checkDB = null;
+        //try {
+        //    checkDB = SQLiteDatabase.openDatabase(DATABASE_NAME, null, SQLiteDatabase.OPEN_READONLY);
+        //    checkDB.close();
+        //} catch (SQLiteException e) {
+        //    Log.d("Database","Database Doesnt Exist: " + DATABASE_NAME);
+        //}
+//
+        //if (checkDB != null)
+        //    Log.d("Database","Database Already Created: " + DATABASE_NAME);
+        //else{
+        //
+        //}
     }
 
     @Override
@@ -203,6 +220,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + CON_TABLE_NAME, null);
     }
 
+    public Cursor getFavoriteConventionsFromSQLite()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + " WHERE " + CON_FAVORITE + " LIKE '1'", null);
+    }
+
     //RETURN SELECT CONVENTIONS FROM SQLite
     public Cursor getSelectConventionsFromSQLite(String conName, String conCode, String conCity, String conState, String conWithin, String conStartDate, String conEndDate)
     {
@@ -246,6 +269,53 @@ public class DatabaseManager extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CON_TABLE_NAME, null, null);
         return;
+    }
+
+    public void setConFavorite(String conID, int setFav){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Cursor res = db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + " WHERE " + CON_CONVENTION_ID + " LIKE " + conID, null);
+
+        values.put(CON_FAVORITE, setFav);
+
+        if (res.getCount() == 0) {
+            //CON DOESNT EXIST
+            Log.d("Database", "Con favorite failed: " + conID);
+        } else {
+            //EVENT EXISTS - UPDATE IT
+            db.update(CON_TABLE_NAME, values, CON_CONVENTION_ID + " = ?", new String[] {conID});
+            db.close();
+            Log.d("Database","Row updated: " + conID);
+        }
+
+        res.close();
+    }
+
+    public int getConventionDates(String conID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] startDate;
+        String[] endDate;
+        int days = 0;
+
+        Cursor res = db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + " WHERE " + CON_CONVENTION_ID + " LIKE '" + conID + "'", null);
+        if(res.getCount() == 1){
+            res.moveToFirst();
+            startDate = res.getString(res.getColumnIndex(CON_START_DATE)).split("-");
+            int start = Integer.parseInt(startDate[2]);
+            endDate = res.getString(res.getColumnIndex(CON_END_DATE)).split("-");
+            int end = Integer.parseInt(endDate[2]);
+            days = end - start;
+            return days;
+            //try {
+            //} catch(NumberFormatException nfe) {
+            //}
+
+        }
+
+
+
+        return days;
     }
 
 /////////////////////////EVENTS////////////////////////
@@ -358,7 +428,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
         if (res.getCount() == 0) {
             //EVENT DOESNT EXIST
-            Log.d("Database", "Event inserted: " + eventID);
+            Log.d("Database", "Event favorite failed: " + eventID);
         } else {
             //EVENT EXISTS - UPDATE IT
             db.update(EVENT_TABLE_NAME, values, EVENT_EVENT_ID + " = ?", new String[] {eventID});

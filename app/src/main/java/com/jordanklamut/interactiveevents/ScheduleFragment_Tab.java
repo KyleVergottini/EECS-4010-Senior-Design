@@ -25,6 +25,7 @@ public class ScheduleFragment_Tab extends Fragment{
     private OnFragmentInteractionListener mListener;
     ArrayList<Event> listitems = new ArrayList<>();
     RecyclerView MyRecyclerView;
+    DatabaseManager dm;
 
     public ScheduleFragment_Tab() {
 
@@ -42,6 +43,7 @@ public class ScheduleFragment_Tab extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dm = new DatabaseManager(this.getActivity());
         initializeList();
         getActivity().setTitle("Schedule");
     }
@@ -64,7 +66,7 @@ public class ScheduleFragment_Tab extends Fragment{
     //GETS DATA FROM THE SQLite DATABASE
     public void initializeList() {
         listitems.clear();
-        DatabaseManager dm = new DatabaseManager(getActivity());
+        //DatabaseManager dm = new DatabaseManager(getActivity());
         Cursor res = dm.getAllEventsFromSQLite();
 
         if(res.getCount() == 0) {
@@ -131,7 +133,7 @@ public class ScheduleFragment_Tab extends Fragment{
             Event ecv = list.get(position);
 
             holder.eventName.setText(list.get(position).getEventName());
-            holder.eventRoom.setText(list.get(position).getEventRoomID() + " | " + list.get(position).getEventFavorite());
+            holder.eventRoom.setText(list.get(position).getEventRoomID());
             holder.eventTime.setText(list.get(position).getEventStartTime() + " - " + list.get(position).getEventEndTime());
 
             if (list.get(position).getEventFavorite().equals("1")) {
@@ -193,23 +195,6 @@ public class ScheduleFragment_Tab extends Fragment{
                         dm.setEventFavorite(eventID, 1);
                         Toast.makeText(getActivity(),"Added to Favorites", Toast.LENGTH_SHORT).show();
                     }
-
-                    //int id = (int)ivFavorites.getTag();
-                    //if( id == R.drawable.ic_like){
-                    //    ivFavorites.setTag(R.drawable.ic_liked);
-                    //    ivFavorites.setImageResource(R.drawable.ic_liked);
-//
-                    //    dm.setEventFavorite(eventID, 1);
-//
-                    //    Toast.makeText(getActivity(),"Added to Favorites", Toast.LENGTH_SHORT).show();
-                    //}else{
-                    //    ivFavorites.setTag(R.drawable.ic_like);
-                    //    ivFavorites.setImageResource(R.drawable.ic_like);
-//
-                    //    dm.setEventFavorite(eventID, 0);
-//
-                    //    Toast.makeText(getActivity(),"Removed from Favorites",Toast.LENGTH_SHORT).show();
-                    //}
                 }
             });
 
@@ -226,22 +211,6 @@ public class ScheduleFragment_Tab extends Fragment{
                     Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show(); //TODO - Set Details page
                 }
             });
-//
-            //shareImageView.setOnClickListener(new View.OnClickListener() {
-            //    @Override
-            //    public void onClick(View v) {
-            //        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-            //                "://" + getResources().getResourcePackageName(coverImageView.getId())
-            //                + '/' + "drawable" + '/' + getResources().getResourceEntryName((int)coverImageView.getTag()));
-//
-            //        Intent shareIntent = new Intent();
-            //        shareIntent.setAction(Intent.ACTION_SEND);
-            //        shareIntent.putExtra(Intent.EXTRA_STREAM,imageUri);
-            //        shareIntent.setType("image/jpeg");
-            //        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-            //    }
-            //});
         }
     }
-
 }

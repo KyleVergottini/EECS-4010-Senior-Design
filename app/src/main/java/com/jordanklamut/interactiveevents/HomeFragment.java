@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeFragment extends Fragment
 {
@@ -65,7 +66,7 @@ public class HomeFragment extends Fragment
             @Override
             public void onClick(View v) {
                 SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
-                String address = csp.getString("homeConventionAddress", null);
+                String address = csp.getString("homeConventionAddress", null) + " \n" + csp.getString("homeConventionCity", null) + ", " + csp.getString("homeConventionState", null);
 
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps/?daddr=" + address));
@@ -89,10 +90,15 @@ public class HomeFragment extends Fragment
         TextView con_name = (TextView) v.findViewById(R.id.tv_home_con_name);
         con_name.setText(csp.getString("homeConventionName", null));
 
+        String address = csp.getString("homeConventionAddress", null) + " \n" + csp.getString("homeConventionCity", null) + ", " + csp.getString("homeConventionState", null);
         TextView con_address = (TextView) v.findViewById(R.id.tv_home_con_address);
-        con_address.setText(csp.getString("homeConventionAddress", null));
+        con_address.setText(address);
 
         TextView con_dates = (TextView) v.findViewById(R.id.tv_home_con_dates);
-        con_dates.setText(csp.getString("homeConventionDates", null));
+        String conStartDate = csp.getString("homeConventionStartDate", null);
+        String conEndDate = csp.getString("homeConventionEndDate", null);
+        if (!conStartDate.equals(conEndDate)) //more than 1 day, display start - end
+            con_dates.setText(conStartDate + " - " + conEndDate);
+        else con_dates.setText(conStartDate); //just 1 day, display start date
     }
 }
