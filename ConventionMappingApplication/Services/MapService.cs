@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BusinessLogic.Maps;
+﻿using BusinessLogic.Maps;
 using BusinessObjects;
 
 namespace Services
@@ -13,7 +12,7 @@ namespace Services
             _getMapForConventionComponent = getMapForConventionComponent;
         }
 
-        public List<Map> GetMapForConvention(int conventionId)
+        public Map GetMapForConvention(int conventionId)
         {
             return _getMapForConventionComponent.Execute(conventionId);
         }

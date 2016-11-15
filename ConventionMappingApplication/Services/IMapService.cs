@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Drawing;
 using BusinessObjects;
 
 namespace Services
 {
     public interface IMapService
     {
-        List<Map> GetMapForConvention(int conventionId);
+        Map GetMapForConvention(int conventionId);
     }
 }

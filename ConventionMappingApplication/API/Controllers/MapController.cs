@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
+using System.Drawing;
 using Services;
 using BusinessLogic.Maps;
-using BusinessObjects;
+using Map = BusinessObjects.Map;
 
 namespace API.Controllers
 {
@@ -23,7 +23,7 @@ namespace API.Controllers
         [Route("Map/GetMapForConvention/{conventionId}")]
         public IHttpActionResult GetMapForConvention(int conventionId)
         {
-            List<Map> result;
+            Map result;
             try
             {
                 result = _MapService.GetMapForConvention(conventionId);
@@ -31,10 +31,6 @@ namespace API.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.ToString());
-            }
-            if (result.Count == 0)
-            {
-                return BadRequest("No maps found for this convention Id");
             }
             return Ok(result);
         }
