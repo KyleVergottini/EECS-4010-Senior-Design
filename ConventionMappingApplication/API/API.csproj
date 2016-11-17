@@ -125,6 +125,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ConventionId.cs" />
+    <Compile Include="Models\ConventionReturnList.cs" />
+    <Compile Include="Models\ErrorReturn.cs" />
+    <Compile Include="Models\EventReturnList.cs" />
+    <Compile Include="Models\RoomReturnList.cs" />
+    <Compile Include="Models\SuccessReturn.cs" />
     <Compile Include="Models\UserCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

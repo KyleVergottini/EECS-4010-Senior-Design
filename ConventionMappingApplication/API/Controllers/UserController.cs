@@ -35,9 +35,9 @@ namespace API.Controllers
             }
             if (result == false)
             {
-                return BadRequest("A user with this email already exists");
+                return Ok(new ErrorReturn("A user with this email already exists"));
             }
-            return Ok("User created successfully");
+            return Ok(new SuccessReturn("User created successfully"));
         }
 
         [HttpPost]
@@ -55,9 +55,9 @@ namespace API.Controllers
             }
             if (result == false)
             {
-                return BadRequest("Invalid username or password");
+                return Ok(new ErrorReturn("Invalid username or password"));
             }
-            return Ok(post.email);
+            return Ok(new SuccessReturn(post.email));
         }
     }
 }

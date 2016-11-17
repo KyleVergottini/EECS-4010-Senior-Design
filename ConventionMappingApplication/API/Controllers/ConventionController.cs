@@ -5,6 +5,7 @@ using System.Web.Http;
 using Services;
 using BusinessLogic.Conventions;
 using BusinessObjects;
+using API.Models;
 
 namespace API.Controllers
 {
@@ -32,11 +33,7 @@ namespace API.Controllers
             {
                 return BadRequest("An error has occurred");
             }
-            if (result.Count == 0)
-            {
-                return BadRequest("No conventions found");
-            }
-            return Ok(result);
+            return Ok(new ConventionReturnList(result));
         }
     }
 }

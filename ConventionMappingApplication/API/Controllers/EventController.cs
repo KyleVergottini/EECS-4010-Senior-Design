@@ -34,11 +34,7 @@ namespace API.Controllers
             {
                 return BadRequest("An error has occurred");
             }
-            if (result.Count == 0)
-            {
-                return BadRequest("No events found for this convention Id");
-            }
-            return Ok(result);
+            return Ok(new EventReturnList(result));
         }
 
         [HttpPost]
@@ -54,11 +50,7 @@ namespace API.Controllers
             {
                 return BadRequest("An error has occurred");
             }
-            if (result.Count == 0)
-            {
-                return BadRequest("No events found");
-            }
-            return Ok(result);
+            return Ok(new EventReturnList(result));
         }
     }
 }
