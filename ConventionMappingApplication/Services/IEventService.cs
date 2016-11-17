@@ -12,5 +12,7 @@ namespace Services
         bool SaveEvent(Event conEvent);
 
         List<Event> GetAllEventsForAConvention(int conventionId);
+
+        List<Event> GetAllEvents();
     }
 }

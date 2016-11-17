@@ -65,19 +65,29 @@
     <Compile Include="Conventions\IGetConventionByIdComponent.cs" />
     <Compile Include="Conventions\ISaveConventionComponent.cs" />
     <Compile Include="Conventions\SaveConventionComponent.cs" />
+    <Compile Include="Events\GetAllEventsComponent.cs" />
     <Compile Include="Events\GetAllEventsForAConventionComponent.cs" />
     <Compile Include="Events\GetEventByIdComponent.cs" />
     <Compile Include="Events\GetEventsByRoomIdComponent.cs" />
+    <Compile Include="Events\IGetAllEventsComponent.cs" />
     <Compile Include="Events\IGetAllEventsForAConventionComponent.cs" />
     <Compile Include="Events\ISaveEventComponent.cs" />
     <Compile Include="Events\SaveEventComponent.cs" />
+    <Compile Include="Maps\GetMapForConventionComponent.cs" />
+    <Compile Include="Maps\IGetMapForConventionComponent.cs" />
+    <Compile Include="Rooms\GetAllRoomsComponent.cs" />
     <Compile Include="Rooms\GetRoomsForAGivenConventionComponent.cs" />
+    <Compile Include="Rooms\IGetAllRoomsComponent.cs" />
     <Compile Include="Rooms\IGetRoomsForAGivenConventionComponent.cs" />
+    <Compile Include="Users\CreateUserComponent.cs" />
     <Compile Include="Users\GetUserComponent.cs" />
     <Compile Include="Events\IGetEventByIdComponent.cs" />
     <Compile Include="Events\IGetEventsByRoomIdComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registries\BusinessModule.cs" />
+    <Compile Include="Users\ICreateUserComponent.cs" />
+    <Compile Include="Users\ILoginComponent.cs" />
+    <Compile Include="Users\LoginComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

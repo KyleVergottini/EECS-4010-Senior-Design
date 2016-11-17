@@ -17,6 +17,11 @@ namespace Services
             _getAllConventionsComponent = getAllConventionsComponent;
         }
 
+        public ConventionService(IGetAllConventionsComponent getAllConventionsComponent)
+        {
+            _getAllConventionsComponent = getAllConventionsComponent;
+        }
+
         public Convention GetConventionById(int id)
         {
             return _getConventionByIdComponent.Execute(id);

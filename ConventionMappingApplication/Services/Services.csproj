@@ -47,10 +47,14 @@
     <Compile Include="EventService.cs" />
     <Compile Include="IConventionService.cs" />
     <Compile Include="IEventService.cs" />
+    <Compile Include="IMapService.cs" />
     <Compile Include="IRoomService.cs" />
+    <Compile Include="IUserService.cs" />
+    <Compile Include="MapService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registries\ServiceModule.cs" />
     <Compile Include="RoomService.cs" />
+    <Compile Include="UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">

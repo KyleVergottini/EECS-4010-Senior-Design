@@ -10,6 +10,7 @@ namespace Services
         private readonly IGetEventByIdComponent _getEventByIdComponent;
         private readonly ISaveEventComponent _saveEventComponent;
         private readonly IGetAllEventsForAConventionComponent _getAllEventsForAConventionComponent;
+        private readonly IGetAllEventsComponent _getAllEventsComponent;
 
         public EventService(IGetEventsByRoomIdComponent getEventByRoomIdComponent, IGetEventByIdComponent getEventByIdComponent, ISaveEventComponent saveEventComponent, IGetAllEventsForAConventionComponent getAllEventsForAConventionComponent)
         {
@@ -17,6 +18,12 @@ namespace Services
             _getEventByIdComponent = getEventByIdComponent;
             _saveEventComponent = saveEventComponent;
             _getAllEventsForAConventionComponent = getAllEventsForAConventionComponent;
+        }
+
+        public EventService(IGetAllEventsForAConventionComponent getAllEventsForAConventionComponent, IGetAllEventsComponent getAllEventsComponent)
+        {
+            _getAllEventsForAConventionComponent = getAllEventsForAConventionComponent;
+            _getAllEventsComponent = getAllEventsComponent;
         }
 
         public Event GetEventById(int eventId)
@@ -37,6 +44,11 @@ namespace Services
         public List<Event> GetAllEventsForAConvention(int conventionId)
         {
             return _getAllEventsForAConventionComponent.Execute(conventionId);
+        }
+
+        public List<Event> GetAllEvents()
+        {
+            return _getAllEventsComponent.Execute();
         }
     }
 }
