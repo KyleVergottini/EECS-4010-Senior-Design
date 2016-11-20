@@ -412,6 +412,20 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
 
+    //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
+    public Cursor getUpcomingEventsForRoomFromSQLite(String RoomID) {
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_ROOM_ID + " = " + RoomID;
+        //TODO: Need to add datetime filter after determining formats
+
+        String orderByQuery = " ORDER BY ";
+        orderByQuery += EVENT_START_TIME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + orderByQuery, null);
+    }
+
+
     public void clearEventsTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(EVENT_TABLE_NAME, null, null);
@@ -444,7 +458,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     //RETURNS ALL ROOMS FROM PHP MATCHING CONVENTION_ID
     public void setRoomList(Context context, String conventionID) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String rooms_url = "http://www.jordanklamut.com/InteractiveEvents/rooms.php";
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Room/GetAllRooms/";
 
         HashMap<String,String> params = new HashMap<>();
         params.put("conventionID", conventionID);
@@ -452,7 +466,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
         CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Database","PHP RESPONSE " + response.toString());
+                Log.d("Database","API RESPONSE " + response.toString());
 
                 try {
                     JSONArray rooms = response.getJSONArray("rooms");
@@ -525,6 +539,17 @@ public class DatabaseManager extends SQLiteOpenHelper{
         whereQuery += ROOM_ROOM_ID + " > '0'";
 
         //TODO - ADD WHERE STATEMENTS TO whereQuery
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
+    }
+
+    //RETURN ROOMS FOR CONVENTION FROM SQLite
+    public Cursor getRoomsForLevelOfConventionFromSQLite(String conventionID, String level)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += ROOM_CONVENTION_ID + " = " + conventionID;
+        whereQuery += " AND " + ROOM_LEVEL + " = " + level;
 
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
