@@ -6,10 +6,22 @@
 }
 @section scripts{
     <script type="text/javascript">
-        $("form").validate({
+        $("#editConForm").validate({
             rules: {
                 EndDate: { greaterThan: "#StartDate" }
             }
+        });
+
+        toastr.options.closeButton = true;
+        $("#saveBtn").click(function() {
+            $.ajax({
+                type: "POST",
+                url: "/Convention/Edit/" + @Model.ID,
+                data: $("#editConForm").serialize(),
+                success: function() {
+                    toastr.success('The changes were saved!', 'Success');
+                }
+            });
         });
     </script>
 }
@@ -18,9 +30,8 @@
 
 <div class="row">
     <div class="col-md-8">
-        <section id="createConForm">
-            @using (Html.BeginForm(MVC.Convention.Edit(), FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
+        <section>
+            <form id="editConForm" class="form-horizontal" role="form">
                 <h4>Fill out the following fields to create a convention.</h4>
                 <hr />
                 <div class="form-group">
@@ -71,12 +82,33 @@
                         @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
                     </div>
                 </div>
+            </form>
+            <div class="form-horizontal">
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default" />
+                        <input id="saveBtn" type="submit" value="Save" class="btn btn-default" />
                     </div>
                 </div>
-            }
+            </div>
         </section>
+    </div>
+    <div class="col-md-4">
+        <div class="row padding">
+            <div class="col-md-offset-2 col-md-10 text-right">
+                <a href="@Url.Action(MVC.Convention.EventList())" class="btn btn-default mainBtn">Edit Events</a>
+            </div>
+        </div>
+        <div class="row padding">
+            <div class="col-md-offset-2 col-md-10 text-right">
+                @if (Model.TotalMaps != 3)
+                {
+                    <a href="@Url.Action(MVC.Convention.Map())" class="btn btn-default mainBtn">Edit Map</a>
+                }
+                else
+                {
+                    <a href="@Url.Action(MVC.Convention.Rooms(1))" class="btn btn-default mainBtn">Edit Rooms</a>
+                }
+            </div>
+        </div>
     </div>
 </div>

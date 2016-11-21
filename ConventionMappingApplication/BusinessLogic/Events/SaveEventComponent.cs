@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DataAccess;
 using Event = BusinessObjects.Event;
 
@@ -6,19 +7,11 @@ namespace BusinessLogic.Events
 {
     public class SaveEventComponent : ISaveEventComponent
     {
-        private readonly IGetEventByIdComponent _getEventByIdComponent;
-
-        public SaveEventComponent(IGetEventByIdComponent getEventByIdComponent)
-        {
-            _getEventByIdComponent = getEventByIdComponent;
-        }
-
         public bool Execute(Event conEvent)
         {
-            var returnedEvent = ConvertEvent(_getEventByIdComponent.Execute(conEvent.ID));
-
             using (var context = new Entities())
             {
+                var returnedEvent = context.Events.FirstOrDefault(x => x.ID == conEvent.ID);
                 if (returnedEvent == null)
                 {
                     returnedEvent = new DataAccess.Event
@@ -29,6 +22,7 @@ namespace BusinessLogic.Events
                         EndDate = Convert.ToDateTime(conEvent.EndDate),
                         StartDate = Convert.ToDateTime(conEvent.StartDate)
                     };
+                    context.Events.Add(returnedEvent);
                 }
                 else
                 {
@@ -38,26 +32,9 @@ namespace BusinessLogic.Events
                     returnedEvent.EndDate = Convert.ToDateTime(conEvent.EndDate);
                     returnedEvent.StartDate = Convert.ToDateTime(conEvent.StartDate);
                 }
-                context.Events.Add(returnedEvent);
                 context.SaveChanges();
             }
             return true;
-        }
-
-        private static DataAccess.Event ConvertEvent(Event conEvent)
-        {
-            if (conEvent == null)
-            {
-                return null;
-            }
-            return new DataAccess.Event
-            {
-                Name = conEvent.Name,
-                RoomID = conEvent.RoomID,
-                Description = conEvent.Description,
-                EndDate = Convert.ToDateTime(conEvent.EndDate),
-                StartDate = Convert.ToDateTime(conEvent.StartDate)
-            };
         }
     }
 }

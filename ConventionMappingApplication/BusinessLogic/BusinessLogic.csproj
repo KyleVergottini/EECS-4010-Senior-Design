@@ -61,9 +61,13 @@
   <ItemGroup>
     <Compile Include="Conventions\GetAllConventionsComponent.cs" />
     <Compile Include="Conventions\GetConventionByIdComponent.cs" />
+    <Compile Include="Conventions\GetMapByConventionIdComponent.cs" />
     <Compile Include="Conventions\IGetAllConventionsComponent.cs" />
     <Compile Include="Conventions\IGetConventionByIdComponent.cs" />
+    <Compile Include="Conventions\IGetMapByConventionIdComponent.cs" />
+    <Compile Include="Conventions\ISaveConMapComponent.cs" />
     <Compile Include="Conventions\ISaveConventionComponent.cs" />
+    <Compile Include="Conventions\SaveConMapComponent.cs" />
     <Compile Include="Conventions\SaveConventionComponent.cs" />
     <Compile Include="Events\GetAllEventsForAConventionComponent.cs" />
     <Compile Include="Events\GetEventByIdComponent.cs" />
@@ -73,6 +77,8 @@
     <Compile Include="Events\SaveEventComponent.cs" />
     <Compile Include="Rooms\GetRoomsForAGivenConventionComponent.cs" />
     <Compile Include="Rooms\IGetRoomsForAGivenConventionComponent.cs" />
+    <Compile Include="Rooms\ISaveRoomsComponent.cs" />
+    <Compile Include="Rooms\SaveRoomsComponent.cs" />
     <Compile Include="Users\GetUserComponent.cs" />
     <Compile Include="Events\IGetEventByIdComponent.cs" />
     <Compile Include="Events\IGetEventsByRoomIdComponent.cs" />

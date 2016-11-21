@@ -7,6 +7,8 @@ namespace WebUI.Models
     {
         public int ID { get; set; }
 
+        public int TotalMaps { get; set; }
+
         [Required, DisplayName("Name*")]
         public string Name { get; set; }
 

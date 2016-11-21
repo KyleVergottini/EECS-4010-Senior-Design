@@ -1,19 +1,44 @@
 ﻿@{
     ViewBag.Title = "Upload a Map";
 }
+@section scripts {
+    <script type="text/javascript">
+        Dropzone.options.mapUpload = {
+            maxFiles: 3,
+            accept: function(file, done) {
+                console.log("uploaded");
+                done();
+            },
+            init: function() {
+                this.on("maxfilesexceeded",
+                    function(file) {
+                        toastr.error('No more maps can be uploaded to this convention!', 'Error');
+                    });
+            }
+        };
+        </script>
+}
+@section styles {
+    <style>
+        .roomIconBox {
+            text-align: center;
+            border: solid black 1px;
+            padding: 10px 0px;
+        }
+    </style>
+}
+
 <h2>@ViewBag.Title</h2>
 
-<div class="row">
+<div style="margin-bottom: 25px" class="row">
     <div class="col-md-8">
         <section id="mapForm">
-            @using (Html.BeginForm(MVC.Convention.Map(), FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm(MVC.Convention.Map(), FormMethod.Post, new { id = "mapUpload", @class = "form-horizontal dropzone", role = "form"}))
             {
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Submit" class="btn btn-default" />
-                    </div>
-                </div>
             }
         </section>
+    </div>
+    <div class="col-md-4 text-right">
+        <input id="nextBtn" type="button" value="Next" class="btn btn-default" onclick="location.href='@Url.Action("Rooms", "Convention")'"/>
     </div>
 </div>
