@@ -28,11 +28,11 @@ namespace API.Controllers
             List<Room> result;
             try
             {
-                result = _RoomService.GetRoomsForGivenConventionId(post.conventionid);
+                result = _RoomService.GetRoomsForGivenConventionId(int.Parse(post.conventionID));
             }
             catch (Exception e)
             {
-                return BadRequest("An error has occurred");
+                return BadRequest(e.ToString());
             }
             return Ok(new RoomReturnList(result));
         }
@@ -48,7 +48,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("An error has occurred");
+                return BadRequest(e.ToString());
             }
             return Ok(new RoomReturnList(result));
         }

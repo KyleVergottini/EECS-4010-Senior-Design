@@ -33,7 +33,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("An error has occurred");
+                return BadRequest(e.ToString());
             }
             if (result == false)
             {
@@ -53,7 +53,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("An error has occurred");
+                return BadRequest(e.ToString());
             }
             if (result == false)
             {

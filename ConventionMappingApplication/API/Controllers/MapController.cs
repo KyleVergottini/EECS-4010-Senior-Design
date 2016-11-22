@@ -27,7 +27,7 @@ namespace API.Controllers
             Map result;
             try
             {
-                result = _MapService.GetMapForConvention(post.conventionid);
+                result = _MapService.GetMapForConvention(int.Parse(post.conventionID));
             }
             catch (Exception e)
             {

@@ -2,6 +2,6 @@
 {
     public class ConventionId
     {
-        public int conventionid;
+        public string conventionID { get; set; }
     }
 }

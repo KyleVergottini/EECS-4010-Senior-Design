@@ -28,11 +28,11 @@ namespace API.Controllers
             List<Event> result;
             try
             {
-                result = _EventService.GetAllEventsForAConvention(post.conventionid);
+                result = _EventService.GetAllEventsForAConvention(int.Parse(post.conventionID));
             }
             catch (Exception e)
             {
-                return BadRequest("An error has occurred");
+                return BadRequest(e.ToString());
             }
             return Ok(new EventReturnList(result));
         }
@@ -48,7 +48,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("An error has occurred");
+                return BadRequest(e.ToString());
             }
             return Ok(new EventReturnList(result));
         }
