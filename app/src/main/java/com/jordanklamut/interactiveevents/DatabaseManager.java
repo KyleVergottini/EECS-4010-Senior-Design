@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -25,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -559,6 +564,89 @@ public class DatabaseManager extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ROOM_TABLE_NAME, null, null);
         return;
+    }
+
+/////////////////////////MAPS/////////////////////////
+
+    //RETURNS ALL MAPS FROM .NET API MATCHING CONVENTION_ID
+    public void setMapImages(Context context, String conventionID) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Map/GetMapForConvention/";
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("conventionID", conventionID);
+
+        final CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Database","API RESPONSE " + response.toString());
+
+                try {
+                    String ConventionID = response.getString("ConventionID");
+
+                    String mapString1 = response.getString("MapImage1");
+                    String mapString2 = response.getString("MapImage2");
+                    String mapString3 = response.getString("MapImage3");
+
+                    if (mapString1 != "null")
+                    {
+                        Bitmap mapImage1 = getBitmapFromString(mapString1);
+                        saveBitmapImage(mapImage1, "map_" + ConventionID + "_1.png");
+                    }
+                    if (mapString2 != "null")
+                    {
+                        Bitmap mapImage2 = getBitmapFromString(mapString2);
+                        saveBitmapImage(mapImage2, "map_" + ConventionID + "_1.png");
+                    }
+                    if (mapString3 != "null")
+                    {
+                        Bitmap mapImage3 = getBitmapFromString(mapString3);
+                        saveBitmapImage(mapImage3, "map_" + ConventionID + "_1.png");
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.append(error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    //Function used in setMapImages to convert string to bitmap and then save to resources
+    //http://mobile.cs.fsu.edu/converting-images-to-json-objects/
+    Bitmap getBitmapFromString(String bitmapString)
+    {
+        byte[] bitmapByteArray = Base64.decode(bitmapString, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapByteArray, 0, bitmapByteArray.length);
+        return bitmap;
+    }
+
+    //Function used in setMapImages to save a bitmap to resources
+    //http://stackoverflow.com/questions/649154/save-bitmap-to-location
+    void saveBitmapImage(Bitmap image, String filename)
+    {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(filename);
+            image.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
