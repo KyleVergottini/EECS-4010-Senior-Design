@@ -50,19 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AspNetRole.cs" />
-    <Compile Include="AspNetUser.cs" />
-    <Compile Include="AspNetUserClaim.cs" />
-    <Compile Include="AspNetUserLogin.cs" />
     <Compile Include="Convention.cs" />
     <Compile Include="ConventionRole.cs" />
-    <Compile Include="C__MigrationHistory.cs" />
     <Compile Include="Entities.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Schedule.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserRecovery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

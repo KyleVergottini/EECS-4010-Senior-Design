@@ -1,12 +1,21 @@
-﻿@{
+﻿@model bool
+
+@{
     ViewBag.Title = "Upload a Map";
 }
 @section scripts {
     <script type="text/javascript">
+        var hasMaps = @Json.Encode(Model);
+        if (hasMaps) {
+            $("#nextBtn").removeClass("hidden");
+        }
         Dropzone.options.mapUpload = {
             maxFiles: 3,
             accept: function(file, done) {
-                console.log("uploaded");
+                toastr.success('Image uploaded!', 'Success');
+                if (!hasMaps) {
+                    $("#nextBtn").removeClass("hidden");
+                }
                 done();
             },
             init: function() {
@@ -16,7 +25,7 @@
                     });
             }
         };
-        </script>
+    </script>
 }
 @section styles {
     <style>
@@ -29,7 +38,8 @@
 }
 
 <h2>@ViewBag.Title</h2>
-
+<p>Upload the Convention Maps representing the different floors starting with the 1st. Up to 3 floors total can be added.</p>
+<p>If at least one floor has been added, and no more are required, skip this step.</p>
 <div style="margin-bottom: 25px" class="row">
     <div class="col-md-8">
         <section id="mapForm">
@@ -39,6 +49,6 @@
         </section>
     </div>
     <div class="col-md-4 text-right">
-        <input id="nextBtn" type="button" value="Next" class="btn btn-default" onclick="location.href='@Url.Action("Rooms", "Convention")'"/>
+        <input id="nextBtn" type="button" value="Next" class="btn btn-default hidden" onclick="location.href='@Url.Action("Rooms", "Convention")'" />
     </div>
 </div>

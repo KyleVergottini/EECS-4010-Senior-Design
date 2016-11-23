@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BusinessLogic.Users;
 
-namespace BusinessLogic
+namespace BusinessLogic.Users
 {
-    public class GetUserComponent : IGetUserComponent
+    public interface IGetUserComponent
     {
     }
 }

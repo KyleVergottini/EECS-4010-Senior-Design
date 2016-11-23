@@ -144,7 +144,8 @@ namespace WebUI.Controllers
         [HttpGet]
         public virtual ActionResult Map()
         {
-            return View();
+            var allFloors = _conventionService.GetMapByConventionId((int)Session["conventionId"]);
+            return View(allFloors.Floor1 != null);
         }
 
         [HttpPost]
@@ -211,7 +212,10 @@ namespace WebUI.Controllers
         [HttpPost]
         public virtual ActionResult Rooms(int floorNumber, List<Room> rooms)
         {
-            _roomService.SaveRooms((int) Session["conventionId"], floorNumber, rooms);
+            if (rooms != null)
+            {
+                _roomService.SaveRooms((int)Session["conventionId"], floorNumber, rooms);
+            }
             return Json(true);
         }
     }

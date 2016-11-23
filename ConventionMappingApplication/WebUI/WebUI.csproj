@@ -196,6 +196,11 @@
     <Compile Include="ManageController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611230421496_InitialCreate.cs" />
+    <Compile Include="Migrations\201611230421496_InitialCreate.Designer.cs">
+      <DependentUpon>201611230421496_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ConListViewModel.cs" />
     <Compile Include="Models\ConventionViewModel.cs" />
@@ -646,7 +651,6 @@
     <Content Include="Views\Convention\EventList.cshtml" />
     <Content Include="Views\Convention\Rooms.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
@@ -659,6 +663,10 @@
       <Project>{418840ec-e7c4-401f-a180-4635ea9d1739}</Project>
       <Name>BusinessObjects</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
+      <Project>{d80b5a2e-813f-46d6-a773-d4f44cf90b6a}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{01e7eb5f-8270-402e-b6c9-32c6a3592cf0}</Project>
       <Name>Services</Name>
@@ -666,6 +674,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201611230421496_InitialCreate.resx">
+      <DependentUpon>201611230421496_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

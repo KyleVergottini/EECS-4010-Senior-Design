@@ -31,6 +31,10 @@ namespace DataAccess
         public string Address { get; set; }
 
         [Required]
+        [StringLength(60)]
+        public string City { get; set; }
+
+        [Required]
         [StringLength(20)]
         public string State { get; set; }
 
@@ -47,9 +51,6 @@ namespace DataAccess
 
         [Column(TypeName = "image")]
         public byte[] Map3 { get; set; }
-
-        [StringLength(60)]
-        public string City { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ConventionRole> ConventionRoles { get; set; }
