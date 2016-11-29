@@ -159,13 +159,18 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
             SharedPreferences csp = getSharedPreferences("login_pref", 0);
             dm = new DatabaseManager(DrawerActivity.this);
-            dm.setEventList(DrawerActivity.this, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
+            String homeConventionID = csp.getString("homeConventionID", null);
+
+            dm.setEventList(DrawerActivity.this, homeConventionID); //gets from php, and inserts into sqlite
+            dm.setRoomList(DrawerActivity.this, homeConventionID);  //ALSO ADDED calls to get rooms and maps
+            dm.setMapList(DrawerActivity.this, homeConventionID);
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.interrupted();
             }
+
             return "Executed";
         }
 

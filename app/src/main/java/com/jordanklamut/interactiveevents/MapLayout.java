@@ -41,7 +41,7 @@ public class MapLayout extends FrameLayout
 
     private MapView mapView;
     private ImageView roomView;
-    private InfoLayout infoView;
+    private MapInfoLayout infoView;
 
     private static final int ROOM_ICON_WIDTH = 80;
     private static final int ROOM_ICON_HEIGHT = 120;
@@ -55,24 +55,29 @@ public class MapLayout extends FrameLayout
 
     private String highlightedRoom = "";
 
-    private String startingRoom = "2";
+    private boolean firstDraw = true;
+    private String startingRoom = "";
 
-    public MapLayout(Context context, Bitmap mapImage, List<Room> roomList)
-    {
+    public MapLayout(Context context, Bitmap mapImage, List<Room> roomList) {
         super(context);
         this.bitmap = mapImage;
-        this.bitmapWidth = this.bitmap.getWidth();
-        this.bitmapHeight = this.bitmap.getHeight();
+        this.bitmapWidth = mapImage.getWidth();
+        this.bitmapHeight = mapImage.getHeight();
         this.roomList = roomList;
 
         mScaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
 
         mapView = new MapView(context, mapImage);
         roomView = new ImageView(context);
-        infoView = new InfoLayout(context);
+        infoView = new MapInfoLayout(context);
         this.addView(mapView);
         this.addView(roomView);
         this.addView(infoView);
+    }
+
+    public MapLayout(Context context, Bitmap mapImage, List<Room> roomList, String startingRoom) {
+        this(context, mapImage, roomList);
+        this.startingRoom = startingRoom;
     }
 
     private long startClickTime;
@@ -128,10 +133,10 @@ public class MapLayout extends FrameLayout
                 long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
                 if (clickDuration < 1000)
                 {
-                    int translatedClickMaxX = (int) ((((mLastTouchX + ROOM_ICON_CENTER_X) / (2 * mScaleFactor)) - mPosX) * 2000 / bitmapWidth);
-                    int translatedClickMinX = (int) (translatedClickMaxX - (ROOM_ICON_WIDTH * 1000 / (mScaleFactor * bitmapWidth)));
-                    int translatedClickMaxY = (int) ((((mLastTouchY + ROOM_ICON_CENTER_Y) / (2 * mScaleFactor)) - mPosY) * 2000 / bitmapHeight);
-                    int translatedClickMinY = (int) (translatedClickMaxY - (ROOM_ICON_HEIGHT * 1000 / (mScaleFactor * bitmapHeight)));
+                    int translatedClickMaxX = (int) (((mLastTouchX + ROOM_ICON_CENTER_X) / (mScaleFactor)) - (2 * mPosX));
+                    int translatedClickMinX = (int) (translatedClickMaxX - (ROOM_ICON_WIDTH / mScaleFactor));
+                    int translatedClickMaxY = (int) (((mLastTouchY + ROOM_ICON_CENTER_Y) / (mScaleFactor)) - (2 * mPosY));
+                    int translatedClickMinY = (int) (translatedClickMaxY - (ROOM_ICON_HEIGHT / mScaleFactor));
                     boolean roomPressed = false;
                     for (Room currentRoom : roomList) {
                         if (    Integer.parseInt(currentRoom.getRoomXCoordinate()) >= translatedClickMinX
@@ -196,20 +201,23 @@ public class MapLayout extends FrameLayout
         super.onSizeChanged(w, h, oldw, oldh);
         viewHeight = h;
         viewWidth = w;
-        FirstDraw();
-    }
 
-    public void FirstDraw()
-    {
         float minXScaleFactor = viewWidth / (float) bitmapWidth; //Set minimum X Scale Factor
         float minYScaleFactor = viewHeight / (float) bitmapHeight; //and Y Scale Factor
         minScaleFactor = Math.max(minXScaleFactor, minYScaleFactor); //Min scale factor is the greater of X and Y
         mScaleFactor = minScaleFactor; //start out "zoomed out" all the way
         mPosX = mPosY = 0; //Set X and Y positions to false
-        if (startingRoom.compareTo("") != 0)
+        if (firstDraw && !startingRoom.equals(""))
         {
-            FocusRoom(startingRoom);
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    FocusRoom(startingRoom);
+                    Redraw();
+                }
+            });
         }
+        firstDraw = false;
         Redraw();
         return;
     }
@@ -254,11 +262,11 @@ public class MapLayout extends FrameLayout
             Bitmap mapWithRooms = Bitmap.createBitmap((int)viewWidth, (int)viewHeight, bitmap.getConfig());
             Canvas canvas = new Canvas(mapWithRooms);
             for (Room currentRoom : roomList) {
-                int drawPosX = (int)(2 * mScaleFactor * ((Integer.parseInt(currentRoom.getRoomXCoordinate()) * bitmapWidth / 2000) + mPosX) - ROOM_ICON_CENTER_X);
-                int drawPosY = (int)(2 * mScaleFactor * ((Integer.parseInt(currentRoom.getRoomYCoordinate()) * bitmapHeight / 2000) + mPosY) - ROOM_ICON_CENTER_Y);
+                int drawPosX = (int)(mScaleFactor * ((Integer.parseInt(currentRoom.getRoomXCoordinate())) + (2 * mPosX)) - ROOM_ICON_CENTER_X);
+                int drawPosY = (int)(mScaleFactor * ((Integer.parseInt(currentRoom.getRoomYCoordinate())) + (2 * mPosY)) - ROOM_ICON_CENTER_Y);
                 if (    drawPosX >= -ROOM_ICON_WIDTH && drawPosX <= viewWidth + ROOM_ICON_WIDTH
                     &&  drawPosY >= -ROOM_ICON_HEIGHT && drawPosY <= viewHeight + ROOM_ICON_HEIGHT) {
-                    if (currentRoom.getRoomID().compareTo(highlightedRoom) == 0) {
+                    if (currentRoom.getRoomID().equals(highlightedRoom)) {
                         canvas.drawBitmap(highlightedRoomIcon, drawPosX, drawPosY, null);
                         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) infoView.getLayoutParams();
                         int infoGravity = Gravity.NO_GRAVITY;
@@ -298,10 +306,10 @@ public class MapLayout extends FrameLayout
     public void FocusRoom(String roomID)
     {
         for (Room currentRoom : roomList) {
-            if (currentRoom.getRoomID().compareTo(roomID) == 0) {
+            if (currentRoom.getRoomID().equals(roomID)) {
                 highlightedRoom = roomID;
-                mPosX = (viewWidth / (4 * mScaleFactor)) - (Integer.parseInt(currentRoom.getRoomXCoordinate()) * bitmapWidth / 2000);
-                mPosY = (viewHeight / (4 * mScaleFactor)) - (Integer.parseInt(currentRoom.getRoomYCoordinate()) * bitmapHeight / 2000);
+                mPosX = (viewWidth / (4 * mScaleFactor)) - (Integer.parseInt(currentRoom.getRoomXCoordinate()) / 2);
+                mPosY = (viewHeight / (4 * mScaleFactor)) - (Integer.parseInt(currentRoom.getRoomYCoordinate()) / 2);
                 return;
             }
         }

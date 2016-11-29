@@ -1,12 +1,16 @@
 package com.jordanklamut.interactiveevents;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -201,7 +205,11 @@ public class ScheduleFragment_Tab extends Fragment{
             btnViewOnMap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show(); //TODO - Link to map
+                    final FragmentManager fm = getParentFragment().getFragmentManager();
+                    fm.beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(ecv.getEventRoomID())).commit();
+
+                    final NavigationView navigationView = (NavigationView) ((Activity) getContext()).findViewById(R.id.nav_view);
+                    navigationView.getMenu().getItem(2).setChecked(true);
                 }
             });
 

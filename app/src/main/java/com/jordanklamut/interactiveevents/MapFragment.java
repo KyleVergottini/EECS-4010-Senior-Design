@@ -16,10 +16,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.jordanklamut.interactiveevents.models.ConventionMap;
 import com.jordanklamut.interactiveevents.models.Room;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MapFragment extends Fragment {
 
@@ -28,13 +30,20 @@ public class MapFragment extends Fragment {
     HashMap<String, MapLayout> mapLayout;
     LinearLayout mapDisplay;
 
+    String startingRoom = null;
+
     public MapFragment() {
 
     }
 
     public static MapFragment newInstance() {
+        return new MapFragment();
+    }
+
+    public static MapFragment newInstance(String startingRoom) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
+        args.putString("startingRoom", startingRoom);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,8 +56,12 @@ public class MapFragment extends Fragment {
         SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
         String conventionID = csp.getString("homeConventionID", null);
 
-        dm.setRoomList(getActivity(), conventionID);
-        //dm.setMapImages(getActivity(), conventionID);
+        Bundle args = getArguments();
+        if (args != null) {
+            this.startingRoom = args.getString("startingRoom");
+        }
+
+        mapLayout = new HashMap<String, MapLayout>();
 
         initializeMapLayouts(conventionID);
     }
@@ -71,7 +84,11 @@ public class MapFragment extends Fragment {
         }
 
         if (mapLayout.size() > 0) {
-            mapDisplay.addView(mapLayout.get("1"));
+            if (startingRoom != null) {
+                mapDisplay.addView(mapLayout.get(getStartingLevel()));
+            } else {
+                mapDisplay.addView(mapLayout.get("1"));
+            }
         }
 
         return x;
@@ -79,25 +96,52 @@ public class MapFragment extends Fragment {
 
     public void initializeMapLayouts(String conventionID) {
         //Clear map layouts
-        mapLayout = new HashMap<String, MapLayout>();
+        mapLayout.clear();
 
         //Initialize map image and room list
         Bitmap mapImage;
         ArrayList<Room> roomList = new ArrayList<Room>();
 
-        for (int i = 1; i <= 3; i++) {
-            String ilevel = String.valueOf(i);
-            mapImage = getMapImage(conventionID, ilevel);
+        ConventionMap map = getMap(conventionID);
+
+        String startingLevel = getStartingLevel();
+
+        if (map != null) {
+            mapImage = map.getMapImage1();
             if (mapImage != null) {
-                roomList = getRoomList(conventionID, ilevel);
-                mapLayout.put(ilevel, new MapLayout(getActivity(), mapImage, roomList));
-            } else {
-                break;
+                roomList = getRoomList(conventionID, "1", mapImage.getWidth());
+                if (startingLevel.equals("1")) {
+                    mapLayout.put("1", new MapLayout(getActivity(), mapImage, roomList, startingRoom));
+                } else {
+                    mapLayout.put("1", new MapLayout(getActivity(), mapImage, roomList));
+                }
+            }
+
+            mapImage = map.getMapImage2();
+            if (mapImage != null) {
+                roomList = getRoomList(conventionID, "2", mapImage.getWidth());
+                if (startingLevel.equals("2")) {
+                    mapLayout.put("2", new MapLayout(getActivity(), mapImage, roomList, startingRoom));
+                } else {
+                    mapLayout.put("2", new MapLayout(getActivity(), mapImage, roomList));
+                }
+            }
+
+            mapImage = map.getMapImage3();
+            if (mapImage != null) {
+                roomList = getRoomList(conventionID, "3", mapImage.getWidth());
+                if (startingLevel.equals("3")) {
+                    mapLayout.put("3", new MapLayout(getActivity(), mapImage, roomList, startingRoom));
+                } else {
+                    mapLayout.put("3", new MapLayout(getActivity(), mapImage, roomList));
+                }
             }
         }
     }
 
-    public ArrayList<Room> getRoomList(String conventionID, String level) {
+    //Gets list of rooms for a given string and level
+    //Image width is also supplied to get the ratio between the image size and the coordinates in the database
+    public ArrayList<Room> getRoomList(String conventionID, String level, float imageWidth) {
         ArrayList<Room> roomList = new ArrayList<Room>();
 
         Cursor res = dm.getRoomsForLevelOfConventionFromSQLite(conventionID, level);
@@ -106,6 +150,21 @@ public class MapFragment extends Fragment {
             Log.d("Database","No room for this convention's level");
         }
         else {
+            //Coordinates are modified based on the size of the map image
+            //They are translated such that the coordinate refers to the point on the image that the room icon points to
+
+            //Set dimensions and center point of room icon used in admin site
+            final int WEB_APP_ICON_WIDTH = 25;
+            final int WEB_APP_ICON_HEIGHT = 40;
+            final float WEB_APP_ICON_X_CENTER = (float) WEB_APP_ICON_WIDTH / 2;
+            final float WEB_APP_ICON_Y_CENTER = (float) WEB_APP_ICON_HEIGHT;
+
+            //The map width in the admin site is always the same, while the height changes
+            //Need to calculate ratio between the two
+            final int WEB_APP_MAP_WIDTH = 1043;
+            float coordinateModifier =  imageWidth / WEB_APP_MAP_WIDTH;
+
+            //Get column indices for room table
             int roomIDIndex = res.getColumnIndex(DatabaseManager.ROOM_ROOM_ID);
             int roomNameIndex = res.getColumnIndex(DatabaseManager.ROOM_NAME);
             int roomXCoordinateIndex = res.getColumnIndex(DatabaseManager.ROOM_X_COORDINATE);
@@ -113,11 +172,17 @@ public class MapFragment extends Fragment {
 
             while (res.moveToNext())
             {
+                //Get room coordinates and translate them
+                int roomXCoordinate = Integer.parseInt(res.getString(roomXCoordinateIndex));
+                int roomYCoordinate = Integer.parseInt(res.getString(roomYCoordinateIndex));
+                roomXCoordinate = (int) ((roomXCoordinate + WEB_APP_ICON_X_CENTER) * coordinateModifier);
+                roomYCoordinate = (int) ((roomYCoordinate + WEB_APP_ICON_Y_CENTER) * coordinateModifier);
+
                 Room item = new Room();
                 item.setRoomID(res.getString(roomIDIndex));
                 item.setRoomName(res.getString(roomNameIndex));
-                item.setRoomXCoordinate(res.getString(roomXCoordinateIndex));
-                item.setRoomYCoordinate(res.getString(roomYCoordinateIndex));
+                item.setRoomXCoordinate(String.valueOf(roomXCoordinate));
+                item.setRoomYCoordinate(String.valueOf(roomYCoordinate));
                 roomList.add(item);
             }
         }
@@ -125,20 +190,52 @@ public class MapFragment extends Fragment {
         return roomList;
     }
 
-    public Bitmap getMapImage(String conventionID, String level) {
-        int mapImageID = getResources().getIdentifier("map_" + conventionID + "_" + level,"drawable","com.jordanklamut.interactiveevents");
-        Bitmap mapImage;
+    public ConventionMap getMap(String conventionID) {
+        ConventionMap map = null;
 
-        if (mapImageID == 0)
-        {
-            mapImage = null;
+        Cursor res = dm.getMapsForConventionFromSQLite(conventionID);
+
+        if(res.getCount() == 0) {
+            Log.d("Database","No maps for this convention");
         }
-        else
-        {
-            mapImage = ((BitmapDrawable) getResources().getDrawable(mapImageID, null)).getBitmap();
+        else {
+            int mapIDIndex = res.getColumnIndex(DatabaseManager.MAP_CONVENTION_ID);
+            int map1Index = res.getColumnIndex(DatabaseManager.MAP_1);
+            int map2Index = res.getColumnIndex(DatabaseManager.MAP_2);
+            int map3Index = res.getColumnIndex(DatabaseManager.MAP_3);
+
+            if (res.moveToNext())
+            {
+                map = new ConventionMap(res.getString(mapIDIndex));
+                map.setMap1(res.getBlob(map1Index));
+                map.setMap2(res.getBlob(map2Index));
+                map.setMap3(res.getBlob(map3Index));
+            }
         }
 
-        return mapImage;
+        return map;
+    }
+
+    public String getStartingLevel()
+    {
+        String startingLevel = "";
+        if (startingRoom != null)
+        {
+            Cursor res = dm.getRoomByIDFromSQLite(startingRoom);
+
+            if(res.getCount() == 0) {
+                Log.d("Database","No maps for this convention");
+            }
+            else {
+                int mapIDIndex = res.getColumnIndex(DatabaseManager.ROOM_LEVEL);
+
+                if (res.moveToNext())
+                {
+                    startingLevel = res.getString(mapIDIndex);
+                }
+            }
+        }
+        return startingLevel;
     }
 
     @Override
@@ -151,8 +248,6 @@ public class MapFragment extends Fragment {
 
     class LevelSelectorButton extends Button {
         private String level;
-
-        protected LevelSelectorButton(Context context) { super(context); }
 
         protected LevelSelectorButton(Context context, String level) {
             super(context);

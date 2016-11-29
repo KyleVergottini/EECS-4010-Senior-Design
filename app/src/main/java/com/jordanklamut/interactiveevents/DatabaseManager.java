@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.jordanklamut.interactiveevents.models.Convention;
+import com.jordanklamut.interactiveevents.models.ConventionMap;
 import com.jordanklamut.interactiveevents.models.Event;
 import com.jordanklamut.interactiveevents.models.Room;
 
@@ -30,9 +31,12 @@ import org.json.JSONObject;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +76,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
         public static final String ROOM_X_COORDINATE = "XCoordinate";
         public static final String ROOM_Y_COORDINATE = "YCoordinate";
 
+    public static final String MAP_TABLE_NAME = "Maps";
+        public static final String MAP_CONVENTION_ID = "ConventionID";
+        public static final String MAP_1 = "Map1";
+        public static final String MAP_2 = "Map2";
+        public static final String MAP_3 = "Map3";
+
     private final String QUERY_CON = "CREATE TABLE " + CON_TABLE_NAME + " ("
             + CON_CONVENTION_ID + " INTEGER, "
             + CON_NAME + " TEXT, "
@@ -102,6 +112,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
             + ROOM_X_COORDINATE + " TEXT, "
             + ROOM_Y_COORDINATE + " TEXT) ";
 
+    private final String QUERY_MAP = "CREATE TABLE " + MAP_TABLE_NAME + " ("
+            + MAP_CONVENTION_ID + " INTEGER, "
+            + MAP_1 + " BLOB, "
+            + MAP_2 + " BLOB, "
+            + MAP_3 + " BLOB) ";
+
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -128,10 +144,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
         database.execSQL(QUERY_CON);
         database.execSQL(QUERY_EVENT);
         database.execSQL(QUERY_ROOM);
+        database.execSQL(QUERY_MAP);
 
         Log.d("Database","Table created: " + CON_TABLE_NAME);
         Log.d("Database","Table created: " + EVENT_TABLE_NAME);
         Log.d("Database","Table created: " + ROOM_TABLE_NAME);
+        Log.d("Database","Table created: " + MAP_TABLE_NAME);
     }
 
     @Override
@@ -147,7 +165,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     public void setConventionList(Context context) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue = Volley.newRequestQueue(context);
-        String conventions_url = "http://www.jordanklamut.com/InteractiveEvents/conventions.php";
+        String conventions_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Convention/GetAllConventions/";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, conventions_url, new Response.Listener<JSONObject>() {
             @Override
@@ -328,7 +346,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     //RETURNS ALL EVENTS FROM PHP MATCHING CONVENTION_ID
     public void setEventList(Context context, String conventionID) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String events_url = "http://www.jordanklamut.com/InteractiveEvents/events.php";
+        String events_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Event/GetAllEventsForAConvention/";
 
         HashMap<String,String> params = new HashMap<>();
         params.put("conventionID", conventionID);
@@ -346,7 +364,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
                         String eventID = event.getString("EventID");
                         String eventRoomID = event.getString("RoomID");
                         String eventName = event.getString("Name");
-                        String eventDate = event.getString("EventDate");
+                        String eventDate = "";  //What are we doing with this field?
                         String eventStartTime = event.getString("StartTime");
                         String eventEndTime = event.getString("EndTime");
                         String eventDescription = event.getString("Description");
@@ -418,16 +436,28 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
-    public Cursor getUpcomingEventsForRoomFromSQLite(String RoomID) {
-        String whereQuery = " WHERE ";
-        whereQuery += EVENT_ROOM_ID + " = " + RoomID;
-        //TODO: Need to add datetime filter after determining formats
+    public Cursor getCurrentAndNextEventsForRoomFromSQLite(String RoomID) {
+        final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        final String CURRENT_TIME = "'" + DATE_TO_STRING.format(new Date()) + "'";
 
-        String orderByQuery = " ORDER BY ";
-        orderByQuery += EVENT_START_TIME;
+        String roomIDWhereQuery = " WHERE ";
+        roomIDWhereQuery += EVENT_ROOM_ID + " = " + RoomID;
+
+        String currentEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'CURRENT' AS Status";
+        currentEventQuery += " FROM " + EVENT_TABLE_NAME;
+        currentEventQuery += roomIDWhereQuery + " AND ";
+        currentEventQuery += EVENT_START_TIME + " <= " + CURRENT_TIME + " AND ";
+        currentEventQuery += EVENT_END_TIME + " > " + CURRENT_TIME;
+
+        String nextEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'NEXT' AS Status";
+        nextEventQuery += " FROM " + EVENT_TABLE_NAME;
+        nextEventQuery += roomIDWhereQuery + " AND ";
+        nextEventQuery += EVENT_START_TIME + " > " + CURRENT_TIME;
+        nextEventQuery += " ORDER BY " + EVENT_START_TIME;
+        nextEventQuery += " LIMIT 1";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + orderByQuery, null);
+        return db.rawQuery(currentEventQuery + " UNION " + nextEventQuery, null);
     }
 
 
@@ -560,6 +590,15 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
     }
 
+    public Cursor getRoomByIDFromSQLite(String roomID)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += ROOM_ROOM_ID + " = " + roomID;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
+    }
+
     public void clearRoomsTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ROOM_TABLE_NAME, null, null);
@@ -569,7 +608,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
 /////////////////////////MAPS/////////////////////////
 
     //RETURNS ALL MAPS FROM .NET API MATCHING CONVENTION_ID
-    public void setMapImages(Context context, String conventionID) {
+    public void setMapList(Context context, String conventionID) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Map/GetMapForConvention/";
 
@@ -583,27 +622,26 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
                 try {
                     String ConventionID = response.getString("ConventionID");
+                    ConventionMap map = new ConventionMap(ConventionID);
 
                     String mapString1 = response.getString("MapImage1");
                     String mapString2 = response.getString("MapImage2");
                     String mapString3 = response.getString("MapImage3");
 
-                    if (mapString1 != "null")
+                    if (!mapString1.equals("null"))
                     {
-                        Bitmap mapImage1 = getBitmapFromString(mapString1);
-                        saveBitmapImage(mapImage1, "map_" + ConventionID + "_1.png");
+                        map.setMap1(Base64.decode(mapString1, Base64.DEFAULT));
                     }
-                    if (mapString2 != "null")
+                    if (!mapString2.equals("null"))
                     {
-                        Bitmap mapImage2 = getBitmapFromString(mapString2);
-                        saveBitmapImage(mapImage2, "map_" + ConventionID + "_1.png");
+                        map.setMap2(Base64.decode(mapString2, Base64.DEFAULT));
                     }
-                    if (mapString3 != "null")
+                    if (!mapString3.equals("null"))
                     {
-                        Bitmap mapImage3 = getBitmapFromString(mapString3);
-                        saveBitmapImage(mapImage3, "map_" + ConventionID + "_1.png");
+                        map.setMap3(Base64.decode(mapString1, Base64.DEFAULT));
                     }
 
+                    insertMapToSQLite(map);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -618,35 +656,40 @@ public class DatabaseManager extends SQLiteOpenHelper{
         requestQueue.add(jsonObjectRequest);
     }
 
-    //Function used in setMapImages to convert string to bitmap and then save to resources
-    //http://mobile.cs.fsu.edu/converting-images-to-json-objects/
-    Bitmap getBitmapFromString(String bitmapString)
-    {
-        byte[] bitmapByteArray = Base64.decode(bitmapString, Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapByteArray, 0, bitmapByteArray.length);
-        return bitmap;
+    //sub method for setMapList
+    public void insertMapToSQLite(ConventionMap map) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Cursor res = db.rawQuery("SELECT * FROM " + MAP_TABLE_NAME + " WHERE " + MAP_CONVENTION_ID + " LIKE " + map.getMapConventionID(), null);
+
+        values.put(MAP_CONVENTION_ID, map.getMapConventionID());
+        values.put(MAP_1, map.getMap1());
+        values.put(MAP_2, map.getMap2());
+        values.put(MAP_3, map.getMap3());
+
+        if (res.getCount() == 0) {
+            //IF MAP DOESNT EXIST - ADD IT
+            db.insert(MAP_TABLE_NAME, null, values);
+            db.close();
+            Log.d("Database", "Map inserted for ConventionID: " + map.getMapConventionID());
+        } else {
+            //ELSE MAP ALREADY EXISTS - UPDATE IT
+            db.update(MAP_TABLE_NAME, values, MAP_CONVENTION_ID + " = ?", new String[] {map.getMapConventionID()});
+            db.close();
+            Log.d("Database","Row updated for Map of ConventionID: " + map.getMapConventionID());
+        }
+
+        res.close();
     }
 
-    //Function used in setMapImages to save a bitmap to resources
-    //http://stackoverflow.com/questions/649154/save-bitmap-to-location
-    void saveBitmapImage(Bitmap image, String filename)
+    //RETURN MAPS FOR CONVENTION FROM SQLite
+    public Cursor getMapsForConventionFromSQLite(String conventionID)
     {
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(filename);
-            image.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-            // PNG is a lossless format, the compression factor (100) is ignored
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        String whereQuery = " WHERE ";
+        whereQuery += MAP_CONVENTION_ID + " = " + conventionID;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + MAP_TABLE_NAME + whereQuery, null);
     }
 
 }
