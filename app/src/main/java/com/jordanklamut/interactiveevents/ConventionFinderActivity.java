@@ -40,7 +40,6 @@ public class ConventionFinderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.convention_finder_activity);
 
-
         // Setup the viewPager
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 
@@ -66,28 +65,13 @@ public class ConventionFinderActivity extends AppCompatActivity {
                 public void onTabSelected(TabLayout.Tab tab) {
                     viewPager.setCurrentItem(tab.getPosition());
                     pagerAdapter.refreshFragment(tab.getPosition());
-
-                    //if (tab.getPosition() == 2){
-                    //    //super.onTabSelected(tab);
-                    //    super.onTabSelected(tab);
-                    //    ConventionFinderFragment_Favorites cff_f = (ConventionFinderFragment_Favorites) pagerAdapter.getItem(tab.getPosition());
-                    //    cff_f.update();
-                    //}
-                    //else{
-                    //    super.onTabSelected(tab);
-                    //}
-
                 }
             });
-
-
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager.setCurrentItem(1);
-
-
     }
 
     @Override
@@ -147,7 +131,6 @@ public class ConventionFinderActivity extends AppCompatActivity {
         }
 
         public void refreshFragment(int position) {
-
             switch (position) {
                 case 0:
                     break;
@@ -219,53 +202,6 @@ public class ConventionFinderActivity extends AppCompatActivity {
             pd = new ProgressDialog(ConventionFinderActivity.this);
             pd.setTitle("Please Wait...");
             pd.setMessage("Gettings Conventions...");
-            pd.setCancelable(false);
-            pd.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {}
-    }
-
-    //EXECUTES ON SEARCH CLICK - QUERY SQLite DB AND RETURNS RESULTS
-    private class GetConventionsFromSQLite extends AsyncTask<String, Void, String> {
-        DatabaseManager dm;
-        ProgressDialog pd;
-
-        @Override
-        protected String doInBackground(String... params) {
-            dm = new DatabaseManager(ConventionFinderActivity.this);
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.interrupted();
-            }
-            return "Executed";
-        }
-
-        @Override
-        //GETS ALL THE CONVENTIONS FROM SQLite
-        protected void onPostExecute(String result) {
-            Cursor res = dm.getAllConventionsFromSQLite();
-
-            //TODO - res contains all the conventions, would need to modify getAllConventions to include filters
-            if(res.getCount() != 0) {
-                startActivity(new Intent(ConventionFinderActivity.this, ConventionFinderActivity_SearchResults.class));
-            }
-            else
-            {
-                Toast.makeText(ConventionFinderActivity.this,"No conventions found",Toast.LENGTH_SHORT).show();
-            }
-            //Toast.makeText(ConventionFinderActivity.this,"SEARCHED CONVENTIONS FROM SQLITE",Toast.LENGTH_SHORT).show();
-            pd.dismiss();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            pd = new ProgressDialog(ConventionFinderActivity.this);
-            pd.setTitle("Please Wait...");
-            pd.setMessage("Finding Conventions...");
             pd.setCancelable(false);
             pd.show();
         }

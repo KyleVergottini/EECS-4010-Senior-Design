@@ -3,10 +3,13 @@ package com.jordanklamut.interactiveevents;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,8 +19,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.ArrayList;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import com.jordanklamut.interactiveevents.models.DetailsDialog;
 import com.jordanklamut.interactiveevents.models.Event;
 
 public class ScheduleFragment_Tab extends Fragment{
@@ -25,13 +32,14 @@ public class ScheduleFragment_Tab extends Fragment{
     private OnFragmentInteractionListener mListener;
     ArrayList<Event> listitems = new ArrayList<>();
     RecyclerView MyRecyclerView;
-    DatabaseManager dm;
+    static DatabaseManager dm;
 
     public ScheduleFragment_Tab() {
 
     }
 
-    public static ScheduleFragment_Tab newInstance(int pageNumber, String pageTitle) {
+    public static ScheduleFragment_Tab newInstance(int pageNumber, String pageTitle, DatabaseManager dManager) {
+        dm = dManager;
         ScheduleFragment_Tab fragment = new ScheduleFragment_Tab();
         Bundle args = new Bundle();
         args.putInt("someInt", pageNumber);
@@ -43,7 +51,7 @@ public class ScheduleFragment_Tab extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dm = new DatabaseManager(this.getActivity());
+        //dm = new DatabaseManager(this.getActivity());
         initializeList();
         getActivity().setTitle("Schedule");
     }
@@ -77,11 +85,41 @@ public class ScheduleFragment_Tab extends Fragment{
             {
                 Event item = new Event();
                 item.setEventID(res.getString(0));
-                item.setEventRoomID(res.getString(1));
+
+                //GET ROOM ROW MATCHING THE ROOM_ID
+                Cursor roomRes = dm.getSelectRoomsFromSQLite(res.getString(1));
+                roomRes.moveToFirst();
+
+                //0 ROOM_ROOM_ID
+                //1 ROOM_CONVENTION_ID
+                //2 ROOM_NAME
+                //3 ROOM_LEVEL
+                //4 ROOM_X_COORDINATE
+                //5 ROOM_Y_COORDINATE
+
+                item.setEventRoomID(roomRes.getString(2) + "    (Floor: " + roomRes.getString(3) + ")");
                 item.setEventName(res.getString(2));
                 item.setEventDate(res.getString(3));
-                item.setEventStartTime(res.getString(4));
-                item.setEventEndTime(res.getString(5));
+
+                //CONVERT TO AM/PM TIMES
+                String formatStartTime = "";
+                String formatEndTime = "";
+                SimpleDateFormat read = new SimpleDateFormat("HH:mm:ss");
+                SimpleDateFormat write = new SimpleDateFormat("h:mm a");
+
+                try {
+                    formatStartTime = write.format(read.parse(res.getString(4)));
+                    formatEndTime = write.format(read.parse(res.getString(5))); //res.getString(5)
+                }
+                catch(Exception e) {
+                    formatStartTime = "?";
+                    formatEndTime = "?";
+                }
+
+                item.setEventStartTime(formatStartTime); //res.getString(4)
+                item.setEventEndTime(formatEndTime);//res.getString(5)
+                item.setEventDescription(res.getString(6));
+
                 item.setEventFavorite(res.getString(7));
                 listitems.add(item);
             }
@@ -202,13 +240,19 @@ public class ScheduleFragment_Tab extends Fragment{
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show(); //TODO - Link to map
+
+                    final NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                    final FragmentManager fm = getFragmentManager();
+
+                    fm.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
+                    navigationView.getMenu().getItem(1).setChecked(true);
                 }
             });
 
             btnViewDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show(); //TODO - Set Details page
+                    new DetailsDialog().setEventDetailsDialog(getContext(), ecv);
                 }
             });
         }

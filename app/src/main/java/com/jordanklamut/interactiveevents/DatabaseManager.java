@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.jordanklamut.interactiveevents.helpers.CustomRequest;
 import com.jordanklamut.interactiveevents.models.Convention;
 import com.jordanklamut.interactiveevents.models.Event;
 import com.jordanklamut.interactiveevents.models.Room;
@@ -142,7 +143,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     public void setConventionList(Context context) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue = Volley.newRequestQueue(context);
-        String conventions_url = "http://www.jordanklamut.com/InteractiveEvents/conventions.php";
+        String conventions_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Convention/GetAllConventions/";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, conventions_url, new Response.Listener<JSONObject>() {
             @Override
@@ -293,6 +294,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     public int getConventionDates(String conID) {
+        //TODO - not finished
         SQLiteDatabase db = this.getWritableDatabase();
         String[] startDate;
         String[] endDate;
@@ -307,61 +309,58 @@ public class DatabaseManager extends SQLiteOpenHelper{
             int end = Integer.parseInt(endDate[2]);
             days = end - start;
             return days;
-            //try {
-            //} catch(NumberFormatException nfe) {
-            //}
-
         }
-
-
 
         return days;
     }
 
 /////////////////////////EVENTS////////////////////////
-
-    //RETURNS ALL EVENTS FROM PHP MATCHING CONVENTION_ID
+//RETURNS ALL EVENTS FROM PHP MATCHING CONVENTION_ID
     public void setEventList(Context context, String conventionID) {
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String events_url = "http://www.jordanklamut.com/InteractiveEvents/events.php";
+    RequestQueue requestQueue = Volley.newRequestQueue(context);
+    String events_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Event/GetAllEventsForAConvention/";
 
-        HashMap<String,String> params = new HashMap<>();
-        params.put("conventionID", conventionID);
+    Map<String,String> params = new HashMap<>();
+    params.put("conventionID", conventionID);
 
-        CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, events_url, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("Database","PHP RESPONSE " + response.toString());
+    CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, events_url, params, new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
+            Log.d("Database","PHP RESPONSE " + response.toString());
 
-                try {
-                    JSONArray events = response.getJSONArray("events");
-                    for (int i = 0; i < events.length(); i++) {
-                        JSONObject event = events.getJSONObject(i);
+            try {
+                JSONArray events = response.getJSONArray("events");
+                for (int i = 0; i < events.length(); i++) {
+                    JSONObject event = events.getJSONObject(i);
 
-                        String eventID = event.getString("EventID");
-                        String eventRoomID = event.getString("RoomID");
-                        String eventName = event.getString("Name");
-                        String eventDate = event.getString("EventDate");
-                        String eventStartTime = event.getString("StartTime");
-                        String eventEndTime = event.getString("EndTime");
-                        String eventDescription = event.getString("Description");
-                        String eventFavorite = "0";
+                    String[] startDateTime = event.getString("StartTime").split(" "); //--date 1-time
+                    String[] endDateTime = event.getString("EndTime").split(" ");
 
-                        insertEventToSQLite(new Event(eventID, eventRoomID, eventName, eventDate, eventStartTime, eventEndTime, eventDescription, eventFavorite));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    String eventID = event.getString("EventID");
+                    String eventRoomID = event.getString("RoomID");
+                    String eventName = event.getString("Name");
+                    String eventDate = startDateTime[0];
+                    String eventStartTime = startDateTime[1];
+                    String eventEndTime = endDateTime[1];
+                    String eventDescription = event.getString("Description");
+                    String eventFavorite = "0";
+
+                    insertEventToSQLite(new Event(eventID, eventRoomID, eventName, eventDate, eventStartTime, eventEndTime, eventDescription, eventFavorite));
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.append(error.getMessage());
-            }
-        });
+        }
+    }, new Response.ErrorListener(){
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.printStackTrace();
+            System.out.append(error.getMessage());
+        }
+    });
 
-        requestQueue.add(jsonObjectRequest);
-    }
+    requestQueue.add(jsonObjectRequest);
+}
 
     //sub method for setEventList
     public void insertEventToSQLite(Event event) {
@@ -401,13 +400,10 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     //RETURN SELECT EVENTS FROM SQLite
-    public Cursor getSelectEventsFromSQLite()
+    public Cursor getSelectEventsFromSQLite(String eventID)
     {
         String whereQuery = " WHERE ";
-        whereQuery += EVENT_EVENT_ID + " > '0'";
-
-        //TODO - ADD WHERE STATEMENTS TO whereQuery
-
+        whereQuery += EVENT_EVENT_ID + " LIKE " + eventID;
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
@@ -444,7 +440,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
     //RETURNS ALL ROOMS FROM PHP MATCHING CONVENTION_ID
     public void setRoomList(Context context, String conventionID) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String rooms_url = "http://www.jordanklamut.com/InteractiveEvents/rooms.php";
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Room/GetRoomsForAGivenConvention/";
 
         HashMap<String,String> params = new HashMap<>();
         params.put("conventionID", conventionID);
@@ -466,7 +462,6 @@ public class DatabaseManager extends SQLiteOpenHelper{
                         String roomXCoordinate = room.getString("XCoordinate");
                         String roomYCoordinate = room.getString("YCoordinate");
 
-
                         insertRoomToSQLite(new Room(roomID, roomConventionID, roomName, roomLevel, roomXCoordinate, roomYCoordinate));
                     }
                 } catch (JSONException e) {
@@ -481,7 +476,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
         });
 
         requestQueue.add(jsonObjectRequest);
-}
+    }
 
     //sub method for setRoomList
     public void insertRoomToSQLite(Room room) {
@@ -519,13 +514,10 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     //RETURN SELECT ROOMS FROM SQLite
-    public Cursor getSelectRoomsFromSQLite()
+    public Cursor getSelectRoomsFromSQLite(String roomID)
     {
         String whereQuery = " WHERE ";
-        whereQuery += ROOM_ROOM_ID + " > '0'";
-
-        //TODO - ADD WHERE STATEMENTS TO whereQuery
-
+        whereQuery += ROOM_ROOM_ID + " LIKE " + roomID;
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
     }

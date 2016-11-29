@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -31,7 +34,7 @@ public class RegisterActivity extends Activity {
     private RequestQueue requestQueue;
     private StringRequest request;
 
-    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/register.php";
+    private String register_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/User/CreateUser/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +50,15 @@ public class RegisterActivity extends Activity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                request = new StringRequest(Request.Method.POST, login_url, new Response.Listener<String>() {
+                request = new StringRequest(Request.Method.POST, register_url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.d("Response", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
 
                             if (jsonObject.names().get(0).equals("success")) {
-                                Toast.makeText(getApplicationContext(), "Account created successfully", Toast.LENGTH_SHORT).show(); //REGISTER SUCCESS - return success flag and username
+                                Toast.makeText(getApplicationContext(), "User created successfully", Toast.LENGTH_SHORT).show(); //REGISTER SUCCESS - return success flag and username
 
                                 SharedPreferences csp = getApplicationContext().getSharedPreferences("login_pref", 0);
                                 SharedPreferences.Editor cEditor = csp.edit();
@@ -81,11 +85,13 @@ public class RegisterActivity extends Activity {
                     }
                 }, new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {}
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT);
+                    }
                 }){
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String,String> hashMap = new HashMap<String, String>();
+                        Map<String,String> hashMap = new HashMap<String, String>();
                         hashMap.put("email",ET_USER.getText().toString());
                         hashMap.put("password",ET_PASS.getText().toString()); //TODO - HASH PASSWORD
 

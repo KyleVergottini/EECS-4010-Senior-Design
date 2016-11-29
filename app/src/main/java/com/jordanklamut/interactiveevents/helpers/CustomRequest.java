@@ -1,4 +1,4 @@
-package com.jordanklamut.interactiveevents;
+package com.jordanklamut.interactiveevents.helpers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -20,6 +20,7 @@ public class CustomRequest extends Request<JSONObject> {
 
     private Listener<JSONObject> listener;
     private Map<String, String> params;
+    private Map<String, Integer> paramsI;
 
     public CustomRequest(String url, Map<String, String> params,
                          Listener<JSONObject> reponseListener, ErrorListener errorListener) {

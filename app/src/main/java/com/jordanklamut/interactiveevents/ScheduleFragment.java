@@ -27,27 +27,29 @@ public class ScheduleFragment extends Fragment{
         getActivity().setTitle("Schedule");
 
         //Inflate tab_layout and setup Views.
-        View x =  inflater.inflate(R.layout.schedule_fragment_pager,null); //TODO
-        tabLayout = (TabLayout) x.findViewById(R.id.tabs);
-        viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+        View v =  inflater.inflate(R.layout.schedule_fragment_pager,null);
+        tabLayout = (TabLayout) v.findViewById(R.id.tabs);
+        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
 
         //Set an Adapter for the View Pager
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
-        return x;
+        return v;
     }
 
     class MyAdapter extends FragmentPagerAdapter{
 
+        DatabaseManager dm;
+
         public MyAdapter(FragmentManager fm) {
             super(fm);
+            dm = new DatabaseManager(getActivity());
         }
 
         @Override
         public Fragment getItem(int position) {
-
             for (int i = 0; i <= position; i++)
-                return ScheduleFragment_Tab.newInstance(position, "Day " + position);
+                return ScheduleFragment_Tab.newInstance(position, "Day " + position, dm);
             return null;
         }
 
@@ -58,17 +60,15 @@ public class ScheduleFragment extends Fragment{
             String conID =  csp.getString("homeConventionID", null);
 
             DatabaseManager dm = new DatabaseManager(getActivity());
-            int days = dm.getConventionDates(conID);
-
-            //int_items = 5; //TODO - SET TO NUMBER OF DAYS
+            int days = dm.getConventionDates(conID) + 1;
             return days;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-
+            //TODO - get start date of event and set titles, comparing with current day to set Today, Tomorrow, etc titles
             for (int i = 0; i <= position; i++)
-                return "Day " + position;
+                return "Day " + position + 1;
             return null;
         }
     }

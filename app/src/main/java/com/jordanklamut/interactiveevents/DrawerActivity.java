@@ -96,7 +96,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 return true;
             case R.id.action_refresh:
                 new GetAllEventsPHPtoSQLite().execute();
-                Toast.makeText(DrawerActivity.this, "Refresh DB: TODO", Toast.LENGTH_LONG).show();
+                Toast.makeText(DrawerActivity.this, "Refreshing Database...", Toast.LENGTH_LONG).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -119,7 +119,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_find_convention) {
             startActivity(new Intent(DrawerActivity.this, ConventionFinderActivity.class));
         }else if (id == R.id.nav_share) {
-            composeEmail("", "Check out Interactive Events", "TODO : App details and link to app to download?"); //TODO
+            composeEmail("", "Check out MapACon", "Check out this app! Plan your busy convention schedule using MapACon."); //TODO
         }else if (id == R.id.nav_feedback) {
             composeEmail("feedback@jordanklamut.com", "Interactive Events Feedback", null);
         }else if (id == R.id.nav_about) {
@@ -129,7 +129,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             builder.setView(dialogLayout);
             builder.show();
         } else if (id == R.id.pref) {
-            //startActivity(new Intent(DrawerActivity.this, PreferencesActivity.class));
             PreferencesActivity.startThisActivityForResult(this, SETTINGS_REQUEST);
         }else if (id == R.id.debug) {
             startActivity(new Intent(DrawerActivity.this, DebugActivity.class));
@@ -148,7 +147,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }
 
-
     //EXECUTES ON REFRESH CLICK - GETS ALL EVENTS FROM PHP MATCHING CONVENTION ID, CREATES SQLite AND RETURNS
     private class GetAllEventsPHPtoSQLite extends AsyncTask<String, Void, String> {
         DatabaseManager dm;
@@ -160,6 +158,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             SharedPreferences csp = getSharedPreferences("login_pref", 0);
             dm = new DatabaseManager(DrawerActivity.this);
             dm.setEventList(DrawerActivity.this, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
+            dm.setRoomList(DrawerActivity.this, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
 
             try {
                 Thread.sleep(500);
@@ -171,7 +170,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(DrawerActivity.this,"CREATED SQLITE FROM PHP",Toast.LENGTH_SHORT).show();
             pd.dismiss();
         }
 

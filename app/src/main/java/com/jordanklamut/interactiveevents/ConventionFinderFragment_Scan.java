@@ -13,7 +13,6 @@ public class ConventionFinderFragment_Scan extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public ConventionFinderFragment_Scan() {
-        // Required empty public constructor
     }
 
     public static ConventionFinderFragment_Scan newInstance() {
@@ -29,9 +28,7 @@ public class ConventionFinderFragment_Scan extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.convention_finder_fragment_scan, container, false);
     }
 
@@ -46,14 +43,7 @@ public class ConventionFinderFragment_Scan extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

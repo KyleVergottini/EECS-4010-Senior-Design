@@ -64,6 +64,7 @@ public class ConventionFinderFragment_Search extends Fragment{
         etConCode.setEnabled(false);
         sConWithin.setEnabled(false);
 
+        //COLLECT THE SEARCH INFO TO PASS TO _SearchResults TO RUN QUERY
         btnSearch.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -93,6 +94,7 @@ public class ConventionFinderFragment_Search extends Fragment{
                 etConName.setText(null);
                 etConCode.setText(null);
                 etConCity.setText(null);
+                //TODO - Need to set spinners to empty
                 //sConState.setAdapter(null);
                 //sConWithin.setAdapter(null);
                 etConStartDate.setText(null);
@@ -147,9 +149,6 @@ public class ConventionFinderFragment_Search extends Fragment{
                     };
                     newFragment.show(getActivity().getFragmentManager(), "Date Picker");
                 }
-                //new DatePickerDialog(getActivity(), from_dateListener, from_year, from_month, from_day);
-                //DialogFragment newFragment = new DatePickerFragment();
-                //newFragment.show(getActivity().getFragmentManager(),"Date Picker");
             }
         });
 
@@ -165,7 +164,6 @@ public class ConventionFinderFragment_Search extends Fragment{
                     }
                 };
                 newFragment.show(getActivity().getFragmentManager(), "Date Picker");
-
             }
         });
 
