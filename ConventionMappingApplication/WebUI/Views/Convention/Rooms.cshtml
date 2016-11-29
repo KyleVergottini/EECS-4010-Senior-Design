@@ -1,0 +1,172 @@
+﻿@using WebUI.Models
+@model RoomViewModel
+
+@{
+    ViewBag.Title = "Add Rooms";
+}
+@section scripts {
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var newCoords = [];
+        var roomNum = 1;
+        $("#map").droppable({
+            accept: '#mapIcon',
+            drop: function (event, ui) {
+                var $clone = ui.helper.clone();
+                if (!$clone.is('.insideContainer')) {
+                    $(this).append($clone.attr("id", 'room' + roomNum));
+                    roomNum += 1;
+
+                    var currentLocation = $clone;
+                    var thisPos = currentLocation.position();
+                    var parentPos = currentLocation.parent().position();
+
+                    var roomId = $clone[0].id;
+                    var x = parseInt(thisPos.left - parentPos.left - 15);
+                    var y = parseInt(thisPos.top - parentPos.top);
+
+                    var found = false;
+                    if (roomId.includes("room")) {
+                        for (var i in newCoords) {
+                            if (newCoords[i].JavascriptID === roomId) {
+                                newCoords[i].XCoordinate = x;
+                                newCoords[i].YCoordinate = y;
+
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            newCoords.push({
+                                JavascriptID: roomId,
+                                XCoordinate: x,
+                                YCoordinate: y
+                            });
+                        }
+                    }
+
+                    $(this).append($clone.addClass('insideContainer').draggable({
+                        containment: '#map',
+                        stop: function() {
+                            var currentLocation = $(this);
+                            var thisPos = currentLocation.position();
+                            var parentPos = currentLocation.parent().position();
+
+                            var roomId = this.id;
+                            var x = parseInt(thisPos.left - parentPos.left - 15);
+                            var y = parseInt(thisPos.top - parentPos.top);
+
+                            var found = false;
+                            if (roomId.includes("room")) {
+                                for (var i in newCoords) {
+                                    if (newCoords[i].JavascriptID === roomId) {
+                                        newCoords[i].XCoordinate = x;
+                                        newCoords[i].YCoordinate = y;
+
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found) {
+                                    newCoords.push({
+                                        JavascriptID: roomId,
+                                        XCoordinate: x,
+                                        YCoordinate: y
+                                    });
+                                }
+                            }
+                        }
+                    }));
+                }
+            }
+        });
+        $(".drag").draggable({
+            appendTo: '#map',
+            helper: 'clone'
+        });
+
+        $("#nextBtn, #prevBtn").click(function() {
+            saveCoords();
+        });
+
+        function saveCoords() {
+            $.ajax({
+                type: "POST",
+                url: "/Convention/Rooms/",
+                data: {floorNumber: @Model.FloorNumber, rooms: newCoords},
+                success: function() {
+                    toastr.success('The changes were saved!', 'Success');
+                }
+            });
+        }
+    </script>
+}
+@section styles {
+    <style>
+        .roomIconBox {
+            text-align: center;
+            border: solid black 1px;
+            padding: 10px 0;
+        }
+
+        #mapIcon {
+            margin-bottom: 10px;
+        }
+
+        #prevBtn {
+            padding: 8px;
+            margin: 5px 0;
+        }
+
+        #nextBtn {
+            margin-bottom: 5px;
+        }
+    </style>
+}
+
+<h2>@ViewBag.Title</h2>
+<p>Drag and drop the blue icon on the side to the location of the rooms on the uploaded map.</p>
+<p>To finish and exit click the "Submit" button.</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="roomForm">
+            @using (Html.BeginForm(MVC.Convention.Rooms(), FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="row">
+                    <div id="map" class="col-md-11">
+                        <img style="width:100%" src="@Url.Action("FloorMap", "Convention", new {floorNumber = Model.FloorNumber})" />
+                    </div>
+                    <div class="col-md-1 roomIconBox">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img id="mapIcon" class="drag" style="height: 40px; width: 25px;" src="@Links.Content.Images.mapIcon_png" />
+                            </div>
+                        </div>
+                        @if (Model.TotalFloors - Model.FloorNumber != 0 && (Model.TotalFloors - Model.FloorNumber == 1 || Model.FloorNumber != 3))
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input id="nextBtn" type="button" value="Next" class="btn btn-default" onclick="location.href='@Url.Action("Rooms", "Convention", new { floorNumber = Model.FloorNumber + 1 })'" />
+                                </div>
+                            </div>
+                        }
+                        @if (Model.FloorNumber != 1)
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input id="prevBtn" type="button" value="Previous" class="btn btn-default" onclick="location.href='@Url.Action("Rooms", "Convention", new { floorNumber = Model.FloorNumber - 1 })'" />
+                                </div>
+                            </div>
+                        }
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="@Url.Action(MVC.Convention.EventList())" style="margin: 5px 0;" class="btn btn-default mainBtn" onclick="saveCoords()">Submit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>

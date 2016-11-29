@@ -2,8 +2,10 @@
 {
     public interface IUserService
     {
-        bool CreateUser(string Username, string Password);
+        bool RegisterUser(string email, string password);
+		
         bool Login(string Username, string Password);
-        string GetRecoveryCode(string Username);
+        
+		string GetRecoveryCode(string Username);
     }
 }

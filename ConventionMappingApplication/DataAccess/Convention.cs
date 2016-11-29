@@ -34,6 +34,10 @@ namespace DataAccess
         public string City { get; set; }
 
         [Required]
+        [StringLength(60)]
+        public string City { get; set; }
+
+        [Required]
         [StringLength(20)]
         public string State { get; set; }
 

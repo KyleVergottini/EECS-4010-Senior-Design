@@ -1,19 +1,54 @@
-﻿@{
+﻿@model bool
+
+@{
     ViewBag.Title = "Upload a Map";
 }
-<h2>@ViewBag.Title</h2>
+@section scripts {
+    <script type="text/javascript">
+        var hasMaps = @Json.Encode(Model);
+        if (hasMaps) {
+            $("#nextBtn").removeClass("hidden");
+        }
+        Dropzone.options.mapUpload = {
+            maxFiles: 3,
+            accept: function(file, done) {
+                toastr.success('Image uploaded!', 'Success');
+                if (!hasMaps) {
+                    $("#nextBtn").removeClass("hidden");
+                }
+                done();
+            },
+            init: function() {
+                this.on("maxfilesexceeded",
+                    function(file) {
+                        toastr.error('No more maps can be uploaded to this convention!', 'Error');
+                    });
+            }
+        };
+    </script>
+}
+@section styles {
+    <style>
+        .roomIconBox {
+            text-align: center;
+            border: solid black 1px;
+            padding: 10px 0px;
+        }
+    </style>
+}
 
-<div class="row">
+<h2>@ViewBag.Title</h2>
+<p>Upload the Convention Maps representing the different floors starting with the 1st. Up to 3 floors total can be added.</p>
+<p>If at least one floor has been added, and no more are required, skip this step.</p>
+<div style="margin-bottom: 25px" class="row">
     <div class="col-md-8">
         <section id="mapForm">
-            @using (Html.BeginForm(MVC.Convention.Map(), FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm(MVC.Convention.Map(), FormMethod.Post, new { id = "mapUpload", @class = "form-horizontal dropzone", role = "form"}))
             {
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Submit" class="btn btn-default" />
-                    </div>
-                </div>
             }
         </section>
+    </div>
+    <div class="col-md-4 text-right">
+        <input id="nextBtn" type="button" value="Next" class="btn btn-default hidden" onclick="location.href='@Url.Action("Rooms", "Convention")'" />
     </div>
 </div>

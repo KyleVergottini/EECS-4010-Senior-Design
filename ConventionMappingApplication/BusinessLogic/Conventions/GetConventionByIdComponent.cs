@@ -16,7 +16,7 @@ namespace BusinessLogic.Conventions
                         ID = x.ID,
                         Name = x.Name,
                         Address = x.Address,
-                        //City = x.City, TODO: forgot city in db
+                        City = x.City,
                         State = x.State,
                         ZipCode = x.ZipCode,
                         Description = x.Description,

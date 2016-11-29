@@ -34,6 +34,10 @@
       <HintPath>..\packages\Autofac.4.1.0\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="BCrypt.Net, Version=0.1.5073.29922, Culture=neutral, PublicKeyToken=6bcd409ee6bc9292, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt-Official.0.1.109\lib\BCrypt.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -61,9 +65,13 @@
   <ItemGroup>
     <Compile Include="Conventions\GetAllConventionsComponent.cs" />
     <Compile Include="Conventions\GetConventionByIdComponent.cs" />
+    <Compile Include="Conventions\GetMapByConventionIdComponent.cs" />
     <Compile Include="Conventions\IGetAllConventionsComponent.cs" />
     <Compile Include="Conventions\IGetConventionByIdComponent.cs" />
+    <Compile Include="Conventions\IGetMapByConventionIdComponent.cs" />
+    <Compile Include="Conventions\ISaveConMapComponent.cs" />
     <Compile Include="Conventions\ISaveConventionComponent.cs" />
+    <Compile Include="Conventions\SaveConMapComponent.cs" />
     <Compile Include="Conventions\SaveConventionComponent.cs" />
     <Compile Include="Events\GetAllEventsComponent.cs" />
     <Compile Include="Events\GetAllEventsForAConventionComponent.cs" />
@@ -81,6 +89,8 @@
     <Compile Include="Rooms\IGetRoomsForAGivenConventionComponent.cs" />
     <Compile Include="Users\CreateUserComponent.cs" />
     <Compile Include="Users\GetRecoveryCodeComponent.cs" />
+    <Compile Include="Rooms\ISaveRoomsComponent.cs" />
+    <Compile Include="Rooms\SaveRoomsComponent.cs" />
     <Compile Include="Users\GetUserComponent.cs" />
     <Compile Include="Events\IGetEventByIdComponent.cs" />
     <Compile Include="Events\IGetEventsByRoomIdComponent.cs" />
@@ -90,6 +100,9 @@
     <Compile Include="Users\IGetRecoveryCodeComponent.cs" />
     <Compile Include="Users\ILoginComponent.cs" />
     <Compile Include="Users\LoginComponent.cs" />
+    <Compile Include="Users\IGetUserComponent.cs" />
+    <Compile Include="Users\ISaveUserComponent.cs" />
+    <Compile Include="Users\SaveUserComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -105,7 +118,9 @@
       <Name>DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

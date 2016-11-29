@@ -7,6 +7,8 @@
     @Styles.Render("~/Content/css")
     @Styles.Render(Links.Content.DataTables.css.dataTables_bootstrap4_min_css)
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render(Links.Content.toastr_min_css)
+    @Styles.Render(Links.Scripts.dropzone.dropzone_min_css)
 </head>
 <body>
     <div class="topNav navbar navbar-fixed-top">
@@ -41,12 +43,15 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render(Links.Scripts.DataTables.jquery_dataTables_min_js)
     @Scripts.Render(Links.Scripts.DataTables.dataTables_bootstrap4_min_js)
+    @Scripts.Render(Links.Scripts.toastr_min_js)
+    @Scripts.Render(Links.Scripts.dropzone.dropzone_min_js)
     @RenderSection("scripts", required: false)
     @RenderSection("styles", required: false)
     <script type="text/javascript">
         $(document).ready(function () {
             $('.datepicker').datepicker();
         });
+        
         jQuery.validator.addMethod("greaterThan",
         function (value, element, params) {
 

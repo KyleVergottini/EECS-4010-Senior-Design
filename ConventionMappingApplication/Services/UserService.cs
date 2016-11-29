@@ -1,23 +1,26 @@
-﻿using BusinessLogic.Users;
-
 namespace Services
 {
     public class UserService : IUserService
     {
-        private readonly ICreateUserComponent _createUserComponent;
+        private readonly ISaveUserComponent _saveUserComponent;
         private readonly ILoginComponent _loginComponent;
         private readonly IGetRecoveryCodeComponent _getRecoveryCodeComponent;
 
-        public UserService(ICreateUserComponent createUserComponent, ILoginComponent loginComponent, IGetRecoveryCodeComponent getRecoveryCodeComponent)
+        public UserService(ISaveUserComponent saveUserComponent)
         {
-            _createUserComponent = createUserComponent;
-            _loginComponent = loginComponent;
-            _getRecoveryCodeComponent = getRecoveryCodeComponent;
+            _saveUserComponent = saveUserComponent;
         }
+		
+		public UserService(ISaveUserComponent saveUserComponent, ILoginComponent loginComponent, IGetRecoveryCode getRecoveryCode)
+		{
+			_saveUserComponent = saveUserComponent;
+			_loginComponent = loginComponent;
+			_getRecoveryCodeComponent = getRecoveryCode;
+		}
 
-        public bool CreateUser(string Username, string Password)
+        public bool RegisterUser(string email, string password)
         {
-            return _createUserComponent.Execute(Username, Password);
+            return _saveUserComponent.Execute(email, password);
         }
 
         public bool Login(string Username, string Password)

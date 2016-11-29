@@ -63,6 +63,19 @@ internal partial class T4MVC_System_Web_Mvc_ActionResult : System.Web.Mvc.Action
     public string Protocol { get; set; }
     public RouteValueDictionary RouteValueDictionary { get; set; }
 }
+[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+internal partial class T4MVC_System_Web_Mvc_JsonResult : System.Web.Mvc.JsonResult, IT4MVCActionResult
+{
+    public T4MVC_System_Web_Mvc_JsonResult(string area, string controller, string action, string protocol = null): base()
+    {
+        this.InitMVCT4Result(area, controller, action, protocol);
+    }
+    
+    public string Controller { get; set; }
+    public string Action { get; set; }
+    public string Protocol { get; set; }
+    public RouteValueDictionary RouteValueDictionary { get; set; }
+}
 
 
 
@@ -159,13 +172,28 @@ namespace Links
             public static readonly string responsive_semanticui_min_js = Url("responsive.semanticui.min.js");
         }
     
-        public static readonly string jquery_3_1_0_intellisense_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery-3.1.0.intellisense.min.js") ? Url("jquery-3.1.0.intellisense.min.js") : Url("jquery-3.1.0.intellisense.js");
-        public static readonly string jquery_3_1_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery-3.1.0.min.js") ? Url("jquery-3.1.0.min.js") : Url("jquery-3.1.0.js");
-        public static readonly string jquery_3_1_0_min_js = Url("jquery-3.1.0.min.js");
-        public static readonly string jquery_3_1_0_min_map = Url("jquery-3.1.0.min.map");
-        public static readonly string jquery_3_1_0_slim_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery-3.1.0.slim.min.js") ? Url("jquery-3.1.0.slim.min.js") : Url("jquery-3.1.0.slim.js");
-        public static readonly string jquery_3_1_0_slim_min_js = Url("jquery-3.1.0.slim.min.js");
-        public static readonly string jquery_3_1_0_slim_min_map = Url("jquery-3.1.0.slim.min.map");
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class dropzone {
+            public const string UrlPath = "~/Scripts/dropzone";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(UrlPath); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(UrlPath + "/" + fileName); }
+            public static readonly string basic_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/basic.min.css") ? Url("basic.min.css") : Url("basic.css");
+            public static readonly string basic_min_css = Url("basic.min.css");
+            public static readonly string dropzone_amd_module_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/dropzone-amd-module.min.js") ? Url("dropzone-amd-module.min.js") : Url("dropzone-amd-module.js");
+            public static readonly string dropzone_amd_module_min_js = Url("dropzone-amd-module.min.js");
+            public static readonly string dropzone_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/dropzone.min.css") ? Url("dropzone.min.css") : Url("dropzone.css");
+            public static readonly string dropzone_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/dropzone.min.js") ? Url("dropzone.min.js") : Url("dropzone.js");
+            public static readonly string dropzone_min_css = Url("dropzone.min.css");
+            public static readonly string dropzone_min_js = Url("dropzone.min.js");
+        }
+    
+        public static readonly string jquery_3_1_1_intellisense_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery-3.1.1.intellisense.min.js") ? Url("jquery-3.1.1.intellisense.min.js") : Url("jquery-3.1.1.intellisense.js");
+        public static readonly string jquery_3_1_1_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery-3.1.1.min.js") ? Url("jquery-3.1.1.min.js") : Url("jquery-3.1.1.js");
+        public static readonly string jquery_3_1_1_min_js = Url("jquery-3.1.1.min.js");
+        public static readonly string jquery_3_1_1_min_map = Url("jquery-3.1.1.min.map");
+        public static readonly string jquery_3_1_1_slim_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery-3.1.1.slim.min.js") ? Url("jquery-3.1.1.slim.min.js") : Url("jquery-3.1.1.slim.js");
+        public static readonly string jquery_3_1_1_slim_min_js = Url("jquery-3.1.1.slim.min.js");
+        public static readonly string jquery_3_1_1_slim_min_map = Url("jquery-3.1.1.slim.min.map");
         public static readonly string jquery_validate_vsdoc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery.validate-vsdoc.min.js") ? Url("jquery.validate-vsdoc.min.js") : Url("jquery.validate-vsdoc.js");
         public static readonly string jquery_validate_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/jquery.validate.min.js") ? Url("jquery.validate.min.js") : Url("jquery.validate.js");
         public static readonly string jquery_validate_min_js = Url("jquery.validate.min.js");
@@ -249,6 +277,8 @@ namespace Links
         public static readonly string respond_matchmedia_addListener_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/respond.matchmedia.addListener.min.js") ? Url("respond.matchmedia.addListener.min.js") : Url("respond.matchmedia.addListener.js");
         public static readonly string respond_matchmedia_addListener_min_js = Url("respond.matchmedia.addListener.min.js");
         public static readonly string respond_min_js = Url("respond.min.js");
+        public static readonly string toastr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/toastr.min.js") ? Url("toastr.min.js") : Url("toastr.js");
+        public static readonly string toastr_min_js = Url("toastr.min.js");
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -456,7 +486,19 @@ namespace Links
         
         }
     
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class Images {
+            public const string UrlPath = "~/Content/Images";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(UrlPath); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(UrlPath + "/" + fileName); }
+            public static readonly string mapIcon_png = Url("mapIcon.png");
+        }
+    
         public static readonly string site_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/site.min.css") ? Url("site.min.css") : Url("site.css");
+        public static readonly string toastr_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(UrlPath + "/toastr.min.css") ? Url("toastr.min.css") : Url("toastr.css");
+        public static readonly string toastr_less = Url("toastr.less");
+        public static readonly string toastr_min_css = Url("toastr.min.css");
+        public static readonly string toastr_scss = Url("toastr.scss");
     }
 
     
@@ -545,6 +587,20 @@ namespace Links
                     public const string responsive_semanticui_min_js = "~/Scripts/DataTables/responsive.semanticui.min.js"; 
                 }
             }
+            public static partial class dropzone 
+            {
+                public static class Assets
+                {
+                    public const string basic_css = "~/Scripts/dropzone/basic.css";
+                    public const string basic_min_css = "~/Scripts/dropzone/basic.min.css";
+                    public const string dropzone_amd_module_js = "~/Scripts/dropzone/dropzone-amd-module.js"; 
+                    public const string dropzone_amd_module_min_js = "~/Scripts/dropzone/dropzone-amd-module.min.js"; 
+                    public const string dropzone_css = "~/Scripts/dropzone/dropzone.css";
+                    public const string dropzone_js = "~/Scripts/dropzone/dropzone.js"; 
+                    public const string dropzone_min_css = "~/Scripts/dropzone/dropzone.min.css";
+                    public const string dropzone_min_js = "~/Scripts/dropzone/dropzone.min.js"; 
+                }
+            }
             public static partial class locales 
             {
                 public static class Assets
@@ -624,11 +680,11 @@ namespace Links
                 public const string bootstrap_datepicker_min_js = "~/Scripts/bootstrap-datepicker.min.js"; 
                 public const string bootstrap_js = "~/Scripts/bootstrap.js"; 
                 public const string bootstrap_min_js = "~/Scripts/bootstrap.min.js"; 
-                public const string jquery_3_1_0_intellisense_js = "~/Scripts/jquery-3.1.0.intellisense.js"; 
-                public const string jquery_3_1_0_js = "~/Scripts/jquery-3.1.0.js"; 
-                public const string jquery_3_1_0_min_js = "~/Scripts/jquery-3.1.0.min.js"; 
-                public const string jquery_3_1_0_slim_js = "~/Scripts/jquery-3.1.0.slim.js"; 
-                public const string jquery_3_1_0_slim_min_js = "~/Scripts/jquery-3.1.0.slim.min.js"; 
+                public const string jquery_3_1_1_intellisense_js = "~/Scripts/jquery-3.1.1.intellisense.js"; 
+                public const string jquery_3_1_1_js = "~/Scripts/jquery-3.1.1.js"; 
+                public const string jquery_3_1_1_min_js = "~/Scripts/jquery-3.1.1.min.js"; 
+                public const string jquery_3_1_1_slim_js = "~/Scripts/jquery-3.1.1.slim.js"; 
+                public const string jquery_3_1_1_slim_min_js = "~/Scripts/jquery-3.1.1.slim.min.js"; 
                 public const string jquery_validate_js = "~/Scripts/jquery.validate.js"; 
                 public const string jquery_validate_min_js = "~/Scripts/jquery.validate.min.js"; 
                 public const string jquery_validate_unobtrusive_js = "~/Scripts/jquery.validate.unobtrusive.js"; 
@@ -638,6 +694,8 @@ namespace Links
                 public const string respond_matchmedia_addListener_js = "~/Scripts/respond.matchmedia.addListener.js"; 
                 public const string respond_matchmedia_addListener_min_js = "~/Scripts/respond.matchmedia.addListener.min.js"; 
                 public const string respond_min_js = "~/Scripts/respond.min.js"; 
+                public const string toastr_js = "~/Scripts/toastr.js"; 
+                public const string toastr_min_js = "~/Scripts/toastr.min.js"; 
             }
         }
         public static partial class Content 
@@ -803,6 +861,12 @@ namespace Links
                 {
                 }
             }
+            public static partial class Images 
+            {
+                public static class Assets
+                {
+                }
+            }
             public static class Assets
             {
                 public const string bootstrap_datepicker_css = "~/Content/bootstrap-datepicker.css";
@@ -818,6 +882,8 @@ namespace Links
                 public const string bootstrap_css = "~/Content/bootstrap.css";
                 public const string bootstrap_min_css = "~/Content/bootstrap.min.css";
                 public const string site_css = "~/Content/site.css";
+                public const string toastr_css = "~/Content/toastr.css";
+                public const string toastr_min_css = "~/Content/toastr.min.css";
             }
         }
     }

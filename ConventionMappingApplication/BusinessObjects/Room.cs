@@ -4,6 +4,8 @@
     {
         public int ID { get; set; }
 
+        public string JavascriptID { get; set; }
+
         public int ConventionID { get; set; }
 
         public string Name { get; set; }

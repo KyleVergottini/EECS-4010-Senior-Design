@@ -8,10 +8,12 @@ namespace Services
     {
         private readonly IGetRoomsForAGivenConventionComponent _getRoomsComponent;
         private readonly IGetAllRoomsComponent _getAllRoomsComponent;
+        private readonly ISaveRoomsComponent _saveRoomsComponent;
 
-        public RoomService(IGetRoomsForAGivenConventionComponent getRoomsComponent)
+        public RoomService(IGetRoomsForAGivenConventionComponent getRoomsComponent, ISaveRoomsComponent saveRoomsComponent)
         {
             _getRoomsComponent = getRoomsComponent;
+            _saveRoomsComponent = saveRoomsComponent;
         }
 
         public RoomService(IGetRoomsForAGivenConventionComponent getRoomsComponent, IGetAllRoomsComponent getAllRoomsComponent)
@@ -28,6 +30,11 @@ namespace Services
         public List<Room> GetAllRooms()
         {
             return _getAllRoomsComponent.Execute();
+		}
+		
+        public bool SaveRooms(int conventionId, int floorLevel, List<Room> rooms)
+        {
+            return _saveRoomsComponent.Execute(conventionId, floorLevel, rooms);
         }
     }
 }

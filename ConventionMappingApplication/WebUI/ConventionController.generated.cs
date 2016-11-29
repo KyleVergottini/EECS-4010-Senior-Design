@@ -68,6 +68,18 @@ namespace WebUI.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditEvent);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public virtual System.Web.Mvc.ActionResult FloorMap()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FloorMap);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public virtual System.Web.Mvc.ActionResult Rooms()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Rooms);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ConventionController Actions { get { return MVC.Convention; } }
@@ -86,10 +98,14 @@ namespace WebUI.Controllers
         {
             public readonly string Create = "Create";
             public readonly string ConList = "ConList";
+            public readonly string GetConList = "GetConList";
             public readonly string Edit = "Edit";
             public readonly string EventList = "EventList";
+            public readonly string GetEventList = "GetEventList";
             public readonly string EditEvent = "EditEvent";
             public readonly string Map = "Map";
+            public readonly string FloorMap = "FloorMap";
+            public readonly string Rooms = "Rooms";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -97,10 +113,14 @@ namespace WebUI.Controllers
         {
             public const string Create = "Create";
             public const string ConList = "ConList";
+            public const string GetConList = "GetConList";
             public const string Edit = "Edit";
             public const string EventList = "EventList";
+            public const string GetEventList = "GetEventList";
             public const string EditEvent = "EditEvent";
             public const string Map = "Map";
+            public const string FloorMap = "FloorMap";
+            public const string Rooms = "Rooms";
         }
 
 
@@ -138,6 +158,23 @@ namespace WebUI.Controllers
         {
             public readonly string file = "file";
         }
+        static readonly ActionParamsClass_FloorMap s_params_FloorMap = new ActionParamsClass_FloorMap();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_FloorMap FloorMapParams { get { return s_params_FloorMap; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_FloorMap
+        {
+            public readonly string floorNumber = "floorNumber";
+        }
+        static readonly ActionParamsClass_Rooms s_params_Rooms = new ActionParamsClass_Rooms();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Rooms RoomsParams { get { return s_params_Rooms; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Rooms
+        {
+            public readonly string floorNumber = "floorNumber";
+            public readonly string rooms = "rooms";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -154,6 +191,7 @@ namespace WebUI.Controllers
                 public readonly string Event = "Event";
                 public readonly string EventList = "EventList";
                 public readonly string Map = "Map";
+                public readonly string Rooms = "Rooms";
             }
             public readonly string ConList = "~/Views/Convention/ConList.cshtml";
             public readonly string Create = "~/Views/Convention/Create.cshtml";
@@ -161,6 +199,7 @@ namespace WebUI.Controllers
             public readonly string Event = "~/Views/Convention/Event.cshtml";
             public readonly string EventList = "~/Views/Convention/EventList.cshtml";
             public readonly string Map = "~/Views/Convention/Map.cshtml";
+            public readonly string Rooms = "~/Views/Convention/Rooms.cshtml";
         }
     }
 
@@ -204,6 +243,17 @@ namespace WebUI.Controllers
         }
 
         [NonAction]
+        partial void GetConListOverride(T4MVC_System_Web_Mvc_JsonResult callInfo);
+
+        [NonAction]
+        public override System.Web.Mvc.JsonResult GetConList()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_JsonResult(Area, Name, ActionNames.GetConList);
+            GetConListOverride(callInfo);
+            return callInfo;
+        }
+
+        [NonAction]
         partial void EditOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, int id);
 
         [NonAction]
@@ -235,6 +285,17 @@ namespace WebUI.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EventList);
             EventListOverride(callInfo);
+            return callInfo;
+        }
+
+        [NonAction]
+        partial void GetEventListOverride(T4MVC_System_Web_Mvc_JsonResult callInfo);
+
+        [NonAction]
+        public override System.Web.Mvc.JsonResult GetEventList()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_JsonResult(Area, Name, ActionNames.GetEventList);
+            GetEventListOverride(callInfo);
             return callInfo;
         }
 
@@ -282,6 +343,43 @@ namespace WebUI.Controllers
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "file", file);
             MapOverride(callInfo, file);
+            return callInfo;
+        }
+
+        [NonAction]
+        partial void FloorMapOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, int floorNumber);
+
+        [NonAction]
+        public override System.Web.Mvc.ActionResult FloorMap(int floorNumber)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FloorMap);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "floorNumber", floorNumber);
+            FloorMapOverride(callInfo, floorNumber);
+            return callInfo;
+        }
+
+        [NonAction]
+        partial void RoomsOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, int? floorNumber);
+
+        [NonAction]
+        public override System.Web.Mvc.ActionResult Rooms(int? floorNumber)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Rooms);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "floorNumber", floorNumber);
+            RoomsOverride(callInfo, floorNumber);
+            return callInfo;
+        }
+
+        [NonAction]
+        partial void RoomsOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, int floorNumber, System.Collections.Generic.List<BusinessObjects.Room> rooms);
+
+        [NonAction]
+        public override System.Web.Mvc.ActionResult Rooms(int floorNumber, System.Collections.Generic.List<BusinessObjects.Room> rooms)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Rooms);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "floorNumber", floorNumber);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "rooms", rooms);
+            RoomsOverride(callInfo, floorNumber, rooms);
             return callInfo;
         }
 

@@ -10,5 +10,9 @@ namespace Services
         int SaveConvention(Convention convention);
 
         List<Convention> GetAllConventions();
+
+        bool SaveMap(int conId, byte[] map);
+
+        ConMap GetMapByConventionId(int conId);
     }
 }

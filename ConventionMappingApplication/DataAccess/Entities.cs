@@ -17,6 +17,7 @@ namespace DataAccess
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<UserRecovery> UserRecoveries { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRecovery> UserRecovery { get; set; }
 
@@ -59,8 +60,7 @@ namespace DataAccess
 
             modelBuilder.Entity<User>()
                 .HasOptional(e => e.UserRecovery)
-                .WithRequired(e => e.User)
-                .WillCascadeOnDelete(false);
+                .WithRequired(e => e.User);
         }
     }
 }

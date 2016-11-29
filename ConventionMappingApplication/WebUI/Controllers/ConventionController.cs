@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Services;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BusinessObjects;
 using WebUI.Models;
 using WebUI.Transformers;
 
@@ -65,7 +67,26 @@ namespace WebUI.Controllers
         public virtual ActionResult Edit(int id)
         {
             var con = _conventionService.GetConventionById(id);
+            Session["conventionId"] = con.ID;
             var model = _conventionTransformer.TransformToViewModel(con);
+
+            var maps = _conventionService.GetMapByConventionId(con.ID);
+
+            var totalMaps = 0;
+            if (maps.Floor1 != null)
+            {
+                totalMaps++;
+            }
+            if (maps.Floor2 != null)
+            {
+                totalMaps++;
+            }
+            if (maps.Floor3 != null)
+            {
+                totalMaps++;
+            }
+
+            model.TotalMaps = totalMaps;
             return View(MVC.Convention.Views.Edit, model);
         }
 
@@ -74,7 +95,7 @@ namespace WebUI.Controllers
         {
             var convention = _conventionTransformer.TransformToBusinessObject(model);
             Session["conventionId"] = _conventionService.SaveConvention(convention);
-            return RedirectToAction(MVC.Convention.Map());
+            return RedirectToAction(MVC.Convention.ConList());
         }
 
         [HttpGet]
@@ -95,17 +116,20 @@ namespace WebUI.Controllers
         public virtual ActionResult EditEvent(int id)
         {
             var model = new EventViewModel{ ID = id };
-            model.Rooms = _roomService.GetRoomsForGivenConventionId(1)
-                .Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ID.ToString()
-                });
+            
             var conEvent = _eventService.GetEventById(id);
             if (conEvent != null)
             {
                 model = _eventTransformer.TrasformToViewModel(conEvent);
             }
+
+            model.Rooms = _roomService.GetRoomsForGivenConventionId((int)Session["conventionId"])
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ID.ToString()
+                });
+
             return View(MVC.Convention.Views.Event, model);
         }
 
@@ -120,14 +144,79 @@ namespace WebUI.Controllers
         [HttpGet]
         public virtual ActionResult Map()
         {
-            return View();
+            var allFloors = _conventionService.GetMapByConventionId((int)Session["conventionId"]);
+            return View(allFloors.Floor1 != null);
         }
 
         [HttpPost]
         public virtual ActionResult Map(HttpPostedFileBase file)
         {
-            //--can get images from Request.Files
-            return RedirectToAction(MVC.Convention.EditEvent(0));
+            byte[] map = new byte[file.InputStream.Length];
+            file.InputStream.Read(map, 0, map.Length);
+
+            _conventionService.SaveMap((int) Session["conventionId"], map);
+            return Json(true);
+        }
+
+        [HttpGet]
+        public virtual ActionResult FloorMap(int floorNumber)
+        {
+            var allFloors = _conventionService.GetMapByConventionId((int) Session["conventionId"]);
+            byte[] map;
+            switch (floorNumber)
+            {
+                case 2:
+                    map = allFloors.Floor2;
+                    break;
+                case 3:
+                    map = allFloors.Floor3;
+                    break;
+                default:
+                    map = allFloors.Floor1;
+                    break;
+            }
+            return File(map, "image/jpeg");
+        }
+
+        [HttpGet]
+        public virtual ActionResult Rooms(int? floorNumber)
+        {
+            if (floorNumber == null)
+            {
+                floorNumber = 1;
+            }
+
+            int totalFloors = 0;
+            var allFloors = _conventionService.GetMapByConventionId((int) Session["conventionId"]);
+            if (allFloors.Floor1 != null)
+            {
+                totalFloors++;
+            }
+            if (allFloors.Floor2 != null)
+            {
+                totalFloors++;
+            }
+            if (allFloors.Floor3 != null)
+            {
+                totalFloors++;
+            }
+
+            var model = new RoomViewModel
+            {
+                FloorNumber = (int)floorNumber,
+                TotalFloors = totalFloors
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual ActionResult Rooms(int floorNumber, List<Room> rooms)
+        {
+            if (rooms != null)
+            {
+                _roomService.SaveRooms((int)Session["conventionId"], floorNumber, rooms);
+            }
+            return Json(true);
         }
     }
 }
