@@ -55,7 +55,6 @@ public class ScheduleFragment extends Fragment{
 
         @Override
         public int getCount() {
-
             SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
             String conID =  csp.getString("homeConventionID", null);
 

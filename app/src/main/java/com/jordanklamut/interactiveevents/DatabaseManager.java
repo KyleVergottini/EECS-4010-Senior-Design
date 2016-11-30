@@ -408,6 +408,15 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
 
+    //RETURN SELECT EVENTS FROM SQLite
+    public Cursor getFavoritedEventsFromSQLite()
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_FAVORITE + " LIKE 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+    }
+
     public void clearEventsTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(EVENT_TABLE_NAME, null, null);

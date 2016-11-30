@@ -1,5 +1,6 @@
 package com.jordanklamut.interactiveevents;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -24,39 +25,46 @@ public class MyScheduleFragment extends Fragment{
         getActivity().setTitle("My Schedule");
 
         //Inflate tab_layout and setup Views.
-        View x =  inflater.inflate(R.layout.my_schedule_fragment_pager,null);
-        tabLayout = (TabLayout) x.findViewById(R.id.tabs);
-        viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+        View v =  inflater.inflate(R.layout.my_schedule_fragment_pager,null);
+        tabLayout = (TabLayout) v.findViewById(R.id.tabs);
+        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
 
         //Set an Adapter for the View Pager
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
-        return x;
+        return v;
     }
 
     class MyAdapter extends FragmentPagerAdapter {
 
+        DatabaseManager dm;
+
         public MyAdapter(FragmentManager fm) {
             super(fm);
+            dm = new DatabaseManager(getActivity());
         }
 
         @Override
         public Fragment getItem(int position) {
 
             for (int i = 0; i <= position; i++)
-                return MyScheduleFragment_Tab.newInstance(position, "Day " + position);
+                return MyScheduleFragment_Tab.newInstance(position, "Day " + position, dm);
             return null;
         }
 
         @Override
         public int getCount() {
-            int_items = 2; //TODO - SET TO NUMBER OF DAYS
-            return int_items;
+            SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
+            String conID =  csp.getString("homeConventionID", null);
+
+            DatabaseManager dm = new DatabaseManager(getActivity());
+            int days = dm.getConventionDates(conID) + 1;
+            return days;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-
+            //TODO - get start date of event and set titles, comparing with current day to set Today, Tomorrow, etc titles
             for (int i = 0; i <= position; i++)
                 return "Day " + position;
             return null;
