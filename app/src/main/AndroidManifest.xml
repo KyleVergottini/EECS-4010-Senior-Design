@@ -15,7 +15,7 @@
         android:name=".MyApplication">
         <!--com.jordanklamut.interactiveevents.SplashActivity-->
         <activity
-            android:name=".SplashActivity"
+            android:name="com.jordanklamut.interactiveevents.SplashActivity"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>

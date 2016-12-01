@@ -33,7 +33,7 @@ public class LogInActivity extends Activity {
     private RequestQueue requestQueue;
     private StringRequest request;
 
-    private String login_url = "http://www.jordanklamut.com/InteractiveEvents/login.php";
+    private String login_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/User/Login/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

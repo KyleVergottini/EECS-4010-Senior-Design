@@ -15,21 +15,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import com.jordanklamut.interactiveevents.helpers.ScheduleAdapter;
+import com.jordanklamut.interactiveevents.models.Event;
 import com.jordanklamut.interactiveevents.models.EventCardView;
 
 public class MyScheduleFragment_Tab extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    ArrayList<EventCardView> listitems = new ArrayList<>();
+    ArrayList<Event> listitems = new ArrayList<>();
     RecyclerView MyRecyclerView;
+    static DatabaseManager dm;
 
     public MyScheduleFragment_Tab() {
 
     }
 
-    public static MyScheduleFragment_Tab newInstance(int pageNumber, String pageTitle) {
+    public static MyScheduleFragment_Tab newInstance(int pageNumber, String pageTitle, DatabaseManager dManager) {
+        dm = dManager;
         MyScheduleFragment_Tab fragment = new MyScheduleFragment_Tab();
         Bundle args = new Bundle();
         args.putInt("someInt", pageNumber);
@@ -53,7 +59,7 @@ public class MyScheduleFragment_Tab extends Fragment {
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         if (listitems.size() > 0 & MyRecyclerView != null) {
-            MyRecyclerView.setAdapter(new MyScheduleFragment_Tab.MyAdapter(listitems));
+            MyRecyclerView.setAdapter(new ScheduleAdapter(listitems));
         }
         MyRecyclerView.setLayoutManager(MyLayoutManager);
 
@@ -63,8 +69,8 @@ public class MyScheduleFragment_Tab extends Fragment {
     //TODO - CHANGE TO FAVORITED EVENTS
     public void initializeList() {
         listitems.clear();
-        DatabaseManager dm = new DatabaseManager(getActivity());
-        Cursor res = dm.getAllEventsFromSQLite();
+        //DatabaseManager dm = new DatabaseManager(getActivity());
+        Cursor res = dm.getFavoritedEventsFromSQLite();
 
         if(res.getCount() == 0) {
             Log.d("Database","No events for this convention");
@@ -72,12 +78,44 @@ public class MyScheduleFragment_Tab extends Fragment {
         else {
             while (res.moveToNext())
             {
-                EventCardView item = new EventCardView();
-                item.setCardName(res.getString(2));
-                item.setCardRoom(res.getString(1));
-                item.setCardTimes(res.getString(4) + " - " + res.getString(5));
-                item.setIsFav(0);
-                //item.setIsTurned(0);
+                Event item = new Event();
+                item.setEventID(res.getString(0));
+
+                //GET ROOM ROW MATCHING THE ROOM_ID
+                Cursor roomRes = dm.getSelectRoomsFromSQLite(res.getString(1));
+                roomRes.moveToFirst();
+
+                //0 ROOM_ROOM_ID
+                //1 ROOM_CONVENTION_ID
+                //2 ROOM_NAME
+                //3 ROOM_LEVEL
+                //4 ROOM_X_COORDINATE
+                //5 ROOM_Y_COORDINATE
+
+                item.setEventRoomID(roomRes.getString(2) + "    (Floor: " + roomRes.getString(3) + ")");
+                item.setEventName(res.getString(2));
+                item.setEventDate(res.getString(3));
+
+                //CONVERT TO AM/PM TIMES
+                String formatStartTime = "";
+                String formatEndTime = "";
+                SimpleDateFormat read = new SimpleDateFormat("HH:mm:ss");
+                SimpleDateFormat write = new SimpleDateFormat("h:mm a");
+
+                try {
+                    formatStartTime = write.format(read.parse(res.getString(4)));
+                    formatEndTime = write.format(read.parse(res.getString(5))); //res.getString(5)
+                }
+                catch(Exception e) {
+                    formatStartTime = "?";
+                    formatEndTime = "?";
+                }
+
+                item.setEventStartTime(formatStartTime); //res.getString(4)
+                item.setEventEndTime(formatEndTime);//res.getString(5)
+                item.setEventDescription(res.getString(6));
+
+                item.setEventFavorite(res.getString(7));
                 listitems.add(item);
             }
 
@@ -105,108 +143,4 @@ public class MyScheduleFragment_Tab extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-    //ADAPTER
-    public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private ArrayList<EventCardView> list;
-
-        public MyAdapter(ArrayList<EventCardView> Data) {
-            list = Data;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
-            // create a new view
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.schedule_card, parent, false);
-            return new MyViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
-            EventCardView ccv = list.get(position);
-
-            holder.eventName.setText(list.get(position).getCardName());
-            holder.eventRoom.setText(list.get(position).getCardRoom());
-            holder.eventTime.setText(list.get(position).getCardTimes());
-            holder.ivFavorites.setTag(R.drawable.ic_like);
-
-            holder.ccv = ccv;
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-    }
-
-    //VIEW HOLDER
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        //title location date image
-        public TextView eventName;
-        public TextView eventRoom;
-        public TextView eventTime;
-        public ImageView ivFavorites;
-        public TextView btnViewOnMap;
-        public TextView btnViewDetails;
-        public EventCardView ccv;
-
-        public MyViewHolder(View v) {
-
-            super(v);
-            eventName = (TextView) v.findViewById(R.id.tv_event_name);
-            eventRoom = (TextView) v.findViewById(R.id.tv_event_room);
-            eventTime = (TextView) v.findViewById(R.id.tv_event_time);
-
-            ivFavorites = (ImageView) v.findViewById(R.id.iv_schedule_favorites);
-            btnViewOnMap = (TextView) v.findViewById(R.id.btn_view_on_map);
-            btnViewDetails = (TextView) v.findViewById(R.id.btn_view_details);
-
-            ivFavorites.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int id = (int)ivFavorites.getTag();
-                    if( id == R.drawable.ic_like){
-                        ivFavorites.setTag(R.drawable.ic_liked);
-                        ivFavorites.setImageResource(R.drawable.ic_liked);
-                        Toast.makeText(getActivity(),"Added to Favorites", Toast.LENGTH_SHORT).show();
-                    }else{
-                        ivFavorites.setTag(R.drawable.ic_like);
-                        ivFavorites.setImageResource(R.drawable.ic_like);
-                        Toast.makeText(getActivity(),"Removed from Favorites",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            btnViewOnMap.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            btnViewDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(),"TODO",Toast.LENGTH_SHORT).show();
-                }
-            });
-//
-            //shareImageView.setOnClickListener(new View.OnClickListener() {
-            //    @Override
-            //    public void onClick(View v) {
-            //        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-            //                "://" + getResources().getResourcePackageName(coverImageView.getId())
-            //                + '/' + "drawable" + '/' + getResources().getResourceEntryName((int)coverImageView.getTag()));
-//
-            //        Intent shareIntent = new Intent();
-            //        shareIntent.setAction(Intent.ACTION_SEND);
-            //        shareIntent.putExtra(Intent.EXTRA_STREAM,imageUri);
-            //        shareIntent.setType("image/jpeg");
-            //        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-            //    }
-            //});
-        }
-    }
-
 }
