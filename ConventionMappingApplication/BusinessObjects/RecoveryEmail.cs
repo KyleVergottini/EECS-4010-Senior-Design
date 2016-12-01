@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Collections.Generic;
 
-namespace API.Models
+namespace BusinessObjects
 {
     [DataContract]
     public class RecoveryEmail
@@ -28,11 +28,13 @@ namespace API.Models
 
         static readonly string text = "Please go to the link below to reset your ConventionMappingApplication account password:";
 
+        static readonly string recoveryURL = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/UserRecovery/RecoveryForm";
+
         public RecoveryEmail(string Username, string RecoveryCode)
         {
             to.Add(Username);
 
-            string recoveryLink = string.Format("https://www.google.com/webhp#q={0}", RecoveryCode);
+            string recoveryLink = string.Format(recoveryURL + "?RecoveryCode={0}", RecoveryCode);
 
             text_body = text + " " + recoveryLink;
             html_body = text + "<br /><a href='" + recoveryLink + "'>" + recoveryLink + "</a>";

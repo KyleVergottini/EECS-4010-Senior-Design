@@ -39,9 +39,9 @@ namespace API.Models
 
             this.Name = eventObject.Name;
 
-            this.StartTime = eventObject.StartDate.ToString("yyyy-MM-dd hh:mm:ss");
+            this.StartTime = eventObject.StartDate.ToString("yyyy-MM-dd HH:mm:ss");
 
-            this.EndTime = eventObject.EndDate.ToString("yyyy-MM-dd hh:mm:ss");
+            this.EndTime = eventObject.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
 
             this.Description = eventObject.Description;
         }

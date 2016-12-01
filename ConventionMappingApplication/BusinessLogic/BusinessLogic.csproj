@@ -87,8 +87,7 @@
     <Compile Include="Rooms\GetRoomsForAGivenConventionComponent.cs" />
     <Compile Include="Rooms\IGetAllRoomsComponent.cs" />
     <Compile Include="Rooms\IGetRoomsForAGivenConventionComponent.cs" />
-    <Compile Include="Users\CreateUserComponent.cs" />
-    <Compile Include="Users\GetRecoveryCodeComponent.cs" />
+    <Compile Include="Users\SendRecoveryCodeComponent.cs" />
     <Compile Include="Rooms\ISaveRoomsComponent.cs" />
     <Compile Include="Rooms\SaveRoomsComponent.cs" />
     <Compile Include="Users\GetUserComponent.cs" />
@@ -96,12 +95,13 @@
     <Compile Include="Events\IGetEventsByRoomIdComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registries\BusinessModule.cs" />
-    <Compile Include="Users\ICreateUserComponent.cs" />
-    <Compile Include="Users\IGetRecoveryCodeComponent.cs" />
+    <Compile Include="Users\ISendRecoveryCodeComponent.cs" />
     <Compile Include="Users\ILoginComponent.cs" />
+    <Compile Include="UserRecovery\IResetPasswordComponent.cs" />
     <Compile Include="Users\LoginComponent.cs" />
     <Compile Include="Users\IGetUserComponent.cs" />
     <Compile Include="Users\ISaveUserComponent.cs" />
+    <Compile Include="UserRecovery\ResetPasswordComponent.cs" />
     <Compile Include="Users\SaveUserComponent.cs" />
   </ItemGroup>
   <ItemGroup>

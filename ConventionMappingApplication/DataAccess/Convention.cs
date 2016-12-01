@@ -30,9 +30,6 @@ namespace DataAccess
         [StringLength(100)]
         public string Address { get; set; }
 
-        [StringLength(60)]
-        public string City { get; set; }
-
         [Required]
         [StringLength(60)]
         public string City { get; set; }

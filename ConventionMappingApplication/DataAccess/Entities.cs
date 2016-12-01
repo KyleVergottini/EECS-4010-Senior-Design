@@ -17,7 +17,6 @@ namespace DataAccess
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
-        public virtual DbSet<UserRecovery> UserRecoveries { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRecovery> UserRecovery { get; set; }
 

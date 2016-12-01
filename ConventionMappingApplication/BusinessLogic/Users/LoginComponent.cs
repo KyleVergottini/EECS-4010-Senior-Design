@@ -18,13 +18,7 @@ namespace BusinessLogic.Users
                     .Select(x => new User { Username = x.Username, HashedPassword = x.HashedPassword, PasswordSalt = x.PasswordSalt }).FirstOrDefault();
                 if (user != null)
                 {
-                    string salt = user.PasswordSalt;
-
-                    string saltedPassword = enteredPassword + salt;
-                    byte[] saltedPasswordBytes = Encoding.UTF8.GetBytes(saltedPassword);
-
-                    byte[] hashedPasswordBytes = (new SHA256CryptoServiceProvider()).ComputeHash(saltedPasswordBytes);
-                    string hashedPassword = Convert.ToBase64String(hashedPasswordBytes);
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(enteredPassword, user.PasswordSalt);
 
                     if (hashedPassword == user.HashedPassword)
                     {

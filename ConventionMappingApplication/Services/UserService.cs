@@ -1,21 +1,23 @@
+using BusinessLogic.Users;
+
 namespace Services
 {
     public class UserService : IUserService
     {
         private readonly ISaveUserComponent _saveUserComponent;
         private readonly ILoginComponent _loginComponent;
-        private readonly IGetRecoveryCodeComponent _getRecoveryCodeComponent;
+        private readonly ISendRecoveryCodeComponent _sendRecoveryCodeComponent;
 
         public UserService(ISaveUserComponent saveUserComponent)
         {
             _saveUserComponent = saveUserComponent;
         }
-		
-		public UserService(ISaveUserComponent saveUserComponent, ILoginComponent loginComponent, IGetRecoveryCode getRecoveryCode)
+
+        public UserService(ISaveUserComponent saveUserComponent, ILoginComponent loginComponent, ISendRecoveryCodeComponent sendRecoveryCodeComponent)
 		{
 			_saveUserComponent = saveUserComponent;
 			_loginComponent = loginComponent;
-			_getRecoveryCodeComponent = getRecoveryCode;
+            _sendRecoveryCodeComponent = sendRecoveryCodeComponent;
 		}
 
         public bool RegisterUser(string email, string password)
@@ -28,9 +30,9 @@ namespace Services
             return _loginComponent.Execute(Username, Password);
         }
 
-        public string GetRecoveryCode(string Username)
+        public bool SendRecoveryCode(string enteredUsername)
         {
-            return _getRecoveryCodeComponent.Execute(Username);
+            return _sendRecoveryCodeComponent.Execute(enteredUsername);
         }
     }
 }
