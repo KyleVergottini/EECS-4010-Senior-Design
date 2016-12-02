@@ -8,6 +8,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="view_room_schedule_button">See schedule for room</string>
+
+    <string name="level_label">Level</string>
+
     <!-- Settings Strings-->
     <string name="title_activity_settings_example">SettingsExampleActivity</string>
     <string name="pref_header_notifications">Notifications</string>

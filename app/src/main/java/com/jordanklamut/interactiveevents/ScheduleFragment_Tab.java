@@ -2,10 +2,13 @@ package com.jordanklamut.interactiveevents;
 
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.jordanklamut.interactiveevents.helpers.ScheduleAdapter;
 import com.jordanklamut.interactiveevents.models.Event;
@@ -22,6 +27,8 @@ public class ScheduleFragment_Tab extends Fragment{
 
     private OnFragmentInteractionListener mListener;
     ArrayList<Event> listitems = new ArrayList<>();
+    HashMap<String, String> roomNames = new HashMap<>();
+
     RecyclerView MyRecyclerView;
     static DatabaseManager dm;
 
@@ -55,7 +62,7 @@ public class ScheduleFragment_Tab extends Fragment{
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         if (listitems.size() > 0 & MyRecyclerView != null) {
-            MyRecyclerView.setAdapter(new ScheduleAdapter(listitems));
+            MyRecyclerView.setAdapter(new ScheduleAdapter(listitems, roomNames));
         }
         MyRecyclerView.setLayoutManager(MyLayoutManager);
 
@@ -76,19 +83,7 @@ public class ScheduleFragment_Tab extends Fragment{
             {
                 Event item = new Event();
                 item.setEventID(res.getString(0));
-
-                //GET ROOM ROW MATCHING THE ROOM_ID
-                Cursor roomRes = dm.getSelectRoomsFromSQLite(res.getString(1));
-                roomRes.moveToFirst();
-
-                //0 ROOM_ROOM_ID
-                //1 ROOM_CONVENTION_ID
-                //2 ROOM_NAME
-                //3 ROOM_LEVEL
-                //4 ROOM_X_COORDINATE
-                //5 ROOM_Y_COORDINATE
-
-                item.setEventRoomID(roomRes.getString(2) + "    (Floor: " + roomRes.getString(3) + ")");
+                item.setEventRoomID(res.getString(1));
                 item.setEventName(res.getString(2));
                 item.setEventDate(res.getString(3));
 
@@ -124,6 +119,26 @@ public class ScheduleFragment_Tab extends Fragment{
             //6 EVENT_DESCRIPTION
             //7 EVENT_FAVORITE?
         }
+
+        roomNames.clear();
+        res.close();
+        res = dm.getAllRoomsFromSQLite();
+
+        if(res.getCount() == 0) {
+            Log.d("Database","No rooms for this convention");
+        }
+        else {
+            while (res.moveToNext()) {
+                roomNames.put(res.getString(0), res.getString(2));
+            }
+        }
+
+        //0 ROOM_ROOM_ID
+        //1 ROOM_CONVENTION_ID
+        //2 ROOM_NAME
+        //3 ROOM_LEVEL
+        //4 ROOM_X_COORDINATE
+        //5 ROOM_Y_COORDINATE
     }
 
     @Override

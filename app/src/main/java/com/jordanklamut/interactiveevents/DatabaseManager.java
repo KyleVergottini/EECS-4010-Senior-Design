@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.jordanklamut.interactiveevents.helpers.CustomRequest;
 import com.jordanklamut.interactiveevents.models.Convention;
+import com.jordanklamut.interactiveevents.models.ConventionMap;
 import com.jordanklamut.interactiveevents.models.Event;
 import com.jordanklamut.interactiveevents.models.Room;
 
@@ -26,9 +30,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +77,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
         public static final String ROOM_X_COORDINATE = "XCoordinate";
         public static final String ROOM_Y_COORDINATE = "YCoordinate";
 
+    public static final String MAP_TABLE_NAME = "Maps";
+        public static final String MAP_CONVENTION_ID = "ConventionID";
+        public static final String MAP_1 = "Map1";
+        public static final String MAP_2 = "Map2";
+        public static final String MAP_3 = "Map3";
+
     private final String QUERY_CON = "CREATE TABLE " + CON_TABLE_NAME + " ("
             + CON_CONVENTION_ID + " INTEGER, "
             + CON_NAME + " TEXT, "
@@ -98,6 +113,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
             + ROOM_X_COORDINATE + " TEXT, "
             + ROOM_Y_COORDINATE + " TEXT) ";
 
+    private final String QUERY_MAP = "CREATE TABLE " + MAP_TABLE_NAME + " ("
+            + MAP_CONVENTION_ID + " INTEGER, "
+            + MAP_1 + " BLOB, "
+            + MAP_2 + " BLOB, "
+            + MAP_3 + " BLOB) ";
+
 
     public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -124,10 +145,12 @@ public class DatabaseManager extends SQLiteOpenHelper{
         database.execSQL(QUERY_CON);
         database.execSQL(QUERY_EVENT);
         database.execSQL(QUERY_ROOM);
+        database.execSQL(QUERY_MAP);
 
         Log.d("Database","Table created: " + CON_TABLE_NAME);
         Log.d("Database","Table created: " + EVENT_TABLE_NAME);
         Log.d("Database","Table created: " + ROOM_TABLE_NAME);
+        Log.d("Database","Table created: " + MAP_TABLE_NAME);
     }
 
     @Override
@@ -417,6 +440,32 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
 
+    //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
+    public Cursor getCurrentAndNextEventsForRoomFromSQLite(String RoomID) {
+        final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        final String CURRENT_TIME = "'" + DATE_TO_STRING.format(new Date()) + "'";
+
+        String roomIDWhereQuery = " WHERE ";
+        roomIDWhereQuery += EVENT_ROOM_ID + " = " + RoomID;
+
+        String currentEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'CURRENT' AS Status";
+        currentEventQuery += " FROM " + EVENT_TABLE_NAME;
+        currentEventQuery += roomIDWhereQuery + " AND ";
+        currentEventQuery += EVENT_START_TIME + " <= " + CURRENT_TIME + " AND ";
+        currentEventQuery += EVENT_END_TIME + " > " + CURRENT_TIME;
+
+        String nextEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'NEXT' AS Status";
+        nextEventQuery += " FROM " + EVENT_TABLE_NAME;
+        nextEventQuery += roomIDWhereQuery + " AND ";
+        nextEventQuery += EVENT_START_TIME + " > " + CURRENT_TIME;
+        nextEventQuery += " ORDER BY " + EVENT_START_TIME;
+        nextEventQuery += " LIMIT 1";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery(currentEventQuery + " UNION " + nextEventQuery, null);
+    }
+
+
     public void clearEventsTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(EVENT_TABLE_NAME, null, null);
@@ -457,7 +506,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
         CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Database","PHP RESPONSE " + response.toString());
+                Log.d("Database","API RESPONSE " + response.toString());
 
                 try {
                     JSONArray rooms = response.getJSONArray("rooms");
@@ -531,10 +580,117 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
     }
 
+    //RETURN ROOMS FOR CONVENTION FROM SQLite
+    public Cursor getRoomsForLevelOfConventionFromSQLite(String conventionID, String level)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += ROOM_CONVENTION_ID + " = " + conventionID;
+        whereQuery += " AND " + ROOM_LEVEL + " = " + level;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
+    }
+
+    public Cursor getRoomByIDFromSQLite(String roomID)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += ROOM_ROOM_ID + " = '" + roomID + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + ROOM_TABLE_NAME + whereQuery, null);
+    }
+
     public void clearRoomsTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ROOM_TABLE_NAME, null, null);
         return;
+    }
+
+/////////////////////////MAPS/////////////////////////
+
+    //RETURNS ALL MAPS FROM .NET API MATCHING CONVENTION_ID
+    public void setMapList(Context context, String conventionID) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Map/GetMapForConvention/";
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("conventionID", conventionID);
+
+        final CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Database","API RESPONSE " + response.toString());
+
+                try {
+                    String ConventionID = response.getString("ConventionID");
+                    ConventionMap map = new ConventionMap(ConventionID);
+
+                    String mapString1 = response.getString("MapImage1");
+                    String mapString2 = response.getString("MapImage2");
+                    String mapString3 = response.getString("MapImage3");
+
+                    if (!mapString1.equals("null"))
+                    {
+                        map.setMap1(Base64.decode(mapString1, Base64.DEFAULT));
+                    }
+                    if (!mapString2.equals("null"))
+                    {
+                        map.setMap2(Base64.decode(mapString2, Base64.DEFAULT));
+                    }
+                    if (!mapString3.equals("null"))
+                    {
+                        map.setMap3(Base64.decode(mapString1, Base64.DEFAULT));
+                    }
+
+                    insertMapToSQLite(map);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.append(error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    //sub method for setMapList
+    public void insertMapToSQLite(ConventionMap map) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Cursor res = db.rawQuery("SELECT * FROM " + MAP_TABLE_NAME + " WHERE " + MAP_CONVENTION_ID + " LIKE " + map.getMapConventionID(), null);
+
+        values.put(MAP_CONVENTION_ID, map.getMapConventionID());
+        values.put(MAP_1, map.getMap1());
+        values.put(MAP_2, map.getMap2());
+        values.put(MAP_3, map.getMap3());
+
+        if (res.getCount() == 0) {
+            //IF MAP DOESNT EXIST - ADD IT
+            db.insert(MAP_TABLE_NAME, null, values);
+            db.close();
+            Log.d("Database", "Map inserted for ConventionID: " + map.getMapConventionID());
+        } else {
+            //ELSE MAP ALREADY EXISTS - UPDATE IT
+            db.update(MAP_TABLE_NAME, values, MAP_CONVENTION_ID + " = ?", new String[] {map.getMapConventionID()});
+            db.close();
+            Log.d("Database","Row updated for Map of ConventionID: " + map.getMapConventionID());
+        }
+
+        res.close();
+    }
+
+    //RETURN MAPS FOR CONVENTION FROM SQLite
+    public Cursor getMapsForConventionFromSQLite(String conventionID)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += MAP_CONVENTION_ID + " = " + conventionID;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + MAP_TABLE_NAME + whereQuery, null);
     }
 
 }

@@ -65,10 +65,8 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder {
         btnViewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"TODO",Toast.LENGTH_SHORT).show(); //TODO - Link to map
-
                 final FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.content_frame, new MapFragment()).commit();
+                fm.beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(ecv.getEventRoomID())).commit();
 
                 final NavigationView navigationView = (NavigationView) ((Activity) context).findViewById(R.id.nav_view);
                 navigationView.getMenu().getItem(1).setChecked(true);
