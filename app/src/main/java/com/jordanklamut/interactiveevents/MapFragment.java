@@ -29,8 +29,11 @@ public class MapFragment extends Fragment {
 
     HashMap<String, MapLayout> mapLayout;
     LinearLayout mapDisplay;
+    LinearLayout levelSelect;
 
     String startingRoom = null;
+
+    String currentLevel;
 
     public MapFragment() {
 
@@ -73,7 +76,7 @@ public class MapFragment extends Fragment {
         View x = inflater.inflate(R.layout.map_fragment, null);
 
         mapDisplay = (LinearLayout) x.findViewById(R.id.mapDisplay);
-        LinearLayout levelSelect = (LinearLayout) x.findViewById(R.id.levelSelector);
+        levelSelect = (LinearLayout) x.findViewById(R.id.levelSelector);
 
         if (mapLayout.size() > 1) {
             for (int i = 1; i <= mapLayout.size(); i++) {
@@ -85,9 +88,12 @@ public class MapFragment extends Fragment {
 
         if (mapLayout.size() > 0) {
             if (startingRoom != null) {
-                mapDisplay.addView(mapLayout.get(getStartingLevel()));
+                String startingLevel = getStartingLevel();
+                mapDisplay.addView(mapLayout.get(startingLevel));
+                currentLevel = startingLevel;
             } else {
                 mapDisplay.addView(mapLayout.get("1"));
+                currentLevel = "1";
             }
         }
 
@@ -260,8 +266,10 @@ public class MapFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                mapDisplay.removeAllViews();
-                mapDisplay.addView(mapLayout.get(level));
+                if (currentLevel != level) {
+                    mapDisplay.removeAllViews();
+                    mapDisplay.addView(mapLayout.get(level));
+                }
             }
         }
     }

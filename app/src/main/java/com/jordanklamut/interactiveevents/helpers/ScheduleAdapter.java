@@ -6,15 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jordanklamut.interactiveevents.R;
 import com.jordanklamut.interactiveevents.models.Event;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder>{
     private ArrayList<Event> list;
+    private HashMap<String, String> roomNames;
 
-    public ScheduleAdapter(ArrayList<Event> Data) {
+    public ScheduleAdapter(ArrayList<Event> Data, HashMap<String, String> RoomData) {
         list = Data;
+        roomNames = RoomData;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder>{
         Event ecv = list.get(position);
 
         holder.eventName.setText(list.get(position).getEventName());
-        holder.eventRoom.setText(list.get(position).getEventRoomID());
+        holder.eventRoom.setText(roomNames.get(list.get(position).getEventRoomID()));
         holder.eventTime.setText(list.get(position).getEventStartTime() + " - " + list.get(position).getEventEndTime());
 
         if (list.get(position).getEventFavorite().equals("1")) {
