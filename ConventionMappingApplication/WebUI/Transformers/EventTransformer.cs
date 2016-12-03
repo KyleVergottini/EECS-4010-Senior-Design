@@ -11,24 +11,30 @@ namespace WebUI.Transformers
             return new EventViewModel
             {
                 ID = conEvent.ID,
-                RoomID = conEvent.RoomID, //--TODO: change this
+                RoomID = conEvent.RoomID,
                 Name = conEvent.Name,
                 Description = conEvent.Description,
-                EndDate = conEvent.EndDate.ToString("d"),
-                StartDate = conEvent.StartDate.ToString("d")
+                Date = conEvent.StartDate.ToString("d"),
+                StartTime = conEvent.StartDate,
+                EndTime = conEvent.EndDate,
+                STime = conEvent.StartDate.ToString("hh:mm tt"),
+                ETime = conEvent.EndDate.ToString("hh:mm tt")
             };
         }
 
         public Event TrasformToBusinessObject(EventViewModel viewModel)
         {
+            var startDate = Convert.ToDateTime(viewModel.Date) + viewModel.StartTime.TimeOfDay;
+            var endDate = Convert.ToDateTime(viewModel.Date) + viewModel.EndTime.TimeOfDay;
+
             return new Event
             {
                 ID = viewModel.ID,
-                RoomID = viewModel.RoomID, //--TODO: change this
+                RoomID = viewModel.RoomID,
                 Name = viewModel.Name,
                 Description = viewModel.Description,
-                EndDate = Convert.ToDateTime(viewModel.EndDate),
-                StartDate = Convert.ToDateTime(viewModel.StartDate)
+                StartDate = startDate,
+                EndDate = endDate
             };
         }
     }
