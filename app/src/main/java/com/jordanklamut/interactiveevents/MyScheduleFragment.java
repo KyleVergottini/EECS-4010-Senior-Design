@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jordanklamut.interactiveevents.helpers.MyScheduleFragmentPager;
+
 public class MyScheduleFragment extends Fragment{
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
-    public static int int_items;
+    DatabaseManager dm;
 
     @Nullable
     @Override
@@ -28,48 +30,11 @@ public class MyScheduleFragment extends Fragment{
         View v =  inflater.inflate(R.layout.my_schedule_fragment_pager,null);
         tabLayout = (TabLayout) v.findViewById(R.id.tabs);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        dm = new DatabaseManager(getContext());
 
         //Set an Adapter for the View Pager
-        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new MyScheduleFragmentPager(getChildFragmentManager(), getActivity(), dm));
 
         return v;
     }
-
-    class MyAdapter extends FragmentPagerAdapter {
-
-        DatabaseManager dm;
-
-        public MyAdapter(FragmentManager fm) {
-            super(fm);
-            dm = new DatabaseManager(getActivity());
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            for (int i = 0; i <= position; i++)
-                return MyScheduleFragment_Tab.newInstance(position, "Day " + position, dm);
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
-            String conID =  csp.getString("homeConventionID", null);
-
-            DatabaseManager dm = new DatabaseManager(getActivity());
-            int days = dm.getConventionDates(conID) + 1;
-            return days;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            //TODO - get start date of event and set titles, comparing with current day to set Today, Tomorrow, etc titles
-            for (int i = 0; i <= position; i++)
-                return "Day " + position;
-            return null;
-        }
-    }
-
-
 }

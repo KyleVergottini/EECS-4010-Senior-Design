@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EECS-4010-Senior-Design.iml" filepath="$PROJECT_DIR$/EECS-4010-Senior-Design.iml" />
       <module fileurl="file://$PROJECT_DIR$/InteractiveEvents - MyGit.iml" filepath="$PROJECT_DIR$/InteractiveEvents - MyGit.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

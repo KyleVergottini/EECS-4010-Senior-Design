@@ -98,6 +98,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 new GetAllEventsPHPtoSQLite().execute();
                 Toast.makeText(DrawerActivity.this, "Refreshing Database...", Toast.LENGTH_LONG).show();
                 return true;
+            case R.id.action_filter:
+                Toast.makeText(DrawerActivity.this, "Filters Not Available", Toast.LENGTH_LONG).show(); //TODO - add filter screen
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -119,7 +122,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_find_convention) {
             startActivity(new Intent(DrawerActivity.this, ConventionFinderActivity.class));
         }else if (id == R.id.nav_share) {
-            composeEmail("", "Check out MapACon", "Check out this app! Plan your busy convention schedule using MapACon."); //TODO
+            composeEmail("", "Check out MapACon", "Check out this app! Plan your busy convention schedule using MapACon."); //TODO - add link if/when available
         }else if (id == R.id.nav_feedback) {
             composeEmail("feedback@jordanklamut.com", "Interactive Events Feedback", null);
         }else if (id == R.id.nav_about) {

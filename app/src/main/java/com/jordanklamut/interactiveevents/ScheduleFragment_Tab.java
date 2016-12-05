@@ -1,5 +1,6 @@
 package com.jordanklamut.interactiveevents;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -15,8 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,23 +29,21 @@ import com.jordanklamut.interactiveevents.models.Event;
 
 public class ScheduleFragment_Tab extends Fragment{
 
-    private OnFragmentInteractionListener mListener;
+    private ConventionFinderFragment_Scan.OnFragmentInteractionListener mListener;
     ArrayList<Event> listitems = new ArrayList<>();
     HashMap<String, String> roomNames = new HashMap<>();
-
     RecyclerView MyRecyclerView;
     static DatabaseManager dm;
 
     public ScheduleFragment_Tab() {
-
     }
 
     public static ScheduleFragment_Tab newInstance(int pageNumber, String pageTitle, DatabaseManager dManager) {
         dm = dManager;
         ScheduleFragment_Tab fragment = new ScheduleFragment_Tab();
         Bundle args = new Bundle();
-        args.putInt("someInt", pageNumber);
-        args.putString("someTitle", pageTitle);
+        args.putInt("pageNumber", pageNumber);
+        args.putString("pageTitle", pageTitle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,8 +51,7 @@ public class ScheduleFragment_Tab extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //dm = new DatabaseManager(this.getActivity());
-        initializeList();
+        initializeList(getArguments().getInt("pageNumber"));
         getActivity().setTitle("Schedule");
     }
 
@@ -70,10 +71,24 @@ public class ScheduleFragment_Tab extends Fragment{
     }
 
     //GETS DATA FROM THE SQLite DATABASE
-    public void initializeList() {
+    public void initializeList(int pageNumber) {
         listitems.clear();
-        //DatabaseManager dm = new DatabaseManager(getActivity());
-        Cursor res = dm.getAllEventsFromSQLite();
+        SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
+        String conID =  csp.getString("homeConventionID", null);
+
+        //SET UP FOR DIFFERENT DAYS ON DIFFERENT TABS
+        SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar pageDate = Calendar.getInstance();
+
+        try {
+            pageDate.setTime(sdfIn.parse(dm.getConventionStartDate(conID)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        pageDate.roll(Calendar.DATE, pageNumber);
+        String sdfPageDate = sdfIn.format(pageDate.getTime());
+        Cursor res = dm.getEventsWithDateLikeFromSQLite(sdfPageDate);
 
         if(res.getCount() == 0) {
             Log.d("Database","No events for this convention");

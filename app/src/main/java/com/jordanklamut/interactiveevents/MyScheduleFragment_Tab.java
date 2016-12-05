@@ -1,6 +1,7 @@
 package com.jordanklamut.interactiveevents;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,24 +13,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import com.jordanklamut.interactiveevents.helpers.ScheduleAdapter;
 import com.jordanklamut.interactiveevents.models.Event;
-import com.jordanklamut.interactiveevents.models.EventCardView;
 
 public class MyScheduleFragment_Tab extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     ArrayList<Event> listitems = new ArrayList<>();
     HashMap<String, String> roomNames = new HashMap<>();
-
     RecyclerView MyRecyclerView;
     static DatabaseManager dm;
 
@@ -41,8 +39,8 @@ public class MyScheduleFragment_Tab extends Fragment {
         dm = dManager;
         MyScheduleFragment_Tab fragment = new MyScheduleFragment_Tab();
         Bundle args = new Bundle();
-        args.putInt("someInt", pageNumber);
-        args.putString("someTitle", pageTitle);
+        args.putInt("pageNumber", pageNumber);
+        args.putString("pageTitle", pageTitle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +48,7 @@ public class MyScheduleFragment_Tab extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeList();
+        initializeList(getArguments().getInt("pageNumber"));
         getActivity().setTitle("My Schedule");
     }
 
@@ -69,11 +67,27 @@ public class MyScheduleFragment_Tab extends Fragment {
         return view;
     }
 
-    //TODO - CHANGE TO FAVORITED EVENTS
-    public void initializeList() {
+    public void initializeList(int pageNumber) {
         listitems.clear();
-        //DatabaseManager dm = new DatabaseManager(getActivity());
-        Cursor res = dm.getFavoritedEventsFromSQLite();
+
+        SharedPreferences csp = getActivity().getSharedPreferences("login_pref", 0);
+        String conID =  csp.getString("homeConventionID", null);
+
+        //SET UP FOR DIFFERENT DAYS ON DIFFERENT TABS
+        SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar pageDate = Calendar.getInstance();
+
+        try {
+            pageDate.setTime(sdfIn.parse(dm.getConventionStartDate(conID)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        pageDate.roll(Calendar.DATE, pageNumber);
+        String sdfPageDate = sdfIn.format(pageDate.getTime());
+
+        Cursor res = dm.getFavoritedEventsWithDateLikeFromSQLite(sdfPageDate);
+        //Cursor res = dm.getFavoritedEventsFromSQLite();
 
         if(res.getCount() == 0) {
             Log.d("Database","No events for this convention");
