@@ -74,8 +74,7 @@ public class LogInActivity extends Activity {
                                 cEditor.putString("usernameEmail", jsonObject.getString("success"));
                                 cEditor.apply();
 
-                                Toast.makeText(getApplicationContext(), "Log In Successful", Toast.LENGTH_SHORT).show(); //LOGIN SUCCESS - returns success flag and Username
-                                //startActivity(new Intent(getApplicationContext(), DrawerActivity.class));
+                                Toast.makeText(getApplicationContext(), "Log In Successful", Toast.LENGTH_SHORT).show();
 
                                 //IF NO CON SET, START CONVENTION FINDER
                                 if (csp.getString("homeConventionID", null) == null) {
@@ -123,6 +122,6 @@ public class LogInActivity extends Activity {
     //Go to sign up screen
     public void registerClick(View v) {
         startActivity(new Intent(LogInActivity.this, RegisterActivity.class));
-        finish();
+        //finish();
     }
 }

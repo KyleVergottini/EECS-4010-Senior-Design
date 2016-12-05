@@ -2,18 +2,11 @@ package com.jordanklamut.interactiveevents;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.TextView;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,19 +22,11 @@ import com.jordanklamut.interactiveevents.models.Room;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class DatabaseManager extends SQLiteOpenHelper{
 
@@ -319,6 +304,9 @@ public class DatabaseManager extends SQLiteOpenHelper{
     public int getConventionDates(String conID) {
         //TODO - not finished
         SQLiteDatabase db = this.getWritableDatabase();
+        String[] conDates;
+
+
         String[] startDate;
         String[] endDate;
         int days = 0;
@@ -337,7 +325,30 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return days;
     }
 
-/////////////////////////EVENTS////////////////////////
+    public String getConventionStartDate(String conID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor res = db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + " WHERE " + CON_CONVENTION_ID + " LIKE '" + conID + "'", null);
+        if(res.getCount() == 1){
+            res.moveToFirst();
+            return res.getString(res.getColumnIndex(CON_START_DATE));
+        }
+        return "Error";
+    }
+
+    public String getConventionEndDate(String conID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor res = db.rawQuery("SELECT * FROM " + CON_TABLE_NAME + " WHERE " + CON_CONVENTION_ID + " LIKE '" + conID + "'", null);
+        if(res.getCount() == 1){
+            res.moveToFirst();
+            return res.getString(res.getColumnIndex(CON_END_DATE));
+        }
+        return "Error";
+    }
+
+
+    /////////////////////////EVENTS////////////////////////
 //RETURNS ALL EVENTS FROM PHP MATCHING CONVENTION_ID
     public void setEventList(Context context, String conventionID) {
     RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -356,7 +367,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
                 for (int i = 0; i < events.length(); i++) {
                     JSONObject event = events.getJSONObject(i);
 
-                    String[] startDateTime = event.getString("StartTime").split(" "); //--date 1-time
+                    String[] startDateTime = event.getString("StartTime").split(" ");
                     String[] endDateTime = event.getString("EndTime").split(" ");
 
                     String eventID = event.getString("EventID");
@@ -427,6 +438,23 @@ public class DatabaseManager extends SQLiteOpenHelper{
     {
         String whereQuery = " WHERE ";
         whereQuery += EVENT_EVENT_ID + " LIKE " + eventID;
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+    }
+
+    public Cursor getEventsWithDateLikeFromSQLite(String date)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_EVENT_DATE + " LIKE '" + date + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+    }
+
+    public Cursor getFavoritedEventsWithDateLikeFromSQLite(String date)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_FAVORITE + " LIKE 1";
+        whereQuery += " AND " + EVENT_EVENT_DATE + " LIKE '" + date + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
