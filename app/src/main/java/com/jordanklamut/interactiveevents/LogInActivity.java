@@ -111,6 +111,12 @@ public class LogInActivity extends Activity {
                         hashMap.put("email", et_User.getText().toString());
                         hashMap.put("password", et_Pass.getText().toString()); //TODO - HASH PASSWORD
 
+                        //Save password for use in schedule related calls that require login
+                        SharedPreferences csp = getApplicationContext().getSharedPreferences("login_pref", 0);
+                        SharedPreferences.Editor cEditor = csp.edit();
+                        cEditor.putString("password", et_Pass.getText().toString());
+                        cEditor.apply();
+
                         return hashMap;
                     }
                 };

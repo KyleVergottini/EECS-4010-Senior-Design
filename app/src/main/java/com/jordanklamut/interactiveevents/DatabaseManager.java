@@ -24,8 +24,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DatabaseManager extends SQLiteOpenHelper{
@@ -721,4 +723,61 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + MAP_TABLE_NAME + whereQuery, null);
     }
 
+/////////////////////////SCHEDULES/////////////////////////
+
+    //RETURN USER'S SCHEDULE FROM .NET API MATCH CONVENTION_ID
+    public void setSchedule(Context context, String email, String password, final String conventionID) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Schedule/GetUserSchedule/";
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+        params.put("conventionID", conventionID);
+
+        final CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Database","API RESPONSE " + response.toString());
+
+                try {
+                    String ConventionID = response.getString("ConventionID");
+
+                    JSONArray Schedule = response.getJSONArray("Schedule");
+                    List<String> EventIDList = new ArrayList<String>();
+                    for (int i = 0; i < Schedule.length(); i++) {
+                            EventIDList.add(Schedule.getString(i));
+                    }
+
+                    insertScheduleIntoSQLLite(ConventionID, EventIDList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.append(error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    //sub method used for loading schedule into sqllite
+    public void insertScheduleIntoSQLLite(String conventionID, List<String> eventIDList) {
+        String eventIDFilter = "'0'";
+        for (String eventID : eventIDList)
+        {
+            eventIDFilter += ",'" + eventID + "'";
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE " + EVENT_TABLE_NAME
+                + " INNER JOIN " + ROOM_TABLE_NAME
+                + " ON " + EVENT_ROOM_ID + " = " + ROOM_ROOM_ID
+                + " SET " + EVENT_FAVORITE + " = CASE WHEN " + EVENT_EVENT_ID + " IN (" + eventIDFilter + ") THEN 1 ELSE 0 END"
+                + " WHERE " + ROOM_CONVENTION_ID + " = " + conventionID);
+    }
 }
