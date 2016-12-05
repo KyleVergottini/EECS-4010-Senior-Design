@@ -11,11 +11,11 @@ namespace API.Models
 
         public string conventionID { get; set; }
 
-        public List<string> eventIDList { get; set; }
+        public string eventIDList { get; set; }
 
         public List<int> parseEventIDList()
         {
-            return eventIDList.Select(x => int.Parse(x)).ToList();
+            return new List<string>(eventIDList.Split(',')).Select(x => int.Parse(x)).ToList();
         }
     }
 }
