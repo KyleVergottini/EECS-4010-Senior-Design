@@ -470,6 +470,15 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
 
+    public Cursor getFavoritedEventsForConventionFromSQLite(String conventionID)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_FAVORITE + " LIKE 1";
+        whereQuery += " AND " + EVENT_ROOM_ID + " IN (SELECT " + ROOM_ROOM_ID + " FROM " + ROOM_TABLE_NAME + " WHERE " + ROOM_CONVENTION_ID + " = " + conventionID + ")";
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+    }
+
     //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
     public Cursor getCurrentAndNextEventsForRoomFromSQLite(String RoomID) {
         final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -774,10 +783,48 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("UPDATE " + EVENT_TABLE_NAME
-                + " INNER JOIN " + ROOM_TABLE_NAME
-                + " ON " + EVENT_ROOM_ID + " = " + ROOM_ROOM_ID
+        String updateQuery = "UPDATE " + EVENT_TABLE_NAME
                 + " SET " + EVENT_FAVORITE + " = CASE WHEN " + EVENT_EVENT_ID + " IN (" + eventIDFilter + ") THEN 1 ELSE 0 END"
-                + " WHERE " + ROOM_CONVENTION_ID + " = " + conventionID);
+                + " WHERE " + EVENT_ROOM_ID + " IN (SELECT " + ROOM_ROOM_ID + " FROM " + ROOM_TABLE_NAME + " WHERE " + ROOM_CONVENTION_ID + " = " + conventionID + ")";
+
+        db.execSQL(updateQuery);
+    }
+
+    //RETURN USER'S SCHEDULE FROM .NET API MATCH CONVENTION_ID
+    public void saveSchedule(Context context, String email, String password, final String conventionID) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Schedule/SaveUserSchedule/";
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+        params.put("conventionID", conventionID);
+
+        Cursor eventCursor = getFavoritedEventsForConventionFromSQLite(conventionID);
+
+        String eventIDList = "";
+        int eventIDIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_EVENT_ID);
+        while (eventCursor.moveToNext())
+        {
+            eventIDList += eventCursor.getString(eventIDIndex) + ",";
+        }
+        if (eventIDList.length() > 1) {
+            eventIDList = eventIDList.substring(0, eventIDList.length() - 1);
+        }
+        params.put("eventIDList", eventIDList);
+
+        final CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Database","API RESPONSE " + response.toString());
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.append(error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
     }
 }

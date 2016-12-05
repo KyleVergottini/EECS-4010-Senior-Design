@@ -163,7 +163,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             dm.setEventList(DrawerActivity.this, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
             dm.setRoomList(DrawerActivity.this, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
 			dm.setMapList(DrawerActivity.this, csp.getString("homeConventionID", null));
-            dm.setSchedule(DrawerActivity.this, csp.getString("homeConventionID", null), csp.getString("usernameEmail", null), csp.getString("password", null));
 
             try {
                 Thread.sleep(2000);
