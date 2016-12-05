@@ -87,6 +87,10 @@
     <Compile Include="Rooms\GetRoomsForAGivenConventionComponent.cs" />
     <Compile Include="Rooms\IGetAllRoomsComponent.cs" />
     <Compile Include="Rooms\IGetRoomsForAGivenConventionComponent.cs" />
+    <Compile Include="Schedules\GetScheduleComponent.cs" />
+    <Compile Include="Schedules\IGetScheduleComponent.cs" />
+    <Compile Include="Schedules\ISaveScheduleComponent.cs" />
+    <Compile Include="Schedules\SaveScheduleComponent.cs" />
     <Compile Include="Users\SendRecoveryCodeComponent.cs" />
     <Compile Include="Rooms\ISaveRoomsComponent.cs" />
     <Compile Include="Rooms\SaveRoomsComponent.cs" />

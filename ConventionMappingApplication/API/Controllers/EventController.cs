@@ -4,6 +4,8 @@ using System.Web;
 using System.Web.Http;
 using Services;
 using BusinessLogic.Events;
+using BusinessLogic.Users;
+using BusinessLogic.Schedules;
 using BusinessObjects;
 using API.Models;
 
@@ -12,12 +14,18 @@ namespace API.Controllers
     public class EventController : ApiController
     {
         private IEventService _EventService;
+        private IUserService _UserService;
 
         public EventController()
         {
             _EventService = new EventService(
                 new GetAllEventsForAConventionComponent(),
                 new GetAllEventsComponent()
+            );
+            _UserService = new UserService(
+                new SaveUserComponent(),
+                new LoginComponent(),
+                new SendRecoveryCodeComponent()
             );
         }
 

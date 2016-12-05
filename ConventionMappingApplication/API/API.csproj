@@ -131,6 +131,7 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
+    <Compile Include="Controllers\ScheduleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRecoveryController.cs" />
     <Compile Include="Global.asax.cs">
@@ -141,6 +142,8 @@
     <Compile Include="Models\ErrorReturn.cs" />
     <Compile Include="Models\EventReturnList.cs" />
     <Compile Include="Models\RoomReturnList.cs" />
+    <Compile Include="Models\SchedulePost.cs" />
+    <Compile Include="Models\ScheduleReturn.cs" />
     <Compile Include="Models\SuccessReturn.cs" />
     <Compile Include="Models\UserCredentials.cs" />
     <Compile Include="Models\UserRecoveryModel.cs" />
