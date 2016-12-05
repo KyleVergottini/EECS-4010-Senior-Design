@@ -23,7 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/level_label" />
+            android:text="@string/level_label"
+            android:textColor="@color/white"
+            android:padding="5dp" />
     </LinearLayout>
 
 </LinearLayout>
