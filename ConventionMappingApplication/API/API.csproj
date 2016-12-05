@@ -141,6 +141,7 @@
     <Compile Include="Models\ConventionReturnList.cs" />
     <Compile Include="Models\ErrorReturn.cs" />
     <Compile Include="Models\EventReturnList.cs" />
+    <Compile Include="Models\MapReturn.cs" />
     <Compile Include="Models\RoomReturnList.cs" />
     <Compile Include="Models\SchedulePost.cs" />
     <Compile Include="Models\ScheduleReturn.cs" />

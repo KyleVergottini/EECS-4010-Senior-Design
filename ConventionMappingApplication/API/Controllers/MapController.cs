@@ -33,7 +33,7 @@ namespace API.Controllers
             {
                 return BadRequest(e.ToString());
             }
-            return Ok(result);
+            return Ok(new MapReturn(post.conventionID, result));
         }
     }
 }
