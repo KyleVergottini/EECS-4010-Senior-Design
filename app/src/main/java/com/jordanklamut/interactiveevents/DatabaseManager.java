@@ -480,28 +480,25 @@ public class DatabaseManager extends SQLiteOpenHelper{
     }
 
     //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
-    public Cursor getCurrentAndNextEventsForRoomFromSQLite(String RoomID) {
-        final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        final String CURRENT_TIME = "'" + DATE_TO_STRING.format(new Date()) + "'";
+    public Cursor getUpcomingEventsForRoomFromSQLite(String RoomID) {
+        final Date CURRENT_DATE_TIME = new Date();
+        final DateFormat TIME_TO_STRING = new SimpleDateFormat("hh:mm:ss");
+        final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd");
+        final String CURRENT_TIME = "'" + TIME_TO_STRING.format(CURRENT_DATE_TIME) + "'";
+        final String CURRENT_DATE = "'" + DATE_TO_STRING.format(CURRENT_DATE_TIME) + "'";
 
-        String roomIDWhereQuery = " WHERE ";
-        roomIDWhereQuery += EVENT_ROOM_ID + " = " + RoomID;
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_ROOM_ID + " = " + RoomID;
+        whereQuery += " AND (";
+        whereQuery += "(" + EVENT_EVENT_DATE + " = " + CURRENT_DATE + " AND " + EVENT_END_TIME + " > " + CURRENT_TIME + ")";
+        whereQuery += " OR " + EVENT_EVENT_DATE + " > " + CURRENT_DATE;
+        whereQuery += ")";
 
-        String currentEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'CURRENT' AS Status";
-        currentEventQuery += " FROM " + EVENT_TABLE_NAME;
-        currentEventQuery += roomIDWhereQuery + " AND ";
-        currentEventQuery += EVENT_START_TIME + " <= " + CURRENT_TIME + " AND ";
-        currentEventQuery += EVENT_END_TIME + " > " + CURRENT_TIME;
-
-        String nextEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'NEXT' AS Status";
-        nextEventQuery += " FROM " + EVENT_TABLE_NAME;
-        nextEventQuery += roomIDWhereQuery + " AND ";
-        nextEventQuery += EVENT_START_TIME + " > " + CURRENT_TIME;
-        nextEventQuery += " ORDER BY " + EVENT_START_TIME;
-        nextEventQuery += " LIMIT 1";
+        String orderByQuery = " ORDER BY ";
+        orderByQuery += EVENT_EVENT_DATE + ", " + EVENT_START_TIME;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery(currentEventQuery + " UNION " + nextEventQuery, null);
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + orderByQuery, null);
     }
 
 

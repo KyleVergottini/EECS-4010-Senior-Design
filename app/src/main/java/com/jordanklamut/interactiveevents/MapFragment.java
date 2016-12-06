@@ -156,17 +156,9 @@ public class MapFragment extends Fragment {
         }
         else {
             //Coordinates are modified based on the size of the map image
-            //They are translated such that the coordinate refers to the point on the image that the room icon points to
-
-            //Set dimensions and center point of room icon used in admin site
-            final int WEB_APP_ICON_WIDTH = 25;
-            final int WEB_APP_ICON_HEIGHT = 40;
-            final float WEB_APP_ICON_X_CENTER = (float) WEB_APP_ICON_WIDTH / 2;
-            final float WEB_APP_ICON_Y_CENTER = (float) WEB_APP_ICON_HEIGHT;
-
             //The map width in the admin site is always the same, while the height changes
             //Need to calculate ratio between the two
-            final int WEB_APP_MAP_WIDTH = 1043;
+            final int WEB_APP_MAP_WIDTH = 1000;
             float coordinateModifier =  imageWidth / WEB_APP_MAP_WIDTH;
 
             //Get column indices for room table
@@ -180,8 +172,8 @@ public class MapFragment extends Fragment {
                 //Get room coordinates and translate them
                 int roomXCoordinate = Integer.parseInt(res.getString(roomXCoordinateIndex));
                 int roomYCoordinate = Integer.parseInt(res.getString(roomYCoordinateIndex));
-                roomXCoordinate = (int) ((roomXCoordinate + WEB_APP_ICON_X_CENTER) * coordinateModifier);
-                roomYCoordinate = (int) ((roomYCoordinate + WEB_APP_ICON_Y_CENTER) * coordinateModifier);
+                roomXCoordinate = (int) (roomXCoordinate * coordinateModifier);
+                roomYCoordinate = (int) (roomYCoordinate * coordinateModifier);
 
                 Room item = new Room();
                 item.setRoomID(res.getString(roomIDIndex));

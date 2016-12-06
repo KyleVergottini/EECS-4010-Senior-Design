@@ -64,24 +64,12 @@ public class MapInfoLayout extends LinearLayout {
     public void setRoomInformation(Room room)
     {
         roomHeader.setText(room.getRoomName());
-        Cursor eventCursor = dm.getCurrentAndNextEventsForRoomFromSQLite(room.getRoomID());
+        Cursor eventCursor = dm.getUpcomingEventsForRoomFromSQLite(room.getRoomID());
         int eventNameIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_NAME);
         int eventStartTimeIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_START_TIME);
         int eventEndTimeIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_END_TIME);
-        int eventStatusIndex = eventCursor.getColumnIndex("Status");
         try {
             while (eventCursor.moveToNext()) {
-                TableRow statusRow = new TableRow(this.getContext());
-                TextView statusText = new TextView(this.getContext());
-                statusText.setPadding(10, 10, 10, 10);
-                if (eventCursor.getString(eventStatusIndex).equals("Current")) {
-                    statusText.setText("Going on now:");
-                } else {
-                    statusText.setText("Coming up next:");
-                }
-                statusRow.addView(statusText);
-                eventTable.addView(statusRow);
-
                 TableRow eventRow = new TableRow(this.getContext());
 
                 TextView eventName = new TextView(this.getContext());
@@ -90,7 +78,7 @@ public class MapInfoLayout extends LinearLayout {
                 eventRow.addView(eventName);
 
                 //Need to format start and end times
-                final DateFormat STRING_TO_DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                final DateFormat STRING_TO_DATE = new SimpleDateFormat("hh:mm:ss");
                 final DateFormat DATE_TO_STRING = new SimpleDateFormat("hh:mm a");
 
                 String eventStartTime, eventEndTime;
