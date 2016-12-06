@@ -678,7 +678,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
                     }
                     if (!mapString3.equals("null"))
                     {
-                        map.setMap3(Base64.decode(mapString1, Base64.DEFAULT));
+                        map.setMap3(Base64.decode(mapString3, Base64.DEFAULT));
                     }
 
                     insertMapToSQLite(map);
