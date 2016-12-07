@@ -56,7 +56,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         //TODO - SET BUILD IN NAV HEADER, REMOVE UPON RELEASE
         TextView tv_build = (TextView) header.findViewById(R.id.tv_app_version);
         String date = new SimpleDateFormat("yy.MM.dd").format(new Date());
-        tv_build.setText("Alpha Build " + date, null);
+        tv_build.setText("Beta Build " + date, null);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();

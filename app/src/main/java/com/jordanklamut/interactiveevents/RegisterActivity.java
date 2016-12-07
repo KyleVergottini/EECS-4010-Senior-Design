@@ -58,7 +58,7 @@ public class RegisterActivity extends Activity {
 
                 String pass1 = ET_PASS.getText().toString();
                 String pass2 = ET_PASS2.getText().toString();
-                String email = ET_USER.getText().toString();
+                final String email = ET_USER.getText().toString();
 
                 if(!pass1.equals(pass2)){
                     Toast.makeText(getApplicationContext(), "Passwords do not match: Please try again", Toast.LENGTH_SHORT).show();
@@ -87,7 +87,7 @@ public class RegisterActivity extends Activity {
 
                                     SharedPreferences csp = getApplicationContext().getSharedPreferences("login_pref", 0);
                                     SharedPreferences.Editor cEditor = csp.edit();
-                                    cEditor.putString("usernameEmail", jsonObject.getString("success"));
+                                    cEditor.putString("usernameEmail", email);
                                     cEditor.apply();
 
                                     //TODO - CHECK FOR SHARED PREFS
