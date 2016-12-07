@@ -76,7 +76,7 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder {
         btnViewDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DetailsDialog().setEventDetailsDialog(context, ecv);
+                new DetailsDialog().setEventDetailsDialog(context, ecv, eventRoom.getText().toString());
             }
         });
     }

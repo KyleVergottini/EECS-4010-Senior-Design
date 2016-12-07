@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -481,17 +482,24 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
     //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
     public Cursor getUpcomingEventsForRoomFromSQLite(String RoomID) {
-        final Date CURRENT_DATE_TIME = new Date();
-        final DateFormat TIME_TO_STRING = new SimpleDateFormat("hh:mm:ss");
+        Date CURRENT_DATE_TIME = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(CURRENT_DATE_TIME);
+        c.add(Calendar.DATE, 1);
+        Date NEXT_DATE_TIME = c.getTime();
+
+        final DateFormat TIME_TO_STRING = new SimpleDateFormat("HH:mm:ss");
         final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd");
-        final String CURRENT_TIME = "'" + TIME_TO_STRING.format(CURRENT_DATE_TIME) + "'";
-        final String CURRENT_DATE = "'" + DATE_TO_STRING.format(CURRENT_DATE_TIME) + "'";
+
+        String CURRENT_TIME = "'" + TIME_TO_STRING.format(CURRENT_DATE_TIME) + "'";
+        String CURRENT_DATE = "'" + DATE_TO_STRING.format(CURRENT_DATE_TIME) + "'";
+        String NEXT_DATE = "'" + DATE_TO_STRING.format(NEXT_DATE_TIME) + "'";
 
         String whereQuery = " WHERE ";
         whereQuery += EVENT_ROOM_ID + " = " + RoomID;
         whereQuery += " AND (";
         whereQuery += "(" + EVENT_EVENT_DATE + " = " + CURRENT_DATE + " AND " + EVENT_END_TIME + " > " + CURRENT_TIME + ")";
-        whereQuery += " OR " + EVENT_EVENT_DATE + " > " + CURRENT_DATE;
+        whereQuery += " OR (" + EVENT_EVENT_DATE + " = " + NEXT_DATE_TIME + " AND " + EVENT_START_TIME + " < " + CURRENT_TIME + ")";
         whereQuery += ")";
 
         String orderByQuery = " ORDER BY ";

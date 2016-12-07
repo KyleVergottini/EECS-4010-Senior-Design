@@ -50,8 +50,8 @@ public class MapLayout extends FrameLayout
     private static final int ROOM_ICON_CENTER_Y = ROOM_ICON_HEIGHT;
 
     private List<Room> roomList;
-    private Bitmap unpressedRoomIcon = Bitmap.createScaledBitmap(((BitmapDrawable) ContextCompat.getDrawable(this.getContext(), R.drawable.map_icon_unpressed)).getBitmap(), ROOM_ICON_WIDTH, ROOM_ICON_HEIGHT, true);
-    private Bitmap highlightedRoomIcon = Bitmap.createScaledBitmap(((BitmapDrawable) ContextCompat.getDrawable(this.getContext(), R.drawable.map_icon_highlighted)).getBitmap(), ROOM_ICON_WIDTH, ROOM_ICON_HEIGHT, true);
+    final private Bitmap unpressedRoomIcon = Bitmap.createScaledBitmap(((BitmapDrawable) ContextCompat.getDrawable(this.getContext(), R.drawable.map_icon_unpressed)).getBitmap(), ROOM_ICON_WIDTH, ROOM_ICON_HEIGHT, true);
+    final private Bitmap highlightedRoomIcon = Bitmap.createScaledBitmap(((BitmapDrawable) ContextCompat.getDrawable(this.getContext(), R.drawable.map_icon_highlighted)).getBitmap(), ROOM_ICON_WIDTH, ROOM_ICON_HEIGHT, true);
 
     private String highlightedRoom = "";
 
