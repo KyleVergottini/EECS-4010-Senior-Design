@@ -21,9 +21,11 @@
                     var thisPos = currentLocation.position();
                     var parentPos = currentLocation.parent().position();
 
+                    var parentSizeModifier = 1000 / currentLocation.parent().width();
+
                     var roomId = $clone[0].id;
-                    var x = parseInt(thisPos.left - parentPos.left - 15);
-                    var y = parseInt(thisPos.top - parentPos.top);
+                    var x = parseInt(((currentLocation.width() / 2) + thisPos.left - parentPos.left - 15) * parentSizeModifier);
+                    var y = parseInt((currentLocation.height() + thisPos.top - parentPos.top) * parentSizeModifier);
 
                     var found = false;
                     if (roomId.includes("room")) {
@@ -52,9 +54,11 @@
                             var thisPos = currentLocation.position();
                             var parentPos = currentLocation.parent().position();
 
+                            var parentSizeModifier = 1000 / currentLocation.parent().width();
+
                             var roomId = this.id;
-                            var x = parseInt(thisPos.left - parentPos.left - 15);
-                            var y = parseInt(thisPos.top - parentPos.top);
+                            var x = parseInt(((currentLocation.width() / 2) + thisPos.left - parentPos.left - 15) * parentSizeModifier);
+                            var y = parseInt((currentLocation.height() + thisPos.top - parentPos.top) * parentSizeModifier);
 
                             var found = false;
                             if (roomId.includes("room")) {
