@@ -71,7 +71,9 @@ public class MapInfoLayout extends LinearLayout {
         int eventEndTimeIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_END_TIME);
         int eventFavoriteIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_FAVORITE);
         try {
+            boolean isEmpty = true;
             while (eventCursor.moveToNext()) {
+                isEmpty = false;
                 Event event = new Event();
                 event.setEventID(eventCursor.getString(eventIDIndex));
                 event.setEventName(eventCursor.getString(eventNameIndex));
@@ -126,6 +128,15 @@ public class MapInfoLayout extends LinearLayout {
                 eventRow.addView(eventName);
 
                 eventTable.addView(eventRow);
+            }
+            if (isEmpty) {
+                TextView noEvents = new TextView(this.getContext());
+                noEvents.setPadding(10, 10, 10, 10);
+                noEvents.setTextAppearance(this.getContext(), android.R.style.TextAppearance_Small);
+                noEvents.setTextColor(getContext().getResources().getColor(R.color.white));
+                noEvents.setText("No upcoming events for this room");
+
+                eventTable.addView(noEvents);
             }
         } finally {
             eventCursor.close();
