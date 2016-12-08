@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Interactive Events"
+        android:text="@string/app_name"
         android:textColor="@color/colorPrimary"
         android:id="@+id/tv_login_header_2"
         android:textSize="35dp"
@@ -78,6 +78,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp" />
 
+    <!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,9 +112,8 @@
             android:id="@+id/button5"
             android:layout_alignTop="@+id/button6"
             android:layout_toStartOf="@+id/tv_or" />
-
-
     </LinearLayout>
+    -->
 
     <LinearLayout
         android:layout_width="wrap_content"
