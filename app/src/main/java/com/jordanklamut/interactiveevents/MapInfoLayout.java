@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jordanklamut.interactiveevents.models.DetailsDialog;
 import com.jordanklamut.interactiveevents.models.Event;
@@ -68,6 +65,7 @@ public class MapInfoLayout extends LinearLayout {
         Cursor eventCursor = dm.getUpcomingEventsForRoomFromSQLite(room.getRoomID());
         int eventIDIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_EVENT_ID);
         int eventNameIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_NAME);
+        int eventDescriptionIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_DESCRIPTION);
         int eventDateIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_EVENT_DATE);
         int eventStartTimeIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_START_TIME);
         int eventEndTimeIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_END_TIME);
@@ -75,7 +73,9 @@ public class MapInfoLayout extends LinearLayout {
         try {
             while (eventCursor.moveToNext()) {
                 Event event = new Event();
+                event.setEventID(eventCursor.getString(eventIDIndex));
                 event.setEventName(eventCursor.getString(eventNameIndex));
+                event.setEventDescription(eventCursor.getString(eventDescriptionIndex));
                 event.setEventDate(eventCursor.getString(eventDateIndex));
                 event.setEventStartTime(eventCursor.getString(eventStartTimeIndex));
                 event.setEventEndTime(eventCursor.getString(eventEndTimeIndex));
@@ -113,6 +113,7 @@ public class MapInfoLayout extends LinearLayout {
                 TextView eventTime = new TextView(this.getContext());
                 eventTime.setPadding(10, 10, 10, 10);
                 eventTime.setTextAppearance(this.getContext(), android.R.style.TextAppearance_Small);
+                eventTime.setTextColor(getContext().getResources().getColor(R.color.white));
                 eventTime.setText(eventStartTime + " - " + eventEndTime);
                 eventLine.addView(eventTime);
                 eventRow.addView(eventLine);
@@ -120,6 +121,7 @@ public class MapInfoLayout extends LinearLayout {
                 TextView eventName = new TextView(this.getContext());
                 eventName.setPadding(10, 10, 10, 10);
                 eventName.setTextAppearance(this.getContext(), android.R.style.TextAppearance_Small);
+                eventName.setTextColor(getContext().getResources().getColor(R.color.white));
                 eventName.setText(event.getEventName());
                 eventRow.addView(eventName);
 

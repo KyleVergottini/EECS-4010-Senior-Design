@@ -116,6 +116,7 @@ public class ConventionFinderViewHolder extends RecyclerView.ViewHolder {
 
             dm.setEventList(context, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite
             dm.setRoomList(context, csp.getString("homeConventionID", null)); //gets from php, and inserts into sqlite //TODO - should get latest Room table changes too
+            dm.setMapList(context, csp.getString("homeConventionID", null));
 
             try {
                 Thread.sleep(500);
