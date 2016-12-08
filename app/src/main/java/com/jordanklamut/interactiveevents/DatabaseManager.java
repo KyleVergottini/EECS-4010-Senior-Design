@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DatabaseManager extends SQLiteOpenHelper{
@@ -481,6 +482,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
 
     //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
     public Cursor getUpcomingEventsForRoomFromSQLite(String RoomID) {
+        //Gets all events for a room for the next 24 hours
         Date CURRENT_DATE_TIME = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(CURRENT_DATE_TIME);
@@ -498,14 +500,16 @@ public class DatabaseManager extends SQLiteOpenHelper{
         whereQuery += EVENT_ROOM_ID + " = " + RoomID;
         whereQuery += " AND (";
         whereQuery += "(" + EVENT_EVENT_DATE + " = " + CURRENT_DATE + " AND " + EVENT_END_TIME + " > " + CURRENT_TIME + ")";
-        whereQuery += " OR (" + EVENT_EVENT_DATE + " = " + NEXT_DATE_TIME + " AND " + EVENT_START_TIME + " < " + CURRENT_TIME + ")";
+        whereQuery += " OR (" + EVENT_EVENT_DATE + " = " + NEXT_DATE + " AND " + EVENT_START_TIME + " < " + CURRENT_TIME + ")";
         whereQuery += ")";
 
         String orderByQuery = " ORDER BY ";
         orderByQuery += EVENT_EVENT_DATE + ", " + EVENT_START_TIME;
 
+        String limitQuery = " LIMIT 10";
+
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + orderByQuery, null);
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + orderByQuery + limitQuery, null);
     }
 
 

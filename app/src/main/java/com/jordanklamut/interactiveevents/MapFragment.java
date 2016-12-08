@@ -78,14 +78,6 @@ public class MapFragment extends Fragment {
         mapDisplay = (LinearLayout) x.findViewById(R.id.mapDisplay);
         levelSelect = (LinearLayout) x.findViewById(R.id.levelSelector);
 
-        if (mapLayout.size() > 1) {
-            for (int i = 1; i <= mapLayout.size(); i++) {
-                levelSelect.addView(new LevelSelectorButton(getActivity(), String.valueOf(i)));
-            }
-        } else {
-            levelSelect.setVisibility(View.INVISIBLE);
-        }
-
         if (mapLayout.size() > 0) {
             if (startingRoom != null) {
                 currentLevel = getStartingLevel();
@@ -93,7 +85,15 @@ public class MapFragment extends Fragment {
                 currentLevel = "1";
             }
             mapDisplay.addView(mapLayout.get(currentLevel));
+        }
+
+        if (mapLayout.size() > 1) {
+            for (int i = 1; i <= mapLayout.size(); i++) {
+                levelSelect.addView(new LevelSelectorButton(getActivity(), String.valueOf(i)));
+            }
             levelSelect.getChildAt(Integer.parseInt(currentLevel)).setSelected(true);
+        } else {
+            levelSelect.setVisibility(View.INVISIBLE);
         }
 
         return x;

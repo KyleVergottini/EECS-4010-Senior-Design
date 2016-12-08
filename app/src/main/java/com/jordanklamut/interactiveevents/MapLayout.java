@@ -11,9 +11,12 @@ import android.view.ScaleGestureDetector;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.google.common.collect.Lists;
 import com.jordanklamut.interactiveevents.models.Room;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -49,7 +52,8 @@ public class MapLayout extends FrameLayout
     private static final int ROOM_ICON_CENTER_X = ROOM_ICON_WIDTH / 2;
     private static final int ROOM_ICON_CENTER_Y = ROOM_ICON_HEIGHT;
 
-    private List<Room> roomList;
+    private List<Room> roomListDraw;
+    private List<Room> roomListTouch;
     final private Bitmap unpressedRoomIcon = Bitmap.createScaledBitmap(((BitmapDrawable) ContextCompat.getDrawable(this.getContext(), R.drawable.map_icon_unpressed)).getBitmap(), ROOM_ICON_WIDTH, ROOM_ICON_HEIGHT, true);
     final private Bitmap highlightedRoomIcon = Bitmap.createScaledBitmap(((BitmapDrawable) ContextCompat.getDrawable(this.getContext(), R.drawable.map_icon_highlighted)).getBitmap(), ROOM_ICON_WIDTH, ROOM_ICON_HEIGHT, true);
 
@@ -63,7 +67,11 @@ public class MapLayout extends FrameLayout
         this.bitmap = mapImage;
         this.bitmapWidth = mapImage.getWidth();
         this.bitmapHeight = mapImage.getHeight();
-        this.roomList = roomList;
+
+        //RoomList is saved in forward and reverse order because we need to draw them one way and check for touch events in the other
+        this.roomListTouch = roomList;
+        this.roomListDraw = new ArrayList(roomList);
+        Collections.reverse(roomListDraw);
 
         mScaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
 
@@ -131,19 +139,20 @@ public class MapLayout extends FrameLayout
 
             case MotionEvent.ACTION_UP: { //Case: Last finger is lifted
                 long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
-                if (clickDuration < 1000)
+                if (clickDuration < 1000) //If it's been less than a second since the screen was touched, register this as a click
                 {
                     int translatedClickMaxX = (int) (((mLastTouchX + ROOM_ICON_CENTER_X) / (mScaleFactor)) - (2 * mPosX));
                     int translatedClickMinX = (int) (translatedClickMaxX - (ROOM_ICON_WIDTH / mScaleFactor));
                     int translatedClickMaxY = (int) (((mLastTouchY + ROOM_ICON_CENTER_Y) / (mScaleFactor)) - (2 * mPosY));
                     int translatedClickMinY = (int) (translatedClickMaxY - (ROOM_ICON_HEIGHT / mScaleFactor));
                     boolean roomPressed = false;
-                    for (Room currentRoom : roomList) {
+                    for (Room currentRoom : roomListTouch) {
                         if (    Integer.parseInt(currentRoom.getRoomXCoordinate()) >= translatedClickMinX
                             &&  Integer.parseInt(currentRoom.getRoomXCoordinate()) <= translatedClickMaxX
                             &&  Integer.parseInt(currentRoom.getRoomYCoordinate()) >= translatedClickMinY
                             &&  Integer.parseInt(currentRoom.getRoomYCoordinate()) <= translatedClickMaxY)
                         {
+                            //If touch coordinates fall in range of a room, set that room as highlighted and break
                             highlightedRoom = currentRoom.getRoomID();
                             roomPressed = true;
                             break;
@@ -151,6 +160,7 @@ public class MapLayout extends FrameLayout
                     }
                     if (!roomPressed)
                     {
+                        //If no room is pressed, clear any highlights
                         highlightedRoom = "";
                     }
                     Redraw();
@@ -209,6 +219,7 @@ public class MapLayout extends FrameLayout
         mPosX = mPosY = 0; //Set X and Y positions to false
         if (firstDraw && !startingRoom.equals(""))
         {
+            //If we're on the first draw, and a starting room was set, focus the starting room was the map has been rendered
             this.post(new Runnable() {
                 @Override
                 public void run() {
@@ -257,44 +268,59 @@ public class MapLayout extends FrameLayout
     }
 
     public Bitmap DrawRoomsOntoMap() {
-        if (!roomList.isEmpty()) {
-            infoView.clear();
+        if (!roomListDraw.isEmpty()) {
+            Room highlightedRoomObject = null;
+            infoView.clear(); //Clear information overlay before drawing
             Bitmap mapWithRooms = Bitmap.createBitmap((int)viewWidth, (int)viewHeight, bitmap.getConfig());
             Canvas canvas = new Canvas(mapWithRooms);
-            for (Room currentRoom : roomList) {
+            for (Room currentRoom : roomListDraw) {
+                //Determine position that room would need to be drawn on the screen
                 int drawPosX = (int)(mScaleFactor * ((Integer.parseInt(currentRoom.getRoomXCoordinate())) + (2 * mPosX)) - ROOM_ICON_CENTER_X);
                 int drawPosY = (int)(mScaleFactor * ((Integer.parseInt(currentRoom.getRoomYCoordinate())) + (2 * mPosY)) - ROOM_ICON_CENTER_Y);
+                //Check if the room would be appear on the screen and if we need to draw it
                 if (    drawPosX >= -ROOM_ICON_WIDTH && drawPosX <= viewWidth + ROOM_ICON_WIDTH
                     &&  drawPosY >= -ROOM_ICON_HEIGHT && drawPosY <= viewHeight + ROOM_ICON_HEIGHT) {
                     if (currentRoom.getRoomID().equals(highlightedRoom)) {
-                        canvas.drawBitmap(highlightedRoomIcon, drawPosX, drawPosY, null);
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) infoView.getLayoutParams();
-                        int infoGravity = Gravity.NO_GRAVITY;
-                        params.leftMargin = 50;
-                        params.rightMargin = 50;
-                        if (drawPosX + (ROOM_ICON_WIDTH / 2) <= (viewWidth / 2)) {
-                            infoGravity |= Gravity.LEFT;
-                        } else {
-                            infoGravity |= Gravity.RIGHT;
-                        }
-                        if (drawPosY + (ROOM_ICON_HEIGHT / 2) <= (viewHeight / 2)) {
-                            params.topMargin = drawPosY + ROOM_ICON_HEIGHT + 50;
-                            params.bottomMargin = 50;
-                            infoGravity |= Gravity.TOP;
-                        } else {
-                            params.topMargin = 50;
-                            params.bottomMargin = (int)viewHeight - drawPosY + 50;
-                            infoGravity |= Gravity.BOTTOM;
-                        }
-                        infoView.setLayoutParams(params);
-                        infoView.setGravity(infoGravity);
-                        infoView.setRoomInformation(currentRoom);
+                        //If the roomID matches what was pressed, save it as the highlighted room to draw last
+                        highlightedRoomObject = currentRoom;
                     }
                     else
                     {
+                        //Otherwise, draw the normal room icon
                         canvas.drawBitmap(unpressedRoomIcon, drawPosX, drawPosY, null);
                     }
                 }
+            }
+            if (highlightedRoomObject != null)
+            {
+                //Draw the highlighted room icon on the map
+                int drawPosX = (int)(mScaleFactor * ((Integer.parseInt(highlightedRoomObject.getRoomXCoordinate())) + (2 * mPosX)) - ROOM_ICON_CENTER_X);
+                int drawPosY = (int)(mScaleFactor * ((Integer.parseInt(highlightedRoomObject.getRoomYCoordinate())) + (2 * mPosY)) - ROOM_ICON_CENTER_Y);
+                canvas.drawBitmap(highlightedRoomIcon, drawPosX, drawPosY, null);
+                //Set layout parameters for the information window
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) infoView.getLayoutParams();
+                int infoGravity = Gravity.NO_GRAVITY;
+                params.leftMargin = 50;
+                params.rightMargin = 50;
+                //Left/right gravity is set based on which side of the screen we want to draw it on
+                if (drawPosX + (ROOM_ICON_WIDTH / 2) <= (viewWidth / 2)) {
+                    infoGravity |= Gravity.LEFT;
+                } else {
+                    infoGravity |= Gravity.RIGHT;
+                }
+                //Top/bottom gravity also is set based on the room position, but margins are also set so it lies next to the icon
+                if (drawPosY + (ROOM_ICON_HEIGHT / 2) <= (viewHeight / 2)) {
+                    params.topMargin = drawPosY + ROOM_ICON_HEIGHT + 50;
+                    params.bottomMargin = 50;
+                    infoGravity |= Gravity.TOP;
+                } else {
+                    params.topMargin = 50;
+                    params.bottomMargin = (int)viewHeight - drawPosY + 50;
+                    infoGravity |= Gravity.BOTTOM;
+                }
+                infoView.setLayoutParams(params);
+                infoView.setGravity(infoGravity);
+                infoView.setRoomInformation(highlightedRoomObject);
             }
             return mapWithRooms;
         }
@@ -305,8 +331,10 @@ public class MapLayout extends FrameLayout
 
     public void FocusRoom(String roomID)
     {
-        for (Room currentRoom : roomList) {
+        for (Room currentRoom : roomListDraw) {
+            //Locate the room with the passed in ID
             if (currentRoom.getRoomID().equals(roomID)) {
+                //Room is highlighted and screen position is set to put room as close to center screen as possible
                 highlightedRoom = roomID;
                 mPosX = (viewWidth / (4 * mScaleFactor)) - (Integer.parseInt(currentRoom.getRoomXCoordinate()) / 2);
                 mPosY = (viewHeight / (4 * mScaleFactor)) - (Integer.parseInt(currentRoom.getRoomYCoordinate()) / 2);
