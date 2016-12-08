@@ -120,6 +120,15 @@ public class RegisterActivity extends Activity {
                             hashMap.put("email", ET_USER.getText().toString());
                             hashMap.put("password", ET_PASS.getText().toString()); //TODO - HASH PASSWORD
 
+                            //Save password for use in schedule related calls that require login
+							//To be used if we implement the ability to save favorited events to the database through the API
+							/*
+                            SharedPreferences csp = getApplicationContext().getSharedPreferences("login_pref", 0);
+                            SharedPreferences.Editor cEditor = csp.edit();
+                            cEditor.putString("password", ET_PASS.getText().toString());
+                            cEditor.apply();
+							*/
+
                             return hashMap;
                         }
                     };

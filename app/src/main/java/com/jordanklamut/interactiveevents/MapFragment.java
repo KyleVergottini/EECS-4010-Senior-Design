@@ -1,19 +1,20 @@
 package com.jordanklamut.interactiveevents;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.jordanklamut.interactiveevents.models.ConventionMap;
@@ -21,7 +22,6 @@ import com.jordanklamut.interactiveevents.models.Room;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MapFragment extends Fragment {
 
@@ -78,23 +78,22 @@ public class MapFragment extends Fragment {
         mapDisplay = (LinearLayout) x.findViewById(R.id.mapDisplay);
         levelSelect = (LinearLayout) x.findViewById(R.id.levelSelector);
 
+        if (mapLayout.size() > 0) {
+            if (startingRoom != null) {
+                currentLevel = getStartingLevel();
+            } else {
+                currentLevel = "1";
+            }
+            mapDisplay.addView(mapLayout.get(currentLevel));
+        }
+
         if (mapLayout.size() > 1) {
             for (int i = 1; i <= mapLayout.size(); i++) {
                 levelSelect.addView(new LevelSelectorButton(getActivity(), String.valueOf(i)));
             }
+            levelSelect.getChildAt(Integer.parseInt(currentLevel)).setSelected(true);
         } else {
             levelSelect.setVisibility(View.INVISIBLE);
-        }
-
-        if (mapLayout.size() > 0) {
-            if (startingRoom != null) {
-                String startingLevel = getStartingLevel();
-                mapDisplay.addView(mapLayout.get(startingLevel));
-                currentLevel = startingLevel;
-            } else {
-                mapDisplay.addView(mapLayout.get("1"));
-                currentLevel = "1";
-            }
         }
 
         return x;
@@ -157,17 +156,9 @@ public class MapFragment extends Fragment {
         }
         else {
             //Coordinates are modified based on the size of the map image
-            //They are translated such that the coordinate refers to the point on the image that the room icon points to
-
-            //Set dimensions and center point of room icon used in admin site
-            final int WEB_APP_ICON_WIDTH = 25;
-            final int WEB_APP_ICON_HEIGHT = 40;
-            final float WEB_APP_ICON_X_CENTER = (float) WEB_APP_ICON_WIDTH / 2;
-            final float WEB_APP_ICON_Y_CENTER = (float) WEB_APP_ICON_HEIGHT;
-
             //The map width in the admin site is always the same, while the height changes
             //Need to calculate ratio between the two
-            final int WEB_APP_MAP_WIDTH = 1043;
+            final int WEB_APP_MAP_WIDTH = 1000;
             float coordinateModifier =  imageWidth / WEB_APP_MAP_WIDTH;
 
             //Get column indices for room table
@@ -181,8 +172,8 @@ public class MapFragment extends Fragment {
                 //Get room coordinates and translate them
                 int roomXCoordinate = Integer.parseInt(res.getString(roomXCoordinateIndex));
                 int roomYCoordinate = Integer.parseInt(res.getString(roomYCoordinateIndex));
-                roomXCoordinate = (int) ((roomXCoordinate + WEB_APP_ICON_X_CENTER) * coordinateModifier);
-                roomYCoordinate = (int) ((roomYCoordinate + WEB_APP_ICON_Y_CENTER) * coordinateModifier);
+                roomXCoordinate = (int) (roomXCoordinate * coordinateModifier);
+                roomYCoordinate = (int) (roomYCoordinate * coordinateModifier);
 
                 Room item = new Room();
                 item.setRoomID(res.getString(roomIDIndex));
@@ -253,10 +244,15 @@ public class MapFragment extends Fragment {
     public void onDetach() { super.onDetach(); }
 
     class LevelSelectorButton extends Button {
+
         private String level;
+        private final Drawable BUTTON_BACKGROUND = (Drawable) ContextCompat.getDrawable(this.getContext(), R.drawable.level_select_button);
+        private final int PADDING = 5;
 
         protected LevelSelectorButton(Context context, String level) {
             super(context);
+            this.setBackground(BUTTON_BACKGROUND);
+            this.setPadding(PADDING, PADDING, PADDING, PADDING);
             this.setText(level);
             this.level = level;
             this.setOnClickListener(new LevelSelectorListener());
@@ -266,9 +262,13 @@ public class MapFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
+
                 if (currentLevel != level) {
+                    levelSelect.getChildAt(Integer.parseInt(currentLevel)).setSelected(false);
+                    view.setSelected(true);
                     mapDisplay.removeAllViews();
                     mapDisplay.addView(mapLayout.get(level));
+                    currentLevel = level;
                 }
             }
         }

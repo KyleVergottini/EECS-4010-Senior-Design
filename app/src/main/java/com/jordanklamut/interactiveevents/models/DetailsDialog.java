@@ -16,20 +16,20 @@ public class DetailsDialog {
 
     }
 
-    public void setEventDetailsDialog(Context ctx, Event event) {
+    public void setEventDetailsDialog(Context ctx, Event event, String roomName) {
         LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);// getLayoutInflater(null);
         View dialogLayout = inflater.inflate(R.layout.details_dialog_event, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setView(dialogLayout);
 
         TextView detailsName = (TextView) dialogLayout.findViewById(R.id.tv_details_event_name);
-        TextView deatilsLocation = (TextView) dialogLayout.findViewById(R.id.tv_details_event_room);
+        TextView detailsLocation = (TextView) dialogLayout.findViewById(R.id.tv_details_event_room);
         TextView detailsDateTime = (TextView) dialogLayout.findViewById(R.id.tv_details_event_time);
         TextView detailsDateDate = (TextView) dialogLayout.findViewById(R.id.tv_details_event_date);
         TextView detailsDescription = (TextView) dialogLayout.findViewById(R.id.tv_details_description);
 
         detailsName.setText(event.getEventName());
-        deatilsLocation.setText(event.getEventRoomID());
+        detailsLocation.setText(roomName);
         detailsDateDate.setText(event.getEventDate());
         detailsDateTime.setText(event.getEventStartTime() + " - " + event.getEventEndTime());
         detailsDescription.setText(event.getEventDescription());
@@ -44,12 +44,12 @@ public class DetailsDialog {
         builder.setView(dialogLayout);
 
         TextView detailsName = (TextView) dialogLayout.findViewById(R.id.tv_details_event_name);
-        TextView deatilsLocation = (TextView) dialogLayout.findViewById(R.id.tv_details_event_room);
+        TextView detailsLocation = (TextView) dialogLayout.findViewById(R.id.tv_details_event_room);
         TextView detailsDateTime = (TextView) dialogLayout.findViewById(R.id.tv_details_event_time);
         TextView detailsDescription = (TextView) dialogLayout.findViewById(R.id.tv_details_description);
 
         detailsName.setText(con.getConName());
-        deatilsLocation.setText(con.getConStreetAddress() + ", \n" + con.getConCity() + ", " + con.getConState());
+        detailsLocation.setText(con.getConStreetAddress() + ", \n" + con.getConCity() + ", " + con.getConState());
         detailsDateTime.setText(con.getConStartDate() + " - " + con.getConEndDate());
         detailsDescription.setText(con.getConDescription());
 

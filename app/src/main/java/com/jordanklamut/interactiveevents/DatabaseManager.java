@@ -24,8 +24,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DatabaseManager extends SQLiteOpenHelper{
@@ -468,29 +471,45 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
     }
 
+    public Cursor getFavoritedEventsForConventionFromSQLite(String conventionID)
+    {
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_FAVORITE + " LIKE 1";
+        whereQuery += " AND " + EVENT_ROOM_ID + " IN (SELECT " + ROOM_ROOM_ID + " FROM " + ROOM_TABLE_NAME + " WHERE " + ROOM_CONVENTION_ID + " = " + conventionID + ")";
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+    }
+
     //RETURN UPCOMING EVENTS FOR A ROOM FROM SQLite
-    public Cursor getCurrentAndNextEventsForRoomFromSQLite(String RoomID) {
-        final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        final String CURRENT_TIME = "'" + DATE_TO_STRING.format(new Date()) + "'";
+    public Cursor getUpcomingEventsForRoomFromSQLite(String RoomID) {
+        //Gets all events for a room for the next 24 hours
+        Date CURRENT_DATE_TIME = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(CURRENT_DATE_TIME);
+        c.add(Calendar.DATE, 1);
+        Date NEXT_DATE_TIME = c.getTime();
 
-        String roomIDWhereQuery = " WHERE ";
-        roomIDWhereQuery += EVENT_ROOM_ID + " = " + RoomID;
+        final DateFormat TIME_TO_STRING = new SimpleDateFormat("HH:mm:ss");
+        final DateFormat DATE_TO_STRING = new SimpleDateFormat("yyyy-MM-dd");
 
-        String currentEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'CURRENT' AS Status";
-        currentEventQuery += " FROM " + EVENT_TABLE_NAME;
-        currentEventQuery += roomIDWhereQuery + " AND ";
-        currentEventQuery += EVENT_START_TIME + " <= " + CURRENT_TIME + " AND ";
-        currentEventQuery += EVENT_END_TIME + " > " + CURRENT_TIME;
+        String CURRENT_TIME = "'" + TIME_TO_STRING.format(CURRENT_DATE_TIME) + "'";
+        String CURRENT_DATE = "'" + DATE_TO_STRING.format(CURRENT_DATE_TIME) + "'";
+        String NEXT_DATE = "'" + DATE_TO_STRING.format(NEXT_DATE_TIME) + "'";
 
-        String nextEventQuery = "SELECT " + EVENT_NAME + ", " + EVENT_START_TIME + ", " + EVENT_END_TIME + ", 'NEXT' AS Status";
-        nextEventQuery += " FROM " + EVENT_TABLE_NAME;
-        nextEventQuery += roomIDWhereQuery + " AND ";
-        nextEventQuery += EVENT_START_TIME + " > " + CURRENT_TIME;
-        nextEventQuery += " ORDER BY " + EVENT_START_TIME;
-        nextEventQuery += " LIMIT 1";
+        String whereQuery = " WHERE ";
+        whereQuery += EVENT_ROOM_ID + " = " + RoomID;
+        whereQuery += " AND (";
+        whereQuery += "(" + EVENT_EVENT_DATE + " = " + CURRENT_DATE + " AND " + EVENT_END_TIME + " > " + CURRENT_TIME + ")";
+        whereQuery += " OR (" + EVENT_EVENT_DATE + " = " + NEXT_DATE + " AND " + EVENT_START_TIME + " < " + CURRENT_TIME + ")";
+        whereQuery += ")";
+
+        String orderByQuery = " ORDER BY ";
+        orderByQuery += EVENT_EVENT_DATE + ", " + EVENT_START_TIME;
+
+        String limitQuery = " LIMIT 10";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery(currentEventQuery + " UNION " + nextEventQuery, null);
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + orderByQuery + limitQuery, null);
     }
 
 
@@ -667,7 +686,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
                     }
                     if (!mapString3.equals("null"))
                     {
-                        map.setMap3(Base64.decode(mapString1, Base64.DEFAULT));
+                        map.setMap3(Base64.decode(mapString3, Base64.DEFAULT));
                     }
 
                     insertMapToSQLite(map);
@@ -721,4 +740,99 @@ public class DatabaseManager extends SQLiteOpenHelper{
         return db.rawQuery("SELECT * FROM " + MAP_TABLE_NAME + whereQuery, null);
     }
 
+/////////////////////////SCHEDULES/////////////////////////
+
+    //RETURN USER'S SCHEDULE FROM .NET API MATCH CONVENTION_ID
+    public void setSchedule(Context context, String email, String password, final String conventionID) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Schedule/GetUserSchedule/";
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+        params.put("conventionID", conventionID);
+
+        final CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Database","API RESPONSE " + response.toString());
+
+                try {
+                    String ConventionID = response.getString("ConventionID");
+
+                    JSONArray Schedule = response.getJSONArray("Schedule");
+                    List<String> EventIDList = new ArrayList<String>();
+                    for (int i = 0; i < Schedule.length(); i++) {
+                            EventIDList.add(Schedule.getString(i));
+                    }
+
+                    insertScheduleIntoSQLLite(ConventionID, EventIDList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.append(error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    //sub method used for loading schedule into sqllite
+    public void insertScheduleIntoSQLLite(String conventionID, List<String> eventIDList) {
+        String eventIDFilter = "'0'";
+        for (String eventID : eventIDList)
+        {
+            eventIDFilter += ",'" + eventID + "'";
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String updateQuery = "UPDATE " + EVENT_TABLE_NAME
+                + " SET " + EVENT_FAVORITE + " = CASE WHEN " + EVENT_EVENT_ID + " IN (" + eventIDFilter + ") THEN 1 ELSE 0 END"
+                + " WHERE " + EVENT_ROOM_ID + " IN (SELECT " + ROOM_ROOM_ID + " FROM " + ROOM_TABLE_NAME + " WHERE " + ROOM_CONVENTION_ID + " = " + conventionID + ")";
+
+        db.execSQL(updateQuery);
+    }
+
+    //RETURN USER'S SCHEDULE FROM .NET API MATCH CONVENTION_ID
+    public void saveSchedule(Context context, String email, String password, final String conventionID) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String rooms_url = "http://lowcost-env.uffurjxps4.us-west-2.elasticbeanstalk.com/Schedule/SaveUserSchedule/";
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+        params.put("conventionID", conventionID);
+
+        Cursor eventCursor = getFavoritedEventsForConventionFromSQLite(conventionID);
+
+        String eventIDList = "";
+        int eventIDIndex = eventCursor.getColumnIndex(DatabaseManager.EVENT_EVENT_ID);
+        while (eventCursor.moveToNext())
+        {
+            eventIDList += eventCursor.getString(eventIDIndex) + ",";
+        }
+        if (eventIDList.length() > 1) {
+            eventIDList = eventIDList.substring(0, eventIDList.length() - 1);
+        }
+        params.put("eventIDList", eventIDList);
+
+        final CustomRequest jsonObjectRequest = new CustomRequest(Request.Method.POST, rooms_url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Database","API RESPONSE " + response.toString());
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.append(error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
 }

@@ -122,9 +122,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_find_convention) {
             startActivity(new Intent(DrawerActivity.this, ConventionFinderActivity.class));
         }else if (id == R.id.nav_share) {
-            composeEmail("", "Check out MapACon", "Check out this app! Plan your busy convention schedule using MapACon."); //TODO - add link if/when available
+            composeEmail("", "Check out ConBuddy", "Check out this app! Plan your busy convention schedule using ConBuddy."); //TODO - add link if/when available
         }else if (id == R.id.nav_feedback) {
-            composeEmail("feedback@jordanklamut.com", "Interactive Events Feedback", null);
+            composeEmail("feedback@jordanklamut.com", "ConBuddy Feedback", null);
         }else if (id == R.id.nav_about) {
             LayoutInflater inflater = getLayoutInflater();
             View dialogLayout = inflater.inflate(R.layout.about_dialog, null);
