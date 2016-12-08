@@ -55,6 +55,7 @@ public class ConventionFinderViewHolder extends RecyclerView.ViewHolder {
                     ivFavorites.setTag(R.drawable.ic_like);
                     ivFavorites.setImageResource(R.drawable.ic_like);
                     dm.setConFavorite(conID, 0);
+                    ccv.setConFavorite("0");
                     Toast.makeText(context,"Removed from Favorites", Toast.LENGTH_SHORT).show();
                 }
                 else if (conFavorite.equals("0")) {
@@ -62,6 +63,7 @@ public class ConventionFinderViewHolder extends RecyclerView.ViewHolder {
                     ivFavorites.setTag(R.drawable.ic_liked);
                     ivFavorites.setImageResource(R.drawable.ic_liked);
                     dm.setConFavorite(conID, 1);
+                    ccv.setConFavorite("1");
                     Toast.makeText(context,"Added to Favorites", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -128,7 +130,6 @@ public class ConventionFinderViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(context,"CREATED SQLITE FROM PHP",Toast.LENGTH_SHORT).show();
             pd.dismiss();
         }
 

@@ -450,7 +450,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
         String whereQuery = " WHERE ";
         whereQuery += EVENT_EVENT_DATE + " LIKE '" + date + "'";
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery  + "ORDER BY " + EVENT_START_TIME, null);
     }
 
     public Cursor getFavoritedEventsWithDateLikeFromSQLite(String date)
@@ -459,7 +459,7 @@ public class DatabaseManager extends SQLiteOpenHelper{
         whereQuery += EVENT_FAVORITE + " LIKE 1";
         whereQuery += " AND " + EVENT_EVENT_DATE + " LIKE '" + date + "'";
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery, null);
+        return db.rawQuery("SELECT * FROM " + EVENT_TABLE_NAME + whereQuery + "ORDER BY " + EVENT_START_TIME, null);
     }
 
     //RETURN SELECT EVENTS FROM SQLite

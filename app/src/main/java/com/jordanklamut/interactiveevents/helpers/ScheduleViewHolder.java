@@ -50,6 +50,7 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder {
                     ivFavorites.setTag(R.drawable.ic_like);
                     ivFavorites.setImageResource(R.drawable.ic_like);
                     dm.setEventFavorite(eventID, 0);
+                    ecv.setEventFavorite("0");
                     Toast.makeText(context,"Removed from Favorites", Toast.LENGTH_SHORT).show();
                 }
                 else if (eventFavorite.equals("0")) {
@@ -57,6 +58,7 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder {
                     ivFavorites.setTag(R.drawable.ic_liked);
                     ivFavorites.setImageResource(R.drawable.ic_liked);
                     dm.setEventFavorite(eventID, 1);
+                    ecv.setEventFavorite("1");
                     Toast.makeText(context,"Added to Favorites", Toast.LENGTH_SHORT).show();
                 }
             }
